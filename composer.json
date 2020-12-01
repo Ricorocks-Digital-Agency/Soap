@@ -33,7 +33,10 @@
     "extra": {
         "laravel": {
             "providers": [
-
+                "RicorocksDigitalAgency\\Soap\\Providers\\SoapServiceProvider"
+            ],
+            "aliases": [
+                "RicorocksDigitalAgency\\Soap\\Facades\\Soap"
             ]
         }
     }
