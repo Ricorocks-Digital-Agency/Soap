@@ -6,8 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use RicorocksDigitalAgency\Soap\Parameters\Builder;
 use RicorocksDigitalAgency\Soap\Parameters\IntelligentBuilder;
 use RicorocksDigitalAgency\Soap\Request\Request;
+use RicorocksDigitalAgency\Soap\Request\SoapClientRequest;
 use RicorocksDigitalAgency\Soap\Soap;
-use RicorocksDigitalAgency\Soap\SoapClientRequest;
 
 class SoapServiceProvider extends ServiceProvider
 {

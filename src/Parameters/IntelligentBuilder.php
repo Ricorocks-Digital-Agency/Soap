@@ -4,6 +4,8 @@
 namespace RicorocksDigitalAgency\Soap\Parameters;
 
 
+use RicorocksDigitalAgency\Soap\Inclusion;
+
 class IntelligentBuilder implements Builder
 {
 
