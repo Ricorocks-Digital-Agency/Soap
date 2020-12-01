@@ -4,16 +4,19 @@
 namespace RicorocksDigitalAgency\Soap;
 
 
+use RicorocksDigitalAgency\Soap\Parameters\Builder;
 use RicorocksDigitalAgency\Soap\Request\Request;
 use SoapClient;
 
 class SoapClientRequest implements Request
 {
     protected SoapClient $client;
+    protected Builder $builder;
 
-    public function __construct(string $endpoint)
+    public function __construct(string $endpoint, Builder $builder)
     {
         $this->client = new SoapClient($endpoint);
+        $this->builder = $builder;
     }
 
     public function __call($name, $parameters)
@@ -28,6 +31,6 @@ class SoapClientRequest implements Request
 
     public function call($method, $parameters = [])
     {
-        return $this->client->$method($parameters);
+        return $this->client->$method($this->builder->handle($parameters));
     }
 }

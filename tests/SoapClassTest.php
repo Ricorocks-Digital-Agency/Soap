@@ -25,6 +25,13 @@ class SoapClassTest extends TestCase
     }
 
     /** @test */
+    public function it_can_use_nodes()
+    {
+        $result = Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->call('Add', soapNode()->body(['intA' => 10, 'intB' => 25]));
+        $this->assertEquals(35, $result->AddResult);
+    }
+
+    /** @test */
     public function it_can_forward_method_calls()
     {
         $result = Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->Add(['intA' => 10, 'intB' => 25]);

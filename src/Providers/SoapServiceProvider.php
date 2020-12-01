@@ -3,6 +3,8 @@
 namespace RicorocksDigitalAgency\Soap\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use RicorocksDigitalAgency\Soap\Parameters\Builder;
+use RicorocksDigitalAgency\Soap\Parameters\IntelligentBuilder;
 use RicorocksDigitalAgency\Soap\Request\Request;
 use RicorocksDigitalAgency\Soap\Soap;
 use RicorocksDigitalAgency\Soap\SoapClientRequest;
@@ -14,6 +16,12 @@ class SoapServiceProvider extends ServiceProvider
     {
         $this->app->singleton('soap', fn() => app(Soap::class));
         $this->app->bind(Request::class, SoapClientRequest::class);
+        $this->app->bind(Builder::class, IntelligentBuilder::class);
+    }
+
+    public function boot()
+    {
+        require_once __DIR__ . '/../helpers.php';
     }
 
 }
