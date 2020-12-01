@@ -1,0 +1,40 @@
+{
+    "name": "ricorocks-digital-agency/soap",
+    "description": "A SOAP client that provides a clean interface for handling requests and responses.",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "RicorocksDigitalAgency\\Soap\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RicorocksDigitalAgency\\Soap\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "illuminate/support": "^8.16"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.4",
+        "orchestra/testbench": "^6.5"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Luke Downing",
+            "email": "luke@ricorocks.agency"
+        },
+        {
+            "name": "Sam Rowden",
+            "email": "sam@ricorocks.agency"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+
+            ]
+        }
+    }
+}
