@@ -4,6 +4,8 @@
 namespace RicorocksDigitalAgency\Soap;
 
 
+use Closure;
+use Illuminate\Support\Str;
 use PHPUnit\Framework\Assert as PHPUnit;
 use RicorocksDigitalAgency\Soap\Parameters\Node;
 use RicorocksDigitalAgency\Soap\Request\Request;
@@ -66,13 +68,63 @@ class Soap
 
         if (is_null($callback)) {
             $this->stubCallbacks = array_merge([fn() => new Response()], $this->stubCallbacks);
+            return new static;
         }
+
+        if (is_array($callback)) {
+            foreach ($callback as $url => $callable) {
+                $this->stubCallbacks[] = $this->stubEndpoint($url, $callable);
+            }
+        }
+    }
+
+    protected function stubEndpoint($url, $callable)
+    {
+        return function (Request $request) use ($url, $callable) {
+            $pieces = [
+                Str::of($url)->start('*')->replaceMatches("/:([\w\d]+$)/", ""),
+                Str::of($url)->afterLast(".")->match("/:([\w\d]+$)/")->start("*")
+            ];
+
+            if (!Str::is($pieces[0]->__toString(), $request->getEndpoint())) {
+                return;
+            }
+
+            if ($pieces[1]->isNotEmpty() && !Str::is($pieces[1]->__toString(), $request->getMethod())) {
+                return;
+            }
+
+            return $callable instanceof Closure ? $callable($request) : $callable;
+        };
     }
 
     public function assertNothingSent()
     {
         PHPUnit::assertEmpty($this->recordedRequests, "Requests were recorded");
         return new static;
+    }
+
+    public function assertSent(callable $callback)
+    {
+        PHPUnit::assertTrue($this->recorded($callback)->isNotEmpty());
+    }
+
+    protected function recorded($callback)
+    {
+        if (empty($this->recordedRequests)) {
+            return collect();
+        }
+
+        $callback = $callback ?: function () {
+            return true;
+        };
+
+        return collect($this->recordedRequests)->filter(fn($pair) => $callback(...$pair));
+    }
+
+    public function assertNotSent(callable $callback)
+    {
+        PHPUnit::assertTrue($this->recorded($callback)->isEmpty());
     }
 
     public function assertSentCount($count)

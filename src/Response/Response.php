@@ -6,7 +6,7 @@ namespace RicorocksDigitalAgency\Soap\Response;
 
 class Response
 {
-    protected $response;
+    public $response;
 
     public function __construct($response = [])
     {
