@@ -95,7 +95,7 @@ class SoapClientRequest implements Request
 
     public function functions(): array
     {
-        return $this->client->__getFunctions();
+        return $this->client()->__getFunctions();
     }
 
     public function beforeRequesting(callable $closure): Request

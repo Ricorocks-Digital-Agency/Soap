@@ -13,4 +13,9 @@ class Response
         $this->response = $response;
     }
 
+    public function __get($name)
+    {
+        return data_get($this->response, $name);
+    }
+
 }
