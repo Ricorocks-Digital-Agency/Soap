@@ -16,4 +16,12 @@ interface Request
      * @param array $parameters
      */
     public function call($method, $parameters = []);
+
+    public function afterRequesting(callable $closure): self;
+
+    public function getEndpoint();
+
+    public function getMethod();
+
+    public function getBody();
 }
