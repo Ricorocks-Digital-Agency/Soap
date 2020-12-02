@@ -33,16 +33,13 @@ class Fakery
     protected function stubEndpoint($url, $callable)
     {
         return function (Request $request) use ($url, $callable) {
-            $pieces = [
-                Str::of($url)->start('*')->replaceMatches("/:([\w\d]+$)/", ""),
-                Str::of($url)->afterLast(".")->match("/:([\w\d]+$)/")->start("*")
-            ];
+            $urlDetails = $this->extractEndpointAndMethod($url);
 
-            if (!Str::is($pieces[0]->__toString(), $request->getEndpoint())) {
+            if (!$this->requestIsForUrl($request, $urlDetails['url'])) {
                 return;
             }
 
-            if ($pieces[1]->isNotEmpty() && !Str::is($pieces[1]->__toString(), $request->getMethod())) {
+            if (!$this->requestIsForMethod($request, $urlDetails['method'])) {
                 return;
             }
 
@@ -50,7 +47,25 @@ class Fakery
         };
     }
 
-    protected function checkForMock(Request $request)
+    protected function extractEndpointAndMethod($url)
+    {
+        return [
+            'url' => Str::of($url)->start('*')->replaceMatches("/:([\w\d]+$)/", ""),
+            'method' => Str::of($url)->afterLast(".")->match("/:([\w\d]+$)/")->start("*")
+        ];
+    }
+
+    protected function requestIsForUrl($request, $url)
+    {
+        return Str::is($url->__toString(), $request->getEndpoint());
+    }
+
+    protected function requestIsForMethod($request, $method)
+    {
+        return $method->isNotEmpty() && Str::is($method->__toString(), $request->getMethod());
+    }
+
+    public function returnMockResponseIfAvailable(Request $request)
     {
         return collect($this->stubCallbacks)
             ->reverse()
@@ -58,6 +73,15 @@ class Fakery
             ->__invoke($request)
             ->filter()
             ->first();
+    }
+
+    public function record(Request $request, Response $response)
+    {
+        if (!$this->shouldRecord) {
+            return;
+        }
+
+        $this->recordedRequests[] = [$request, $response];
     }
 
     public function assertSentCount($count)
