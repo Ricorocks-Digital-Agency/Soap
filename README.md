@@ -11,6 +11,9 @@ A Laravel SOAP client that provides a clean interface for handling requests and 
     * [Call](#call)
         * [Parameters](#parameters)
             * [Nodes](#nodes)
+- [Configuration](#configuration)
+    * [Include](#include)
+
 
 
 ## Installation
@@ -138,6 +141,18 @@ Soap::to('...')
 Now, just by adding or removing a body to the `soap_node()` the outputted array is intelligently constructed.
 
 A node can be made with either the Facade `Soap::node()` or the helper method `soap_node()`.
+
+## Configuration
+
+Configuration of Soap is via the `Soap` facade in the `boot()` method in your service provider.
+
+### Include
+
+Parameters can be set to be included with specific endpoints. These can be `arrays` or [nodes](#nodes)
+
+```php
+Soap::include('credentials' => soap_node(['user' => '...', 'password' => '...']))->for('...')
+```
 
 ### Changelog
 
