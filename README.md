@@ -1,4 +1,7 @@
 # Soap
+
+![PHP Composer](https://github.com/Ricorocks-Digital-Agency/Soap/workflows/PHP%20Composer/badge.svg)
+
 A Laravel SOAP client that provides a clean interface for handling requests and responses.
 
 ## Docs
@@ -151,7 +154,7 @@ Configuration of Soap is via the `Soap` facade in the `boot()` method in your se
 Parameters can be set to be included with specific endpoints. These can be `arrays` or [nodes](#nodes)
 
 ```php
-Soap::include('credentials' => soap_node(['user' => '...', 'password' => '...']))->for('...')
+Soap::include(['credentials' => soap_node(['user' => '...', 'password' => '...'])])->for('...');
 ```
 
 ### Changelog
