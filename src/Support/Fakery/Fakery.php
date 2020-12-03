@@ -75,6 +75,15 @@ class Fakery
             ->first();
     }
 
+    public function returnMockResponseIfAvailableNew(Request $request)
+    {
+        return collect($this->stubCallbacks)
+            ->filter(fn(Stub $stub) => $stub->endpoint == '*' || $request->getEndpoint())
+            ->when($request->getMethod(), fn($stubs) => $stubs->filter(fn($stub) => $stub->method == $request->getMethod()))
+            ->first()
+            ->generateResponse($request);
+    }
+
     public function record(Request $request, Response $response)
     {
         if (!$this->shouldRecord) {
