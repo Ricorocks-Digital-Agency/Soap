@@ -2,8 +2,6 @@
 
 namespace RicorocksDigitalAgency\Soap\Support\Fakery;
 
-use Closure;
-use Illuminate\Support\Str;
 use PHPUnit\Framework\Assert as PHPUnit;
 use RicorocksDigitalAgency\Soap\Request\Request;
 use RicorocksDigitalAgency\Soap\Response\Response;
@@ -11,73 +9,38 @@ use RicorocksDigitalAgency\Soap\Response\Response;
 class Fakery
 {
     protected $shouldRecord = false;
-    protected $recordedRequests = [];
-    protected $stubCallbacks = [];
+    protected $recordedRequests;
+    protected $stubCallbacks;
+
+    public function __construct()
+    {
+        $this->stubCallbacks = collect();
+        $this->recordedRequests = collect();
+    }
 
     public function fake($callback = null)
     {
         $this->shouldRecord = true;
 
         if (is_null($callback)) {
-            $this->stubCallbacks = array_merge([Stub::for('*')->respondWith(fn() => new Response())], $this->stubCallbacks);
+            $this->newStub('*', fn() => new Response());
             return;
         }
 
         if (is_array($callback)) {
-            foreach ($callback as $url => $callable) {
-                $this->stubCallbacks[] = Stub::for($url)->respondWith($callable);
-            }
+            collect($callback)->each(fn($callable, $url) => $this->newStub($url, $callable));
+            return;
         }
     }
 
-    protected function stubEndpoint($url, $callable)
+    protected function newStub($url, $callback)
     {
-        return function (Request $request) use ($url, $callable) {
-            $urlDetails = $this->extractEndpointAndMethod($url);
-
-            if (!$this->requestIsForUrl($request, $urlDetails['url'])) {
-                return;
-            }
-
-            if (!$this->requestIsForMethod($request, $urlDetails['method'])) {
-                return;
-            }
-
-            return $callable instanceof Closure ? $callable($request) : $callable;
-        };
-    }
-
-    protected function extractEndpointAndMethod($url)
-    {
-        return [
-            'url' => Str::of($url)->start('*')->replaceMatches("/:([\w\d]+$)/", ""),
-            'method' => Str::of($url)->afterLast(".")->match("/:([\w\d]+$)/")->start("*")
-        ];
-    }
-
-    protected function requestIsForUrl($request, $url)
-    {
-        return Str::is($url->__toString(), $request->getEndpoint());
-    }
-
-    protected function requestIsForMethod($request, $method)
-    {
-        return $method->isNotEmpty() && Str::is($method->__toString(), $request->getMethod());
+        $this->stubCallbacks->push(Stub::for($url)->respondWith($callback));
     }
 
     public function returnMockResponseIfAvailable(Request $request)
     {
-        return collect($this->stubCallbacks)
-            ->reverse()
-            ->map
-            ->__invoke($request)
-            ->filter()
-            ->first();
-    }
-
-    public function returnMockResponseIfAvailableNew(Request $request)
-    {
-        return collect($this->stubCallbacks)
+        return $this->stubCallbacks
             ->filter(fn(Stub $stub) => $stub->isForEndpoint($request->getEndpoint()))
             ->when($request->getMethod(), fn($stubs) => $this->getStubsForMethod($stubs, $request->getMethod()))
             ->sortByDesc('endpoint')
@@ -99,7 +62,7 @@ class Fakery
             return;
         }
 
-        $this->recordedRequests[] = [$request, $response];
+        $this->recordedRequests->push([$request, $response]);
     }
 
     public function assertSentCount($count)
@@ -124,7 +87,7 @@ class Fakery
 
     protected function recorded($callback)
     {
-        if (empty($this->recordedRequests)) {
+        if ($this->recordedRequests->isEmpty()) {
             return collect();
         }
 
@@ -132,6 +95,6 @@ class Fakery
             return true;
         };
 
-        return collect($this->recordedRequests)->filter(fn($pair) => $callback(...$pair));
+        return $this->recordedRequests->filter(fn($pair) => $callback(...$pair));
     }
 }
