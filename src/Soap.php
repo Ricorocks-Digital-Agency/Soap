@@ -2,12 +2,15 @@
 
 namespace RicorocksDigitalAgency\Soap;
 
+use Illuminate\Support\Traits\ForwardsCalls;
 use RicorocksDigitalAgency\Soap\Parameters\Node;
 use RicorocksDigitalAgency\Soap\Request\Request;
 use RicorocksDigitalAgency\Soap\Support\Fakery\Fakery;
 
 class Soap
 {
+    use ForwardsCalls;
+
     protected Fakery $fakery;
     protected $inclusions = [];
 
@@ -41,33 +44,8 @@ class Soap
         return collect($this->inclusions)->filter->matches($endpoint, $method);
     }
 
-    public function fake($callback = null)
+    public function __call($method, $parameters)
     {
-        $this->fakery->fake($callback);
-        return app(self::class);
-    }
-
-    public function assertNothingSent()
-    {
-        $this->fakery->assertNothingSent();
-        return app(self::class);
-    }
-
-    public function assertSent(callable $callback)
-    {
-        $this->fakery->assertSent($callback);
-        return app(self::class);
-    }
-
-    public function assertNotSent(callable $callback)
-    {
-        $this->fakery->assertNotSent($callback);
-        return app(self::class);
-    }
-
-    public function assertSentCount($count)
-    {
-        $this->fakery->assertSentCount($count);
-        return app(self::class);
+        return $this->forwardCallTo($this->fakery, $method, $parameters);
     }
 }

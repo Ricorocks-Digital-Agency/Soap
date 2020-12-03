@@ -14,6 +14,7 @@ A Laravel SOAP client that provides a clean interface for handling requests and 
     * [Call](#call)
         * [Parameters](#parameters)
             * [Nodes](#nodes)
+- [Faking](#faking)            
 - [Configuration](#configuration)
     * [Include](#include)
 
@@ -145,6 +146,59 @@ Now, just by adding or removing a body to the `soap_node()` the outputted array 
 
 A node can be made with either the Facade `Soap::node()` or the helper method `soap_node()`.
 
+## Faking
+
+Soap includes full support for faking endpoints and actions, as well as
+inspecting requests and responses.
+
+To fake all SOAP requests, call `Soap:fake()`. This will return an empty
+response for every request. It is likely that you will want to be more
+specific, so you can pass the `fake` method an array of endpoints as keys
+and response objects as values:
+
+```php
+Soap::fake(['http://endpoint.com' => Response(['foo' => 'bar'])]);
+```
+
+In the above example, any SOAP request made to `http://endpoint.com` will
+be faked, and a `Response` object with a body of `['foo' => 'bar']` will
+be returned instead.
+
+What if you want to specify the SOAP action too? Easy! Just add `:{ActionName}` after your endpoint, like so:
+
+```php
+Soap::fake(['http://endpoint.com:Details' => Response(['foo' => 'bar'])]);
+```
+
+Now, only SOAP requests to the `Details` actions will be mocked.
+
+### Inspecting requests
+
+If you've made a call to `Soap::fake()`, Soap will record all requests made. You can then inspect these requests as you see fit.
+
+#### `Soap::assertSentCount($count)`
+
+If you just want to assert that `n` amount of SOAP requests were sent,
+you can use this method, passing in the desired count as a parameter.
+
+#### `Soap::assertSent(callable $callback)`
+
+You can dive a little deeper and test that a particular request was 
+actually sent, and that it returned the expected response. You should
+pass a closure into this method, which receives the `$request` and `$response` as parameters, and return `true` if they match your
+expectations.
+
+#### `Soap::assertNotSent(callable $callback)`
+
+This is the opposite of `Soap::assertSent`. You can make sure that a 
+particular request wasn't made. Again, returning `true` from the
+closure will cause it to pass.
+
+#### `Soap::assertNothingSent()`
+
+If you just want to make sure that absolutely nothing was sent out, you 
+can call this. It does what it says on the tin.
+
 ## Configuration
 
 Configuration of Soap is via the `Soap` facade in the `boot()` method in your service provider.
@@ -156,6 +210,9 @@ Parameters can be set to be included with specific endpoints. These can be `arra
 ```php
 Soap::include(['credentials' => soap_node(['user' => '...', 'password' => '...'])])->for('...');
 ```
+
+Inclusions will be included at the root of the request body.
+
 
 ### Changelog
 
