@@ -27,7 +27,7 @@ class Stub
         return $this;
     }
 
-    public function generateResponse(Request $request)
+    public function getResponse(Request $request)
     {
         return $this->callback instanceof Closure ? call_user_func($this->callback, $request) : $this->callback;
     }
@@ -45,8 +45,8 @@ class Stub
 
     protected function extractEndpointAndMethods($endpoint)
     {
-        $this->endpoint = (string) Str::of($endpoint)->start('*')->replaceMatches("/:([\w\d]+$)/", "");
-        $this->methods = (string) Str::of($endpoint)->afterLast(".")->match("/:([\w\d]+$)/")->start("*");
+        $this->endpoint = (string) Str::of($endpoint)->start('*')->replaceMatches("/:([\w\d|]+$)/", "");
+        $this->methods = (string) Str::of($endpoint)->afterLast(".")->match("/:([\w\d|]+$)/");
     }
 
     public function isForEndpoint($endpoint)
@@ -56,6 +56,9 @@ class Stub
 
     public function isForMethod($method)
     {
-        return Str::is($this->methods, $method);
+        return Str::of($this->methods)
+                ->explode('|')
+                ->map(fn($availableMethod) => Str::start($availableMethod, '*'))
+                ->contains(fn($availableMethod) => Str::is($availableMethod, $method));
     }
 }

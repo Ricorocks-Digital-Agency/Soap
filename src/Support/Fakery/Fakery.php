@@ -45,7 +45,8 @@ class Fakery
             ->when($request->getMethod(), fn($stubs) => $this->getStubsForMethod($stubs, $request->getMethod()))
             ->sortByDesc('endpoint')
             ->map
-            ->generateResponse($request)
+            ->getResponse($request)
+            ->filter()
             ->first();
     }
 
