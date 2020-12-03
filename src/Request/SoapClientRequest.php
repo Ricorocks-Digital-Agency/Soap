@@ -56,7 +56,9 @@ class SoapClientRequest implements Request
 
     protected function getResponse()
     {
-        return $this->runBeforeRequestingHooks() ?? new Response($this->makeRequest());
+        return $this->runBeforeRequestingHooks()
+            ?? Response::new($this->makeRequest())
+                ->withXml($this->client()->__getLastRequest(), $this->client()->__getLastResponse());
     }
 
     /**
@@ -82,7 +84,7 @@ class SoapClientRequest implements Request
 
     protected function client()
     {
-        return $this->client ??= new SoapClient($this->endpoint);
+        return $this->client ??= new SoapClient($this->endpoint, ['trace' => true]);
     }
 
     public function getBody()
