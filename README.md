@@ -1,6 +1,6 @@
 # Soap
 
-![PHP Composer](https://github.com/Ricorocks-Digital-Agency/Soap/workflows/PHP%20Composer/badge.svg)
+![Tests](https://github.com/Ricorocks-Digital-Agency/Soap/workflows/Tests/badge.svg)
 
 A Laravel SOAP client that provides a clean interface for handling requests and responses.
 
