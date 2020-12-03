@@ -1,13 +1,9 @@
 <?php
 
-
 namespace RicorocksDigitalAgency\Soap\Tests\Inclusions;
-
 
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 use RicorocksDigitalAgency\Soap\Parameters\Builder;
-use RicorocksDigitalAgency\Soap\Request\Request;
-use RicorocksDigitalAgency\Soap\Response\Response;
 use RicorocksDigitalAgency\Soap\Tests\TestCase;
 
 class IncludeTest extends TestCase

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace RicorocksDigitalAgency\Soap\Parameters;
-
 
 use Illuminate\Contracts\Support\Arrayable;
 

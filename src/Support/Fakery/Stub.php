@@ -16,10 +16,7 @@ class Stub
 
     public static function for($endpoint): self
     {
-        $instance = app(self::class);
-        $instance->register($endpoint);
-
-        return $instance;
+        return tap(new static, fn($instance) => $instance->register($endpoint));
     }
 
     public function respondWith($callback): self
