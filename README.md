@@ -203,6 +203,11 @@ What if you want to specify the SOAP action too? Easy! Just add `:{ActionName}` 
 Soap::fake(['http://endpoint.com:Details' => Response(['foo' => 'bar'])]);
 ```
 
+You can also specify multiple actions with the `|` operator:
+```php
+Soap::fake(['http://endpoint.com:Details|Information|Overview' => Response(['foo' => 'bar'])]);
+```
+
 Now, only SOAP requests to the `Details` actions will be mocked.
 
 ### Inspecting requests
