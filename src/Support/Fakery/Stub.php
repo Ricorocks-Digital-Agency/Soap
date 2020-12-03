@@ -8,6 +8,8 @@ use RicorocksDigitalAgency\Soap\Request\Request;
 
 class Stub
 {
+    const REGEX_PATTERN = "/:([\w\d|]+$)/";
+
     public $endpoint;
     public $methods;
     public $callback;
@@ -36,31 +38,13 @@ class Stub
 
     protected function register($endpoint)
     {
-        $this->endpointIsWildcard($endpoint)
-            ? $this->setWildcardEndpointAndMethods()
-            : $this->setEndpointAndMethods($endpoint);
-    }
-
-    protected function endpointIsWildcard($endpoint)
-    {
-        return $endpoint == '*';
-    }
-
-    protected function setWildcardEndpointAndMethods()
-    {
-        $this->endpoint = '*';
-        $this->methods = '*';
-    }
-
-    protected function setEndpointAndMethods($endpoint)
-    {
-        $this->endpoint = (string) Str::of($endpoint)->replaceMatches("/:([\w\d|]+$)/", "")->start('*');
-        $this->methods = (string) Str::of($endpoint)->afterLast(".")->match("/:([\w\d|]+$)/")->start('*');
+        $this->endpoint = Str::of($endpoint)->replaceMatches(self::REGEX_PATTERN, "")->start('*')->__toString();
+        $this->methods = Str::of($endpoint)->afterLast(".")->match(self::REGEX_PATTERN)->start('*')->__toString();
     }
 
     public function isForEndpoint($endpoint)
     {
-        return Str::is($this->endpoint, '*') || Str::is($this->endpoint, $endpoint);
+        return Str::is($this->endpoint, $endpoint);
     }
 
     public function isForMethod($method)
@@ -73,6 +57,6 @@ class Stub
 
     public function hasWildcardMethods()
     {
-        return $this->methods == '*';
+        return Str::is($this->methods, '*');
     }
 }
