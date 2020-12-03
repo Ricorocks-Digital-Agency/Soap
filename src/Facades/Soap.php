@@ -16,7 +16,7 @@ use RicorocksDigitalAgency\Soap\Request\Request;
  * @method static Request to(string $endpoint)
  * @method static Node node(array $attributes = [])
  * @method static include(array $parameters)
- * @method static fake(array|Closure $callable = null)
+ * @method static void fake(array|Closure $callable = null)
  */
 class Soap extends Facade
 {

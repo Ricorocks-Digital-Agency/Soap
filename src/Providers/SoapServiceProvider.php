@@ -8,6 +8,7 @@ use RicorocksDigitalAgency\Soap\Parameters\IntelligentBuilder;
 use RicorocksDigitalAgency\Soap\Request\Request;
 use RicorocksDigitalAgency\Soap\Request\SoapClientRequest;
 use RicorocksDigitalAgency\Soap\Soap;
+use RicorocksDigitalAgency\Soap\Support\Fakery\Fakery;
 
 class SoapServiceProvider extends ServiceProvider
 {
