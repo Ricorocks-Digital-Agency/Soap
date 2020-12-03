@@ -22,7 +22,7 @@ class Fakery
         $this->shouldRecord = true;
 
         if (is_null($callback)) {
-            $this->newStub('*', fn() => new Response());
+            $this->newStub('*', fn() => Response::new());
             return;
         }
 
