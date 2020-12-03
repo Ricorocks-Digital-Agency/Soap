@@ -12,12 +12,6 @@ class Fakery
     protected $recordedRequests;
     protected $stubCallbacks;
 
-    public function __construct()
-    {
-        $this->stubCallbacks = collect();
-        $this->recordedRequests = collect();
-    }
-
     public function fake($callback = null)
     {
         $this->shouldRecord = true;
@@ -35,7 +29,7 @@ class Fakery
 
     protected function newStub($url, $callback)
     {
-        $this->stubCallbacks->push(Stub::for($url)->respondWith($callback));
+        ($this->stubCallbacks ??= collect())->push(Stub::for($url)->respondWith($callback));
     }
 
     public function returnMockResponseIfAvailable(Request $request)
@@ -63,7 +57,7 @@ class Fakery
             return;
         }
 
-        $this->recordedRequests->push([$request, $response]);
+        ($this->recordedRequests ??= collect())->push([$request, $response]);
     }
 
     public function assertSentCount($count)
