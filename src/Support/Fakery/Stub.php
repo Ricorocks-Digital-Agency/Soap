@@ -29,7 +29,9 @@ class Stub
 
     public function getResponse(Request $request)
     {
-        return $this->callback instanceof Closure ? call_user_func($this->callback, $request) : $this->callback;
+        return $this->callback instanceof Closure
+            ? call_user_func($this->callback, $request)
+            : $this->callback;
     }
 
     protected function register($endpoint)
