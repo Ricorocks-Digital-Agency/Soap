@@ -34,16 +34,23 @@ class Stub
 
     protected function register($endpoint)
     {
-        if ($endpoint == '*') {
-            $this->endpoint = '*';
-            $this->methods = '*';
-            return;
-        }
-
-        $this->extractEndpointAndMethods($endpoint);
+        $this->endpointIsWildcard($endpoint)
+            ? $this->setWildcardEndpointAndMethods()
+            : $this->setEndpointAndMethods($endpoint);
     }
 
-    protected function extractEndpointAndMethods($endpoint)
+    protected function endpointIsWildcard($endpoint)
+    {
+        return $endpoint == '*';
+    }
+
+    protected function setWildcardEndpointAndMethods()
+    {
+        $this->endpoint = '*';
+        $this->methods = '*';
+    }
+
+    protected function setEndpointAndMethods($endpoint)
     {
         $this->endpoint = (string) Str::of($endpoint)->start('*')->replaceMatches("/:([\w\d|]+$)/", "");
         $this->methods = (string) Str::of($endpoint)->afterLast(".")->match("/:([\w\d|]+$)/");
