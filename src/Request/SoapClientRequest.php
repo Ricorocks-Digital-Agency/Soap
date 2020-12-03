@@ -16,10 +16,7 @@ class SoapClientRequest implements Request
     protected $body;
     protected SoapClient $client;
     protected Builder $builder;
-    protected $hooks = [
-        'beforeRequesting' => [],
-        'afterRequesting' => []
-    ];
+    protected $hooks = [];
 
     public function __construct(Builder $builder)
     {
@@ -34,7 +31,7 @@ class SoapClientRequest implements Request
 
     public function __call($name, $parameters)
     {
-        return $this->call($name, $parameters[0]);
+        return $this->call($name, $parameters[0] ?? []);
     }
 
     public function call($method, $parameters = [])
@@ -43,9 +40,9 @@ class SoapClientRequest implements Request
         $this->body = $this->builder->handle($this->mergeInclusions($method, $parameters));
 
         $response = $this->getResponse();
-        collect($this->hooks['afterRequesting'])->each(fn($callback) => $callback($this, $response));
+        $this->hooks['afterRequesting']->each(fn($callback) => $callback($this, $response));
 
-        return $this->getResponse();
+        return $response;
     }
 
     protected function mergeInclusions($method, $parameters)
@@ -59,18 +56,18 @@ class SoapClientRequest implements Request
 
     protected function getResponse()
     {
-        return $this->runBeforeRequestingHooks($this->getMethod()) ?? new Response($this->makeRequest());
+        return $this->runBeforeRequestingHooks() ?? new Response($this->makeRequest());
     }
 
     /**
      * @return Response|void
      */
-    protected function runBeforeRequestingHooks($method)
+    protected function runBeforeRequestingHooks()
     {
-        $results = collect($this->hooks['beforeRequesting'])->map(fn($callback) => $callback($this));
-        if ($response = $results->filter(fn($result) => $result instanceof Response)->first()) {
-            return $response;
-        }
+        return $this->hooks['beforeRequesting']
+            ->map(fn($callback) => $callback($this))
+            ->filter(fn($result) => $result instanceof Response)
+            ->first();
     }
 
     public function getMethod()
@@ -98,15 +95,15 @@ class SoapClientRequest implements Request
         return $this->client()->__getFunctions();
     }
 
-    public function beforeRequesting(callable $closure): Request
+    public function beforeRequesting(...$closures): Request
     {
-        $this->hooks['beforeRequesting'][] = $closure;
+        ($this->hooks['beforeRequesting'] ??= collect())->push(...$closures);
         return $this;
     }
 
-    public function afterRequesting(callable $closure): Request
+    public function afterRequesting(...$closures): Request
     {
-        $this->hooks['afterRequesting'][] = $closure;
+        ($this->hooks['afterRequesting'] ??= collect())->push(...$closures);
         return $this;
     }
 

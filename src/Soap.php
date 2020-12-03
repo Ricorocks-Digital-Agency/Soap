@@ -13,17 +13,20 @@ class Soap
 
     protected Fakery $fakery;
     protected $inclusions = [];
+    protected $globalHooks = [];
 
     public function __construct(Fakery $fakery)
     {
         $this->fakery = $fakery;
+        $this->beforeRequesting(fn($request) => $this->fakery->returnMockResponseIfAvailable($request));
+        $this->afterRequesting(fn($request, $response) => $this->record($request, $response));
     }
 
     public function to(string $endpoint)
     {
         return app(Request::class)
-            ->beforeRequesting(fn($request) => $this->fakery->returnMockResponseIfAvailable($request))
-            ->afterRequesting(fn($request, $response) => $this->fakery->record($request, $response))
+            ->beforeRequesting(...$this->globalHooks['beforeRequesting'])
+            ->afterRequesting(...$this->globalHooks['afterRequesting'])
             ->to($endpoint);
     }
 
@@ -42,6 +45,18 @@ class Soap
     public function inclusionsFor(string $endpoint, $method = null)
     {
         return collect($this->inclusions)->filter->matches($endpoint, $method);
+    }
+
+    public function beforeRequesting(callable $hook)
+    {
+        ($this->globalHooks['beforeRequesting'] ??= collect())->push($hook);
+        return $this;
+    }
+
+    public function afterRequesting(callable $hook)
+    {
+        ($this->globalHooks['afterRequesting'] ??= collect())->push($hook);
+        return $this;
     }
 
     public function __call($method, $parameters)

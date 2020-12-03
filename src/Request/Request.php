@@ -17,7 +17,9 @@ interface Request
      */
     public function call($method, $parameters = []);
 
-    public function afterRequesting(callable $closure): self;
+    public function beforeRequesting(...$closures): self;
+
+    public function afterRequesting(...$closures): self;
 
     public function getEndpoint();
 

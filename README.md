@@ -146,6 +146,39 @@ Now, just by adding or removing a body to the `soap_node()` the outputted array 
 
 A node can be made with either the Facade `Soap::node()` or the helper method `soap_node()`.
 
+## Hooks
+
+Hooks allow you to perform actions before and after Soap makes a request.
+These hooks can be local (per request), or global (applied to every request).
+
+### Local
+
+To create a local hook, chain `beforeRequesting` or `afterRequesting` to a `Request` object:
+
+```php
+Soap::to('http://example.com')
+	->beforeRequesting(fn() => Log::info('Request going in!'))
+	->afterRequesting(fn() => Log::info('Request coming out!'))
+	->call('Action', []);
+```
+
+Any before requesting hooks will receive the request as a parameter
+and after requesting hooks will receive the request and response
+as a parameter.
+
+### Global
+
+To create a global hook, use the `Soap::beforeRequesting` and `Soap::afterRequesting` methods.
+
+```php
+Soap::beforeRequesting(fn() => Log::info('Request going in!'));
+Soap::afterRequesting(fn() => Log::info('Request coming out!'));
+```
+
+Any before requesting hooks will receive the request as a parameter
+and after requesting hooks will receive the request and response
+as a parameter.
+
 ## Faking
 
 Soap includes full support for faking endpoints and actions, as well as
