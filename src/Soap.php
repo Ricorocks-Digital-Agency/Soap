@@ -19,7 +19,7 @@ class Soap
     public function to(string $endpoint)
     {
         return app(Request::class)
-            ->beforeRequesting(fn($request) => $this->fakery->returnMockResponseIfAvailable($request))
+            ->beforeRequesting(fn($request) => $this->fakery->returnMockResponseIfAvailableNew($request))
             ->afterRequesting(fn($request, $response) => $this->fakery->record($request, $response))
             ->to($endpoint);
     }

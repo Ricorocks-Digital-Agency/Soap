@@ -42,16 +42,26 @@ class Stub
             return;
         }
 
-        [$endpoint, $methods] = $this->extractEndpointAndMethods($endpoint);
-        $this->endpoint = $endpoint;
-        $this->methods = $methods;
+        $details = $this->extractEndpointAndMethods($endpoint);
+        $this->endpoint = $details['endpoint'];
+        $this->methods = $details['methods'];
     }
 
     protected function extractEndpointAndMethods($endpoint)
     {
         return [
-            'endpoint' => Str::of($endpoint)->start('*')->replaceMatches("/:([\w\d]+$)/", ""),
-            'methods' => Str::of($endpoint)->afterLast(".")->match("/:([\w\d]+$)/")->start("*")
+            'endpoint' => (string) Str::of($endpoint)->start('*')->replaceMatches("/:([\w\d]+$)/", ""),
+            'methods' => (string) Str::of($endpoint)->afterLast(".")->match("/:([\w\d]+$)/")->start("*")
         ];
+    }
+
+    public function isForEndpoint($endpoint)
+    {
+        return Str::is($this->endpoint, '*') || Str::is($this->endpoint, $endpoint);
+    }
+
+    public function isForMethod($method)
+    {
+        return $this->methods && Str::is($this->methods, $method);
     }
 }

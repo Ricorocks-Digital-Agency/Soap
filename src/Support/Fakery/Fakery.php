@@ -19,13 +19,13 @@ class Fakery
         $this->shouldRecord = true;
 
         if (is_null($callback)) {
-            $this->stubCallbacks = array_merge([fn() => new Response()], $this->stubCallbacks);
+            $this->stubCallbacks = array_merge([Stub::for('*')->respondWith(fn() => new Response())], $this->stubCallbacks);
             return;
         }
 
         if (is_array($callback)) {
             foreach ($callback as $url => $callable) {
-                $this->stubCallbacks[] = $this->stubEndpoint($url, $callable);
+                $this->stubCallbacks[] = Stub::for($url)->respondWith($callable);
             }
         }
     }
@@ -78,10 +78,19 @@ class Fakery
     public function returnMockResponseIfAvailableNew(Request $request)
     {
         return collect($this->stubCallbacks)
-            ->filter(fn(Stub $stub) => $stub->endpoint == '*' || $request->getEndpoint())
-            ->when($request->getMethod(), fn($stubs) => $stubs->filter(fn($stub) => $stub->method == $request->getMethod()))
-            ->first()
-            ->generateResponse($request);
+            ->filter(fn(Stub $stub) => $stub->isForEndpoint($request->getEndpoint()))
+            ->when($request->getMethod(), fn($stubs) => $this->getStubsForMethod($stubs, $request->getMethod()))
+            ->sortByDesc('endpoint')
+            ->map
+            ->generateResponse($request)
+            ->first();
+    }
+
+    protected function getStubsForMethod($stubs, $method)
+    {
+        return $stubs
+                ->filter(fn(Stub $stub) => $stub->isForMethod($method))
+                ->sortByDesc('methods');
     }
 
     public function record(Request $request, Response $response)
