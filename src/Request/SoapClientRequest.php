@@ -56,18 +56,18 @@ class SoapClientRequest implements Request
 
     protected function getResponse()
     {
-        return $this->runBeforeRequestingHooks($this->getMethod()) ?? new Response($this->makeRequest());
+        return $this->runBeforeRequestingHooks() ?? new Response($this->makeRequest());
     }
 
     /**
      * @return Response|void
      */
-    protected function runBeforeRequestingHooks($method)
+    protected function runBeforeRequestingHooks()
     {
-        $results = $this->hooks['beforeRequesting']->map(fn($callback) => $callback($this));
-        if ($response = $results->filter(fn($result) => $result instanceof Response)->first()) {
-            return $response;
-        }
+        return $this->hooks['beforeRequesting']
+            ->map(fn($callback) => $callback($this))
+            ->filter(fn($result) => $result instanceof Response)
+            ->first();
     }
 
     public function getMethod()
