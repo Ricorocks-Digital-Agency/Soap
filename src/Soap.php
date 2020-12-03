@@ -13,10 +13,7 @@ class Soap
 
     protected Fakery $fakery;
     protected $inclusions = [];
-    protected $globalHooks = [
-        'beforeRequesting' => [],
-        'afterRequesting' => [],
-    ];
+    protected $globalHooks = [];
 
     public function __construct(Fakery $fakery)
     {
@@ -52,13 +49,13 @@ class Soap
 
     public function beforeRequesting(callable $hook)
     {
-        $this->globalHooks['beforeRequesting'][] = $hook;
+        ($this->globalHooks['beforeRequesting'] ??= collect())->push($hook);
         return $this;
     }
 
     public function afterRequesting(callable $hook)
     {
-        $this->globalHooks['afterRequesting'][] = $hook;
+        ($this->globalHooks['afterRequesting'] ??= collect())->push($hook);
         return $this;
     }
 

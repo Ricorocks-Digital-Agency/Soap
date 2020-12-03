@@ -7,7 +7,6 @@ namespace RicorocksDigitalAgency\Soap\Request;
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 use RicorocksDigitalAgency\Soap\Parameters\Builder;
 use RicorocksDigitalAgency\Soap\Response\Response;
-use RicorocksDigitalAgency\Soap\Tests\GlobalHooksTest;
 use SoapClient;
 
 class SoapClientRequest implements Request
@@ -17,10 +16,7 @@ class SoapClientRequest implements Request
     protected $body;
     protected SoapClient $client;
     protected Builder $builder;
-    protected $hooks = [
-        'beforeRequesting' => [],
-        'afterRequesting' => []
-    ];
+    protected $hooks = [];
 
     public function __construct(Builder $builder)
     {
@@ -44,7 +40,7 @@ class SoapClientRequest implements Request
         $this->body = $this->builder->handle($this->mergeInclusions($method, $parameters));
 
         $response = $this->getResponse();
-        collect($this->hooks['afterRequesting'])->each(fn($callback) => $callback($this, $response));
+        $this->hooks['afterRequesting']->each(fn($callback) => $callback($this, $response));
 
         return $response;
     }
@@ -68,7 +64,7 @@ class SoapClientRequest implements Request
      */
     protected function runBeforeRequestingHooks($method)
     {
-        $results = collect($this->hooks['beforeRequesting'])->map(fn($callback) => $callback($this));
+        $results = $this->hooks['beforeRequesting']->map(fn($callback) => $callback($this));
         if ($response = $results->filter(fn($result) => $result instanceof Response)->first()) {
             return $response;
         }
@@ -101,13 +97,13 @@ class SoapClientRequest implements Request
 
     public function beforeRequesting(...$closures): Request
     {
-        $this->hooks['beforeRequesting'] = array_merge($this->hooks['beforeRequesting'], $closures);
+        ($this->hooks['beforeRequesting'] ??= collect())->push(...$closures);
         return $this;
     }
 
     public function afterRequesting(...$closures): Request
     {
-        $this->hooks['afterRequesting'] = array_merge($this->hooks['afterRequesting'], $closures);
+        ($this->hooks['afterRequesting'] ??= collect())->push(...$closures);
         return $this;
     }
 
