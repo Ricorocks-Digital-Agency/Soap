@@ -17,12 +17,22 @@ class Soap
     protected $recordRequests = false;
     protected $recordedRequests = [];
     protected $stubCallbacks = [];
+    protected $globalHooks = [
+        'beforeRequesting' => [],
+        'afterRequesting' => [],
+    ];
+
+    public function __construct()
+    {
+        $this->beforeRequesting(fn($request) => $this->checkForMock($request));
+        $this->afterRequesting(fn($request, $response) => $this->record($request, $response));
+    }
 
     public function to(string $endpoint)
     {
         return app(Request::class)
-            ->beforeRequesting(fn($request) => $this->checkForMock($request))
-            ->afterRequesting(fn($request, $response) => $this->record($request, $response))
+            ->beforeRequesting(...$this->globalHooks['beforeRequesting'])
+            ->afterRequesting(...$this->globalHooks['afterRequesting'])
             ->to($endpoint);
     }
 
@@ -96,6 +106,18 @@ class Soap
 
             return $callable instanceof Closure ? $callable($request) : $callable;
         };
+    }
+
+    public function beforeRequesting(callable $hook)
+    {
+        $this->globalHooks['beforeRequesting'][] = $hook;
+        return $this;
+    }
+
+    public function afterRequesting(callable $hook)
+    {
+        $this->globalHooks['afterRequesting'][] = $hook;
+        return $this;
     }
 
     public function assertNothingSent()

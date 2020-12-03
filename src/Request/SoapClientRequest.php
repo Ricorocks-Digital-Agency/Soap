@@ -7,6 +7,7 @@ namespace RicorocksDigitalAgency\Soap\Request;
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 use RicorocksDigitalAgency\Soap\Parameters\Builder;
 use RicorocksDigitalAgency\Soap\Response\Response;
+use RicorocksDigitalAgency\Soap\Tests\GlobalHooksTest;
 use SoapClient;
 
 class SoapClientRequest implements Request
@@ -34,7 +35,7 @@ class SoapClientRequest implements Request
 
     public function __call($name, $parameters)
     {
-        return $this->call($name, $parameters[0]);
+        return $this->call($name, $parameters[0] ?? []);
     }
 
     public function call($method, $parameters = [])
@@ -45,7 +46,7 @@ class SoapClientRequest implements Request
         $response = $this->getResponse();
         collect($this->hooks['afterRequesting'])->each(fn($callback) => $callback($this, $response));
 
-        return $this->getResponse();
+        return $response;
     }
 
     protected function mergeInclusions($method, $parameters)
@@ -98,15 +99,15 @@ class SoapClientRequest implements Request
         return $this->client()->__getFunctions();
     }
 
-    public function beforeRequesting(callable $closure): Request
+    public function beforeRequesting(...$closures): Request
     {
-        $this->hooks['beforeRequesting'][] = $closure;
+        $this->hooks['beforeRequesting'] = array_merge($this->hooks['beforeRequesting'], $closures);
         return $this;
     }
 
-    public function afterRequesting(callable $closure): Request
+    public function afterRequesting(...$closures): Request
     {
-        $this->hooks['afterRequesting'][] = $closure;
+        $this->hooks['afterRequesting'] = array_merge($this->hooks['afterRequesting'], $closures);
         return $this;
     }
 
