@@ -1,13 +1,14 @@
 <?php
 
-namespace RicorocksDigitalAgency\Soap\Tests;
+namespace RicorocksDigitalAgency\Soap\Tests\Hooks;
 
 use Exception;
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 use RicorocksDigitalAgency\Soap\Response\Response;
+use RicorocksDigitalAgency\Soap\Tests\TestCase;
 
-class GlobalHooksTest extends TestCase {
-
+class GlobalHooksTest extends TestCase
+{
     public static $increment = 0;
 
     /** @test */
@@ -49,5 +50,4 @@ class GlobalHooksTest extends TestCase {
         parent::tearDown();
         static::$increment = 0;
     }
-
 }
