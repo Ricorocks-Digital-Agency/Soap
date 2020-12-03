@@ -36,7 +36,9 @@ class SoapFakeTest extends TestCase
         Soap::fake();
         Soap::fake(['http://foobar.com' => Response::new(['foo' => 'bar'])]);
         Soap::fake(['http://foobar.com/testing' => Response::new(['baz' => 'bam'])]);
+
         Soap::to('http://foobar.com')->call('Bob', ['intA' => 10, 'intB' => 20]);
+
         Soap::assertSent(fn($request, Response $response) => $response->response['foo'] === 'bar');
         Soap::assertSent(fn(Request $request, Response $response) => $request->getMethod() === 'Bob');
         Soap::assertNotSent(fn(Request $request, Response $response) => $request->getMethod() === 'Trudy');

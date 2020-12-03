@@ -40,20 +40,39 @@ class Fakery
     public function returnMockResponseIfAvailable(Request $request)
     {
         return $this->stubCallbacks
-            ->filter(fn(Stub $stub) => $stub->isForEndpoint($request->getEndpoint()))
-            ->when($request->getMethod(), fn($stubs) => $this->getStubsForMethod($stubs, $request->getMethod()))
-            ->sortByDesc('endpoint')
-            ->map
-            ->getResponse($request)
-            ->filter()
-            ->first();
+                ->pipe(fn($stubs) => $this->filterAndSortStubs($stubs, $request))
+                ->pipe(fn($stubs) => $this->getMockResponse($stubs, $request));
     }
 
-    protected function getStubsForMethod($stubs, $method)
+    protected function getMockResponse($stubs, Request $request)
     {
         return $stubs
-                ->filter(fn(Stub $stub) => $stub->isForMethod($method))
-                ->sortByDesc('methods');
+                ->map
+                ->getResponse($request)
+                ->filter()
+                ->first();
+    }
+
+    protected function filterAndSortStubs($stubs, Request $request)
+    {
+        return $stubs
+                ->filter(fn(Stub $stub) => $stub->isForEndpoint($request->getEndpoint()))
+                ->when(
+                    $request->getMethod(),
+                    fn($stubs) => $this->getStubsForMethod($stubs, $request),
+                    fn($stubs) => $stubs->sortByDesc('endpoint'),
+                );
+    }
+
+    protected function getStubsForMethod($stubs, $request)
+    {
+        return $stubs
+                ->filter(fn(Stub $stub) => $stub->isForMethod($request->getMethod()))
+                ->pipe(function ($stubs) {
+                    return $stubs->every->hasWildcardMethods()
+                    ? $stubs->sortByDesc('endpoint')
+                    : $stubs->sortByDesc('methods');
+                });
     }
 
     public function record(Request $request, Response $response)

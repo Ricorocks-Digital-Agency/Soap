@@ -54,8 +54,8 @@ class Stub
 
     protected function setEndpointAndMethods($endpoint)
     {
-        $this->endpoint = (string) Str::of($endpoint)->start('*')->replaceMatches("/:([\w\d|]+$)/", "");
-        $this->methods = (string) Str::of($endpoint)->afterLast(".")->match("/:([\w\d|]+$)/");
+        $this->endpoint = (string) Str::of($endpoint)->replaceMatches("/:([\w\d|]+$)/", "")->start('*');
+        $this->methods = (string) Str::of($endpoint)->afterLast(".")->match("/:([\w\d|]+$)/")->start('*');
     }
 
     public function isForEndpoint($endpoint)
@@ -69,5 +69,10 @@ class Stub
                 ->explode('|')
                 ->map(fn($availableMethod) => Str::start($availableMethod, '*'))
                 ->contains(fn($availableMethod) => Str::is($availableMethod, $method));
+    }
+
+    public function hasWildcardMethods()
+    {
+        return $this->methods == '*';
     }
 }
