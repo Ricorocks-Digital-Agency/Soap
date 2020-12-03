@@ -1,8 +1,6 @@
 <?php
 
-
 namespace RicorocksDigitalAgency\Soap\Tests\Fake;
-
 
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 use RicorocksDigitalAgency\Soap\Request\Request;
@@ -11,7 +9,6 @@ use RicorocksDigitalAgency\Soap\Tests\TestCase;
 
 class SoapFakeTest extends TestCase
 {
-
     /** @test */
     public function it_can_record_requests()
     {
@@ -28,6 +25,14 @@ class SoapFakeTest extends TestCase
         Soap::fake();
         Soap::to(self::EXAMPLE_SOAP_ENDPOINT)->call('Bob', ['intA' => 10, 'intB' => 20]);
         Soap::assertSentCount(1);
+    }
+
+    /** @test */
+    public function calling_fake_with_no_paramaters_returns_a_new_response()
+    {
+        Soap::fake();
+        Soap::to(self::EXAMPLE_SOAP_ENDPOINT)->call('Bob', ['intA' => 10, 'intB' => 20]);
+        Soap::assertSent(fn(Request $request, Response $response) => $response->response == []);
     }
 
     /** @test */
