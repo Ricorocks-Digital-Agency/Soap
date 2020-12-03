@@ -10,11 +10,11 @@ class Fakery
 {
     protected $shouldRecord = false;
     protected $recordedRequests;
-    protected $stubCallbacks;
+    protected Stubs $stubs;
 
-    public function __construct()
+    public function __construct(Stubs $stubs)
     {
-        $this->stubCallbacks = collect();
+        $this->stubs = $stubs;
     }
 
     public function fake($callback = null)
@@ -22,57 +22,19 @@ class Fakery
         $this->shouldRecord = true;
 
         if (is_null($callback)) {
-            $this->newStub('*', fn() => Response::new());
+            $this->stubs->new('*', fn() => Response::new());
             return;
         }
 
         if (is_array($callback)) {
-            collect($callback)->each(fn($callable, $url) => $this->newStub($url, $callable));
+            collect($callback)->each(fn($callable, $url) => $this->stubs->new($url, $callable));
             return;
         }
     }
 
-    protected function newStub($url, $callback)
-    {
-        $this->stubCallbacks->push(Stub::for($url)->respondWith($callback));
-    }
-
     public function returnMockResponseIfAvailable(Request $request)
     {
-        return $this->stubCallbacks
-                ->pipe(fn($stubs) => $this->filterAndSortStubs($stubs, $request))
-                ->pipe(fn($stubs) => $this->getMockResponse($stubs, $request));
-    }
-
-    protected function getMockResponse($stubs, Request $request)
-    {
-        return $stubs
-                ->map
-                ->getResponse($request)
-                ->filter()
-                ->first();
-    }
-
-    protected function filterAndSortStubs($stubs, Request $request)
-    {
-        return $stubs
-                ->filter(fn(Stub $stub) => $stub->isForEndpoint($request->getEndpoint()))
-                ->when(
-                    $request->getMethod(),
-                    fn($stubs) => $this->getStubsForMethod($stubs, $request),
-                    fn($stubs) => $stubs->sortByDesc('endpoint'),
-                );
-    }
-
-    protected function getStubsForMethod($stubs, $request)
-    {
-        return $stubs
-                ->filter(fn(Stub $stub) => $stub->isForMethod($request->getMethod()))
-                ->pipe(function ($stubs) {
-                    return $stubs->every->hasWildcardMethods()
-                    ? $stubs->sortByDesc('endpoint')
-                    : $stubs->sortByDesc('methods');
-                });
+        return $this->stubs->getForRequest($request);
     }
 
     public function record(Request $request, Response $response)
