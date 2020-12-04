@@ -1,16 +1,14 @@
 <?php
 
-
-namespace RicorocksDigitalAgency\Soap\Tests;
-
+namespace RicorocksDigitalAgency\Soap\Tests\Fake;
 
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 use RicorocksDigitalAgency\Soap\Request\Request;
 use RicorocksDigitalAgency\Soap\Response\Response;
+use RicorocksDigitalAgency\Soap\Tests\TestCase;
 
 class SoapFakeTest extends TestCase
 {
-
     /** @test */
     public function it_can_record_requests()
     {
@@ -30,12 +28,22 @@ class SoapFakeTest extends TestCase
     }
 
     /** @test */
+    public function calling_fake_with_no_paramaters_returns_a_new_response()
+    {
+        Soap::fake();
+        Soap::to(self::EXAMPLE_SOAP_ENDPOINT)->call('Bob', ['intA' => 10, 'intB' => 20]);
+        Soap::assertSent(fn(Request $request, Response $response) => $response->response == []);
+    }
+
+    /** @test */
     public function it_can_fake_specific_endpoints()
     {
         Soap::fake();
         Soap::fake(['http://foobar.com' => Response::new(['foo' => 'bar'])]);
         Soap::fake(['http://foobar.com/testing' => Response::new(['baz' => 'bam'])]);
+
         Soap::to('http://foobar.com')->call('Bob', ['intA' => 10, 'intB' => 20]);
+
         Soap::assertSent(fn($request, Response $response) => $response->response['foo'] === 'bar');
         Soap::assertSent(fn(Request $request, Response $response) => $request->getMethod() === 'Bob');
         Soap::assertNotSent(fn(Request $request, Response $response) => $request->getMethod() === 'Trudy');
@@ -103,45 +111,6 @@ class SoapFakeTest extends TestCase
                     'intA' => 30,
                     'intB' => 40
                 ] && $response->response === ['baz' => 'english dear']
-        );
-    }
-
-    /** @test */
-    public function it_can_handle_methods()
-    {
-        Soap::fake(['http://foobar.com' => Response::new(['baz' => 'boom'])]);
-        Soap::fake(['http://foobar.com:Add' => Response::new(['foo' => 'bar'])]);
-
-        Soap::to('http://foobar.com')->call('Add', ['intA' => 10, 'intB' => 20]);
-
-        Soap::assertSent(
-            fn($request, $response) => $request->getMethod() == 'Add' && $response->response == ['foo' => 'bar']
-        );
-    }
-
-    /** @test */
-    public function it_can_handle_multiple_methods_declared_by_a_pipe_operator()
-    {
-        Soap::fake(['http://foobar.com:Multiply|Divide' => Response::new(['baz' => 'boom'])]);
-        Soap::fake(['http://foobar.com:Add|Subtract' => Response::new(['foo' => 'bar'])]);
-
-        Soap::to('http://foobar.com')->call('Add', ['intA' => 10, 'intB' => 20]);
-        Soap::to('http://foobar.com')->Subtract(['intA' => 10, 'intB' => 20]);
-
-        Soap::to('http://foobar.com')->Multiply(['intA' => 10, 'intB' => 20]);
-        Soap::to('http://foobar.com')->Divide(['intA' => 10, 'intB' => 20]);
-
-        Soap::assertSent(
-            fn($request, $response) => $request->getMethod() == 'Add' && $response->response == ['foo' => 'bar']
-        );
-        Soap::assertSent(
-            fn($request, $response) => $request->getMethod() == 'Subtract' && $response->response == ['foo' => 'bar']
-        );
-        Soap::assertSent(
-            fn($request, $response) => $request->getMethod() == 'Multiply' && $response->response == ['baz' => 'boom']
-        );
-        Soap::assertSent(
-            fn($request, $response) => $request->getMethod() == 'Divide' && $response->response == ['baz' => 'boom']
         );
     }
 }

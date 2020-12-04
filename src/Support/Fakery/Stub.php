@@ -8,16 +8,15 @@ use RicorocksDigitalAgency\Soap\Request\Request;
 
 class Stub
 {
+    const REGEX_PATTERN = "/:([\w\d|]+$)/";
+
     public $endpoint;
     public $methods;
     public $callback;
 
     public static function for($endpoint): self
     {
-        $instance = app(self::class);
-        $instance->register($endpoint);
-
-        return $instance;
+        return tap(new static, fn($instance) => $instance->register($endpoint));
     }
 
     public function respondWith($callback): self
@@ -36,31 +35,13 @@ class Stub
 
     protected function register($endpoint)
     {
-        $this->endpointIsWildcard($endpoint)
-            ? $this->setWildcardEndpointAndMethods()
-            : $this->setEndpointAndMethods($endpoint);
-    }
-
-    protected function endpointIsWildcard($endpoint)
-    {
-        return $endpoint == '*';
-    }
-
-    protected function setWildcardEndpointAndMethods()
-    {
-        $this->endpoint = '*';
-        $this->methods = '*';
-    }
-
-    protected function setEndpointAndMethods($endpoint)
-    {
-        $this->endpoint = (string) Str::of($endpoint)->start('*')->replaceMatches("/:([\w\d|]+$)/", "");
-        $this->methods = (string) Str::of($endpoint)->afterLast(".")->match("/:([\w\d|]+$)/");
+        $this->endpoint = Str::of($endpoint)->replaceMatches(self::REGEX_PATTERN, "")->start('*')->__toString();
+        $this->methods = Str::of($endpoint)->afterLast(".")->match(self::REGEX_PATTERN)->start('*')->__toString();
     }
 
     public function isForEndpoint($endpoint)
     {
-        return Str::is($this->endpoint, '*') || Str::is($this->endpoint, $endpoint);
+        return Str::is($this->endpoint, $endpoint);
     }
 
     public function isForMethod($method)
@@ -69,5 +50,10 @@ class Stub
                 ->explode('|')
                 ->map(fn($availableMethod) => Str::start($availableMethod, '*'))
                 ->contains(fn($availableMethod) => Str::is($availableMethod, $method));
+    }
+
+    public function hasWildcardMethods()
+    {
+        return Str::is($this->methods, '*');
     }
 }

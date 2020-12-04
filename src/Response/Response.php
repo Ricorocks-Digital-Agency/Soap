@@ -1,13 +1,12 @@
 <?php
 
-
 namespace RicorocksDigitalAgency\Soap\Response;
-
 
 class Response
 {
     public $response;
-    public $xmlRequest = null, $xmlResponse = null;
+    public $xmlRequest = null;
+    public $xmlResponse = null;
 
     public static function new($response = []): self
     {
@@ -25,5 +24,4 @@ class Response
         $this->xmlResponse = $xmlResponse;
         return $this;
     }
-
 }

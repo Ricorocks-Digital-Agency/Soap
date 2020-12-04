@@ -1,12 +1,11 @@
 <?php
 
-
-namespace RicorocksDigitalAgency\Soap\Tests;
-
+namespace RicorocksDigitalAgency\Soap\Tests\Building;
 
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 use RicorocksDigitalAgency\Soap\Parameters\Builder;
 use RicorocksDigitalAgency\Soap\Parameters\IntelligentBuilder;
+use RicorocksDigitalAgency\Soap\Tests\TestCase;
 
 class IntelligentBuilderTest extends TestCase
 {

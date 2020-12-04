@@ -1,19 +1,20 @@
 <?php
 
-namespace RicorocksDigitalAgency\Soap\Tests;
+namespace RicorocksDigitalAgency\Soap\Tests\Hooks;
 
 use Exception;
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 use RicorocksDigitalAgency\Soap\Response\Response;
+use RicorocksDigitalAgency\Soap\Tests\TestCase;
 
-class GlobalHooksTest extends TestCase {
-
+class GlobalHooksTest extends TestCase
+{
     public static $increment = 0;
 
     /** @test */
     public function it_can_perform_global_before_requesting_hooks()
     {
-        Soap::fake(['http://endpoint.com' => new Response(), 'http://foobar.com' => new Response()]);
+        Soap::fake(['http://endpoint.com' => Response::new(), 'http://foobar.com' => Response::new()]);
 
         Soap::beforeRequesting(fn() => static::$increment++);
 
@@ -26,7 +27,7 @@ class GlobalHooksTest extends TestCase {
     /** @test */
     public function it_can_perform_global_after_requesting_hooks()
     {
-        Soap::fake(['http://endpoint.com' => new Response(), 'http://foobar.com' => new Response()]);
+        Soap::fake(['http://endpoint.com' => Response::new(), 'http://foobar.com' => Response::new()]);
 
         Soap::afterRequesting(fn() => static::$increment++);
 
@@ -49,5 +50,4 @@ class GlobalHooksTest extends TestCase {
         parent::tearDown();
         static::$increment = 0;
     }
-
 }

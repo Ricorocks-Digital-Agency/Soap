@@ -1,8 +1,6 @@
 <?php
 
-
 namespace RicorocksDigitalAgency\Soap;
-
 
 class Inclusion
 {
@@ -34,5 +32,4 @@ class Inclusion
     {
         return $this->parameters;
     }
-
 }

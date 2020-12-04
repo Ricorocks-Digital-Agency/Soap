@@ -8,11 +8,9 @@ use RicorocksDigitalAgency\Soap\Parameters\IntelligentBuilder;
 use RicorocksDigitalAgency\Soap\Request\Request;
 use RicorocksDigitalAgency\Soap\Request\SoapClientRequest;
 use RicorocksDigitalAgency\Soap\Soap;
-use RicorocksDigitalAgency\Soap\Support\Fakery\Fakery;
 
 class SoapServiceProvider extends ServiceProvider
 {
-
     public function register()
     {
         $this->app->singleton('soap', fn() => app(Soap::class));
@@ -24,5 +22,4 @@ class SoapServiceProvider extends ServiceProvider
     {
         require_once __DIR__ . '/../helpers.php';
     }
-
 }
