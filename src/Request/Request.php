@@ -2,6 +2,8 @@
 
 namespace RicorocksDigitalAgency\Soap\Request;
 
+use RicorocksDigitalAgency\Soap\Response\Response;
+
 interface Request
 {
     public function to(string $endpoint): self;
@@ -19,9 +21,16 @@ interface Request
 
     public function afterRequesting(...$closures): self;
 
+    /**
+     * @param callable|Response|null $response
+     */
+    public function fakeUsing($response): self;
+
     public function getEndpoint();
 
     public function getMethod();
 
     public function getBody();
+
+    public function set($key, $value): self;
 }

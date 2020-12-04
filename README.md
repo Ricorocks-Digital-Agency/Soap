@@ -14,6 +14,7 @@ A Laravel SOAP client that provides a clean interface for handling requests and 
     * [Call](#call)
         * [Parameters](#parameters)
             * [Nodes](#nodes)
+- [Hooks](#hooks)
 - [Faking](#faking)            
 - [Configuration](#configuration)
     * [Include](#include)
@@ -151,6 +152,8 @@ A node can be made with either the Facade `Soap::node()` or the helper method `s
 Hooks allow you to perform actions before and after Soap makes a request.
 These hooks can be local (per request), or global (applied to every request).
 
+You can make changes to the `Request` object in `beforeRequesting` hooks if you wish. These changes will be reflected in the actual request. In fact, this is how the Soap `include` functionality works.
+
 ### Local
 
 To create a local hook, chain `beforeRequesting` or `afterRequesting` to a `Request` object:
@@ -250,7 +253,11 @@ Parameters can be set to be included with specific endpoints. These can be `arra
 Soap::include(['credentials' => soap_node(['user' => '...', 'password' => '...'])])->for('...');
 ```
 
-Inclusions will be included at the root of the request body.
+You can even use dot syntax on your array keys to permeate deeper into the request body.
+
+```php
+Soap::include(['login.credentials' => soap_node(['user' => '...', 'password' => '...'])])->for('...');
+``` 
 
 
 ### Changelog

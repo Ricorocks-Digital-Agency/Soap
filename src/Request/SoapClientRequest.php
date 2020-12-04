@@ -2,7 +2,6 @@
 
 namespace RicorocksDigitalAgency\Soap\Request;
 
-use RicorocksDigitalAgency\Soap\Facades\Soap;
 use RicorocksDigitalAgency\Soap\Parameters\Builder;
 use RicorocksDigitalAgency\Soap\Response\Response;
 use SoapClient;
@@ -11,9 +10,10 @@ class SoapClientRequest implements Request
 {
     protected string $endpoint;
     protected string $method;
-    protected $body;
+    protected $body = [];
     protected SoapClient $client;
     protected Builder $builder;
+    protected Response $response;
     protected $hooks = [];
 
     public function __construct(Builder $builder)
@@ -35,7 +35,10 @@ class SoapClientRequest implements Request
     public function call($method, $parameters = [])
     {
         $this->method = $method;
-        $this->body = $this->builder->handle($this->mergeInclusions($method, $parameters));
+        $this->body = $parameters;
+
+        $this->hooks['beforeRequesting']->each(fn($callback) => $callback($this));
+        $this->body = $this->builder->handle($this->body);
 
         $response = $this->getResponse();
         $this->hooks['afterRequesting']->each(fn($callback) => $callback($this, $response));
@@ -43,36 +46,10 @@ class SoapClientRequest implements Request
         return $response;
     }
 
-    protected function mergeInclusions($method, $parameters)
-    {
-        return Soap::inclusionsFor($this->endpoint, $method)
-            ->flatMap
-            ->getParameters()
-            ->merge($parameters)
-            ->toArray();
-    }
-
     protected function getResponse()
     {
-        return $this->runBeforeRequestingHooks()
-            ?? Response::new($this->makeRequest())
-                ->withXml($this->client()->__getLastRequest(), $this->client()->__getLastResponse());
-    }
-
-    /**
-     * @return Response|void
-     */
-    protected function runBeforeRequestingHooks()
-    {
-        return $this->hooks['beforeRequesting']
-            ->map(fn($callback) => $callback($this))
-            ->filter(fn($result) => $result instanceof Response)
-            ->first();
-    }
-
-    public function getMethod()
-    {
-        return $this->method;
+        return $this->response ??= Response::new($this->makeRequest())
+            ->withXml($this->client()->__getLastRequest(), $this->client()->__getLastResponse());
     }
 
     protected function makeRequest()
@@ -83,6 +60,11 @@ class SoapClientRequest implements Request
     protected function client()
     {
         return $this->client ??= new SoapClient($this->endpoint, ['trace' => true]);
+    }
+
+    public function getMethod()
+    {
+        return $this->method;
     }
 
     public function getBody()
@@ -110,5 +92,21 @@ class SoapClientRequest implements Request
     public function getEndpoint()
     {
         return $this->endpoint;
+    }
+
+    public function fakeUsing($response): Request
+    {
+        if (empty($response)) {
+            return $this;
+        }
+
+        $this->response = $response instanceof Response ? $response : $response($this);
+        return $this;
+    }
+
+    public function set($key, $value): Request
+    {
+        data_set($this->body, $key, $value);
+        return $this;
     }
 }

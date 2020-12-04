@@ -32,7 +32,7 @@ class Fakery
         }
     }
 
-    public function returnMockResponseIfAvailable(Request $request)
+    public function mockResponseIfAvailable(Request $request)
     {
         return $this->stubs->getForRequest($request);
     }

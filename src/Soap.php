@@ -18,7 +18,8 @@ class Soap
     public function __construct(Fakery $fakery)
     {
         $this->fakery = $fakery;
-        $this->beforeRequesting(fn($request) => $this->fakery->returnMockResponseIfAvailable($request));
+        $this->beforeRequesting(fn($request) => $request->fakeUsing($this->fakery->mockResponseIfAvailable($request)));
+        $this->beforeRequesting(fn($request) => $this->mergeInclusionsFor($request));
         $this->afterRequesting(fn($request, $response) => $this->record($request, $response));
     }
 
@@ -42,9 +43,14 @@ class Soap
         return $inclusion;
     }
 
-    public function inclusionsFor(string $endpoint, $method = null)
+    protected function mergeInclusionsFor(Request $request)
     {
-        return collect($this->inclusions)->filter->matches($endpoint, $method);
+        collect($this->inclusions)
+            ->filter
+            ->matches($request->getEndpoint(), $request->getMethod())
+            ->flatMap
+            ->getParameters()
+            ->each(fn($value, $key) => $request->set($key, $value));
     }
 
     public function beforeRequesting(callable $hook)

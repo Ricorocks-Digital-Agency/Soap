@@ -4,6 +4,7 @@ namespace RicorocksDigitalAgency\Soap\Tests\Hooks;
 
 use Exception;
 use RicorocksDigitalAgency\Soap\Facades\Soap;
+use RicorocksDigitalAgency\Soap\Request\Request;
 use RicorocksDigitalAgency\Soap\Response\Response;
 use RicorocksDigitalAgency\Soap\Tests\TestCase;
 
@@ -43,6 +44,18 @@ class GlobalHooksTest extends TestCase
         $this->expectException(Exception::class);
         Soap::beforeRequesting(function() { throw new Exception("Yippee! We hit this instead"); });
         Soap::to('http://endpoint.com')->Test();
+    }
+
+    /** @test */
+    public function the_beforeRequesting_hooks_can_transform_the_request_object()
+    {
+        Soap::fake();
+
+        Soap::beforeRequesting(fn(Request $request) => $request->set('hello.world', ['foo', 'bar']));
+        Soap::beforeRequesting(fn(Request $request) => $request->set('hello.person', 'Richard'));
+        Soap::to('http://endpoint.com')->Test();
+
+        Soap::assertSent(fn($request) => $request->getBody()['hello'] === ['world' => ['foo', 'bar'], 'person' => 'Richard']);
     }
 
     protected function tearDown(): void

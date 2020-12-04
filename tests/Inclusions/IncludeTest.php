@@ -17,7 +17,7 @@ class IncludeTest extends TestCase
             ->once()
             ->withArgs(
                 function ($parameters) {
-                    return $parameters ===
+                    return $parameters ==
                         [
                             'intA' => 10,
                             'intB' => 25
@@ -38,14 +38,11 @@ class IncludeTest extends TestCase
             ->once()
             ->withArgs(
                 function ($parameters) {
-                    return $parameters ===
+                    return $parameters ==
                         [
-                            'foo' => [
-                                "_" => "",
-                                'foo' => 'bar'
-                            ],
                             'intA' => 10,
-                            'intB' => 25
+                            'intB' => 25,
+                            'foo' => soap_node(['foo' => 'bar'])
                         ];
                 }
             );
@@ -63,7 +60,7 @@ class IncludeTest extends TestCase
             ->once()
             ->withArgs(
                 function ($parameters) {
-                    return $parameters ===
+                    return $parameters ==
                         [
                             'intA' => 10,
                             'intB' => 25
@@ -73,5 +70,15 @@ class IncludeTest extends TestCase
 
         Soap::include(['foo' => soap_node(['foo' => 'bar'])])->for(static::EXAMPLE_SOAP_ENDPOINT, 'Bar');
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->call('Add', (['intA' => 10, 'intB' => 25]));
+    }
+
+    /** @test */
+    public function inclusions_can_be_placed_further_down_the_tree_using_dot_syntax()
+    {
+        Soap::fake();
+        Soap::include(['foo.bar' => 'Hello World'])->for(static::EXAMPLE_SOAP_ENDPOINT, 'Bar');
+        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->call('Bar', (['foo' => ['baz' => 'cool']]));
+
+        Soap::assertSent(fn($request) => $request->getBody() == ['foo' => ['baz' => 'cool', 'bar' => 'Hello World']]);
     }
 }

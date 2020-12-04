@@ -79,6 +79,19 @@ class LocalHooksTest extends TestCase
             ->Test();
     }
 
+    /** @test */
+    public function the_beforeRequesting_hooks_can_transform_the_request_object()
+    {
+        Soap::fake();
+
+        Soap::to('http://endpoint.com')
+            ->beforeRequesting(fn(Request $request) => $request->set('hello.world', ['foo', 'bar']))
+            ->beforeRequesting(fn(Request $request) => $request->set('hello.person', 'Richard'))
+            ->Test();
+
+        Soap::assertSent(fn($request) => $request->getBody()['hello'] === ['world' => ['foo', 'bar'], 'person' => 'Richard']);
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
