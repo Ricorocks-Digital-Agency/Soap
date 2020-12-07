@@ -58,6 +58,18 @@ class GlobalHooksTest extends TestCase
         Soap::assertSent(fn($request) => $request->getBody()['hello'] === ['world' => ['foo', 'bar'], 'person' => 'Richard']);
     }
 
+    /** @test */
+    public function the_afterRequesting_hooks_can_transform_the_response_object()
+    {
+        Soap::fake();
+
+        Soap::afterRequesting(fn($request, Response $response) => $response->set('hello.world', ['foo', 'bar']));
+        Soap::afterRequesting(fn($request, Response $response) => $response->set('hello.person', 'Richard'));
+        Soap::to('http://endpoint.com')->Test();
+
+        Soap::assertSent(fn($request, Response $response) => $response->response['hello'] === ['world' => ['foo', 'bar'], 'person' => 'Richard']);
+    }
+
     protected function tearDown(): void
     {
         parent::tearDown();
