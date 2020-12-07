@@ -24,4 +24,10 @@ class Response
         $this->xmlResponse = $xmlResponse;
         return $this;
     }
+
+    public function set($key, $value): self
+    {
+        data_set($this->response, $key, $value);
+        return $this;
+    }
 }
