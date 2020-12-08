@@ -3,6 +3,7 @@
 namespace RicorocksDigitalAgency\Soap;
 
 use Illuminate\Support\Traits\ForwardsCalls;
+use Illuminate\Support\Traits\Macroable;
 use RicorocksDigitalAgency\Soap\Parameters\Node;
 use RicorocksDigitalAgency\Soap\Request\Request;
 use RicorocksDigitalAgency\Soap\Support\Fakery\Fakery;
@@ -10,6 +11,9 @@ use RicorocksDigitalAgency\Soap\Support\Fakery\Fakery;
 class Soap
 {
     use ForwardsCalls;
+    use Macroable {
+        __call as __macroableCall;
+    }
 
     protected Fakery $fakery;
     protected $inclusions = [];
@@ -67,6 +71,10 @@ class Soap
 
     public function __call($method, $parameters)
     {
+        if (static::hasMacro($method)) {
+            return $this->__macroableCall($method, $parameters);
+        }
+
         return $this->forwardCallTo($this->fakery, $method, $parameters);
     }
 }
