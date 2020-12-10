@@ -5,14 +5,13 @@ namespace RicorocksDigitalAgency\Soap\Request;
 use RicorocksDigitalAgency\Soap\Parameters\Builder;
 use RicorocksDigitalAgency\Soap\Response\Response;
 use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
-use SoapClient;
 
 class SoapClientRequest implements Request
 {
     protected string $endpoint;
     protected string $method;
     protected $body = [];
-    protected SoapClient $client;
+    protected $client;
     protected Builder $builder;
     protected Response $response;
     protected $hooks = [];
@@ -76,7 +75,7 @@ class SoapClientRequest implements Request
 
     protected function client()
     {
-        return $this->client ??= new SoapClient($this->endpoint, ['trace' => $this->shouldTrace]);
+        return $this->client ??= app(\SoapClient::class, ['wsdl' => $this->endpoint, 'options' => ['trace' => $this->shouldTrace]]);
     }
 
     public function getMethod()
