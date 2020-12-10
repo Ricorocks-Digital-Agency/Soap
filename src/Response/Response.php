@@ -7,8 +7,6 @@ use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
 class Response
 {
     public $response;
-    public $xmlRequest = null;
-    public $xmlResponse = null;
     protected Trace $trace;
 
     public static function new($response = []): self
@@ -19,13 +17,6 @@ class Response
     public function __get($name)
     {
         return data_get($this->response, $name);
-    }
-
-    public function withXml($xmlRequest, $xmlResponse)
-    {
-        $this->xmlRequest = $xmlRequest;
-        $this->xmlResponse = $xmlResponse;
-        return $this;
     }
 
     public function setTrace(Trace $trace)
