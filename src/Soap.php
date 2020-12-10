@@ -69,6 +69,12 @@ class Soap
         return $this;
     }
 
+    public function trace($shouldTrace = true)
+    {
+        $this->beforeRequesting(fn($request) => $request->trace($shouldTrace));
+        return $this;
+    }
+
     public function __call($method, $parameters)
     {
         if (static::hasMacro($method)) {

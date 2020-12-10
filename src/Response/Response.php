@@ -2,11 +2,12 @@
 
 namespace RicorocksDigitalAgency\Soap\Response;
 
+use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
+
 class Response
 {
     public $response;
-    public $xmlRequest = null;
-    public $xmlResponse = null;
+    protected Trace $trace;
 
     public static function new($response = []): self
     {
@@ -18,11 +19,15 @@ class Response
         return data_get($this->response, $name);
     }
 
-    public function withXml($xmlRequest, $xmlResponse)
+    public function setTrace(Trace $trace)
     {
-        $this->xmlRequest = $xmlRequest;
-        $this->xmlResponse = $xmlResponse;
+        $this->trace = $trace;
         return $this;
+    }
+
+    public function trace()
+    {
+        return $this->trace ??= app(Trace::class);
     }
 
     public function set($key, $value): self

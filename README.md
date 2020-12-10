@@ -14,8 +14,9 @@ A Laravel SOAP client that provides a clean interface for handling requests and 
     * [Call](#call)
         * [Parameters](#parameters)
             * [Nodes](#nodes)
+- [Tracing](#Tracing)
 - [Hooks](#hooks)
-- [Faking](#faking)            
+- [Faking](#faking)
 - [Configuration](#configuration)
     * [Include](#include)
 
@@ -147,6 +148,24 @@ Now, just by adding or removing a body to the `soap_node()` the outputted array 
 
 A node can be made with either the Facade `Soap::node()` or the helper method `soap_node()`.
 
+## Tracing
+Soap allows you to easily trace your interactions with the SOAP endpoint being accessed.
+
+To trace all requests, set the following in the register method of your `ServiceProvider`:
+
+```php
+Soap::trace()
+```
+Now, all `Response` objects returned will have a `Trace` object attached, accessible via `$response->getTrace()`. This has two properties `xmlRequest` and `xmlResponse` - storing the raw XML values for each.
+
+Tracing can also be declared locally:
+```php
+Soap::to('...')->trace()->call('...')
+```
+Now, just this `Response` will have a valid `Trace`.
+
+Tracing is null safe. If `$response->getTrace()` is called when a `Trace` hasn't been set, a new `Trace` is returned. This `Trace`'s properties will all return `null`.
+
 ## Hooks
 
 Hooks allow you to perform actions before and after Soap makes a request.
@@ -225,20 +244,20 @@ you can use this method, passing in the desired count as a parameter.
 
 #### `Soap::assertSent(callable $callback)`
 
-You can dive a little deeper and test that a particular request was 
+You can dive a little deeper and test that a particular request was
 actually sent, and that it returned the expected response. You should
 pass a closure into this method, which receives the `$request` and `$response` as parameters, and return `true` if they match your
 expectations.
 
 #### `Soap::assertNotSent(callable $callback)`
 
-This is the opposite of `Soap::assertSent`. You can make sure that a 
+This is the opposite of `Soap::assertSent`. You can make sure that a
 particular request wasn't made. Again, returning `true` from the
 closure will cause it to pass.
 
 #### `Soap::assertNothingSent()`
 
-If you just want to make sure that absolutely nothing was sent out, you 
+If you just want to make sure that absolutely nothing was sent out, you
 can call this. It does what it says on the tin.
 
 ## Configuration
@@ -257,7 +276,7 @@ You can even use dot syntax on your array keys to permeate deeper into the reque
 
 ```php
 Soap::include(['login.credentials' => soap_node(['user' => '...', 'password' => '...'])])->for('...');
-``` 
+```
 
 
 ### Changelog

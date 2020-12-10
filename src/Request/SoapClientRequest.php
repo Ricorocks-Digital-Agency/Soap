@@ -4,17 +4,18 @@ namespace RicorocksDigitalAgency\Soap\Request;
 
 use RicorocksDigitalAgency\Soap\Parameters\Builder;
 use RicorocksDigitalAgency\Soap\Response\Response;
-use SoapClient;
+use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
 
 class SoapClientRequest implements Request
 {
     protected string $endpoint;
     protected string $method;
     protected $body = [];
-    protected SoapClient $client;
+    protected $client;
     protected Builder $builder;
     protected Response $response;
     protected $hooks = [];
+    protected $shouldTrace = false;
 
     public function __construct(Builder $builder)
     {
@@ -48,8 +49,23 @@ class SoapClientRequest implements Request
 
     protected function getResponse()
     {
-        return $this->response ??= Response::new($this->makeRequest())
-            ->withXml($this->client()->__getLastRequest(), $this->client()->__getLastResponse());
+        return $this->response ??= $this->getRealResponse();
+    }
+
+    protected function getRealResponse()
+    {
+        return tap(
+            Response::new($this->makeRequest()),
+            fn($response) => $this->shouldTrace ? $this->addTrace($response) : $response
+        );
+    }
+
+    protected function addTrace($response)
+    {
+        return $response->setTrace(
+            Trace::thisXmlRequest($this->client()->__getLastRequest())
+                ->thisXmlResponse($this->client()->__getLastResponse())
+        );
     }
 
     protected function makeRequest()
@@ -59,7 +75,7 @@ class SoapClientRequest implements Request
 
     protected function client()
     {
-        return $this->client ??= new SoapClient($this->endpoint, ['trace' => true]);
+        return $this->client ??= app(\SoapClient::class, ['wsdl' => $this->endpoint, 'options' => ['trace' => $this->shouldTrace]]);
     }
 
     public function getMethod()
@@ -107,6 +123,12 @@ class SoapClientRequest implements Request
     public function set($key, $value): Request
     {
         data_set($this->body, $key, $value);
+        return $this;
+    }
+
+    public function trace($shouldTrace = true): Request
+    {
+        $this->shouldTrace = $shouldTrace;
         return $this;
     }
 }
