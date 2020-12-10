@@ -55,12 +55,14 @@ class SoapClientRequest implements Request
 
     protected function getRealResponse()
     {
-        $response = Response::new($this->makeRequest());
+        return tap(
+            Response::new($this->makeRequest()),
+            fn($response) => $this->shouldTrace ? $this->addTrace($response) : $response
+        );
+    }
 
-        if (!$this->shouldTrace) {
-            return $response;
-        }
-
+    protected function addTrace($response)
+    {
         return $response->setTrace(
             Trace::thisXmlRequest($this->client()->__getLastRequest())
                 ->thisXmlResponse($this->client()->__getLastResponse())

@@ -18,7 +18,6 @@ class Soap
     protected Fakery $fakery;
     protected $inclusions = [];
     protected $globalHooks = [];
-    protected $shouldTrace = false;
 
     public function __construct(Fakery $fakery)
     {
@@ -31,7 +30,6 @@ class Soap
     public function to(string $endpoint)
     {
         return app(Request::class)
-            ->trace($this->shouldTrace)
             ->beforeRequesting(...$this->globalHooks['beforeRequesting'])
             ->afterRequesting(...$this->globalHooks['afterRequesting'])
             ->to($endpoint);
@@ -73,7 +71,7 @@ class Soap
 
     public function trace($shouldTrace = true)
     {
-        $this->shouldTrace = $shouldTrace;
+        $this->beforeRequesting(fn($request) => $request->trace($shouldTrace));
         return $this;
     }
 
