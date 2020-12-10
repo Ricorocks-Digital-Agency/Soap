@@ -4,6 +4,7 @@ namespace RicorocksDigitalAgency\Soap\Request;
 
 use RicorocksDigitalAgency\Soap\Parameters\Builder;
 use RicorocksDigitalAgency\Soap\Response\Response;
+use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
 use SoapClient;
 
 class SoapClientRequest implements Request
@@ -15,6 +16,7 @@ class SoapClientRequest implements Request
     protected Builder $builder;
     protected Response $response;
     protected $hooks = [];
+    protected $shouldTrace = false;
 
     public function __construct(Builder $builder)
     {
@@ -48,8 +50,21 @@ class SoapClientRequest implements Request
 
     protected function getResponse()
     {
-        return $this->response ??= Response::new($this->makeRequest())
-            ->withXml($this->client()->__getLastRequest(), $this->client()->__getLastResponse());
+        return $this->response ??= $this->getRealResponse();
+    }
+
+    protected function getRealResponse()
+    {
+        $response = Response::new($this->makeRequest());
+
+        if (!$this->shouldTrace) {
+            return $response;
+        }
+
+        return $response->setTrace(
+            Trace::thisXmlRequest($this->client()->__getLastRequest())
+                ->thisXmlResponse($this->client()->__getLastResponse())
+        );
     }
 
     protected function makeRequest()
@@ -59,7 +74,7 @@ class SoapClientRequest implements Request
 
     protected function client()
     {
-        return $this->client ??= new SoapClient($this->endpoint, ['trace' => true]);
+        return $this->client ??= new SoapClient($this->endpoint, ['trace' => $this->shouldTrace]);
     }
 
     public function getMethod()
@@ -107,6 +122,12 @@ class SoapClientRequest implements Request
     public function set($key, $value): Request
     {
         data_set($this->body, $key, $value);
+        return $this;
+    }
+
+    public function trace(): Request
+    {
+        $this->shouldTrace = true;
         return $this;
     }
 }

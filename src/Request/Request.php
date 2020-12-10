@@ -33,4 +33,6 @@ interface Request
     public function getBody();
 
     public function set($key, $value): self;
+
+    public function trace(): self;
 }
