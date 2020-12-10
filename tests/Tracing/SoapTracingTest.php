@@ -22,6 +22,20 @@ class SoapTracingTest extends TestCase
     }
 
     /** @test */
+    public function a_trace_can_be_requested_globally()
+    {
+        $this->markTestSkipped('This makes a real API call');
+
+        Soap::trace();
+
+        $response = Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
+                        ->call('Add', ['intA' => 10, 'intB' => 25]);
+
+        $this->assertNotEmpty($response->trace()->xmlRequest);
+        $this->assertNotEmpty($response->trace()->xmlResponse);
+    }
+
+    /** @test */
     public function by_default_the_trace_has_no_content_on_the_response()
     {
         Soap::fake();

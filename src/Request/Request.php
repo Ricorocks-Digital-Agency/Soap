@@ -34,5 +34,5 @@ interface Request
 
     public function set($key, $value): self;
 
-    public function trace(): self;
+    public function trace($shouldTrace = true): self;
 }

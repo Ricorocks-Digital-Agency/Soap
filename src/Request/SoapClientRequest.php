@@ -125,9 +125,9 @@ class SoapClientRequest implements Request
         return $this;
     }
 
-    public function trace(): Request
+    public function trace($shouldTrace = true): Request
     {
-        $this->shouldTrace = true;
+        $this->shouldTrace = $shouldTrace;
         return $this;
     }
 }
