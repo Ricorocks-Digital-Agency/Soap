@@ -14,7 +14,7 @@ A Laravel SOAP client that provides a clean interface for handling requests and 
     * [Call](#call)
         * [Parameters](#parameters)
             * [Nodes](#nodes)
-    * [Tracing](#Tracing)
+- [Tracing](#Tracing)
 - [Hooks](#hooks)
 - [Faking](#faking)
 - [Configuration](#configuration)
