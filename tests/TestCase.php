@@ -5,6 +5,7 @@ namespace RicorocksDigitalAgency\Soap\Tests;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use RicorocksDigitalAgency\Soap\Providers\SoapServiceProvider;
 use RicorocksDigitalAgency\Soap\Tests\Mocks\MockSoapClient;
+use Spatie\LaravelRay\RayServiceProvider;
 
 abstract class TestCase extends OrchestraTestCase
 {
@@ -17,7 +18,7 @@ abstract class TestCase extends OrchestraTestCase
 
     protected function getPackageProviders($app)
     {
-        return [SoapServiceProvider::class];
+        return [RayServiceProvider::class, SoapServiceProvider::class];
     }
 
 }
