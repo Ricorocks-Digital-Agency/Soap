@@ -19,7 +19,7 @@ A Laravel SOAP client that provides a clean interface for handling requests and 
 - [Faking](#faking)
 - [Configuration](#configuration)
     * [Include](#include)
-
+- [Ray Support](#ray-support)
 
 
 ## Installation
@@ -278,6 +278,20 @@ You can even use dot syntax on your array keys to permeate deeper into the reque
 Soap::include(['login.credentials' => soap_node(['user' => '...', 'password' => '...'])])->for('...');
 ```
 
+## Ray Support
+
+This package comes with first party support for Ray, an awesome debugging tool by Spatie! We offer a couple of methods that you
+can use to start debugging immediately.
+
+> Obviously, you'll need Ray installed in your project for this to work.
+
+### `ray()->showSoapRequests()`
+This enables Ray support in the SOAP package. Any SOAP requests made will be recorded in the Ray
+app for you to inspect.
+
+### `ray()->stopShowingSoapRequests()`
+This disables Ray support in the SOAP package. Requests will stop being recorded if previously
+enabled.
 
 ### Changelog
 

@@ -4,6 +4,7 @@ namespace RicorocksDigitalAgency\Soap\Tests;
 
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 use RicorocksDigitalAgency\Soap\Response\Response;
+use Spatie\Ray\Ray;
 
 class SoapClassTest extends TestCase
 {
