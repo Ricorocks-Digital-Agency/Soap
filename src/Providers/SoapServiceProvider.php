@@ -31,7 +31,6 @@ class SoapServiceProvider extends ServiceProvider
         if (!class_exists("Spatie\\LaravelRay\\Ray")) {
             return;
         }
-
         $this->app->singleton(SoapWatcher::class);
         app(SoapWatcher::class)->register();
     }
