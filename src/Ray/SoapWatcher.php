@@ -12,10 +12,6 @@ use Spatie\Ray\Ray as SpatieRay;
 
 class SoapWatcher extends Watcher
 {
-    public static function rayExists(): bool
-    {
-        return class_exists("Spatie\\Ray\\Ray");
-    }
 
     public function register(): void
     {

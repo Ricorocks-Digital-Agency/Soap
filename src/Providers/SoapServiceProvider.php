@@ -28,7 +28,7 @@ class SoapServiceProvider extends ServiceProvider
 
     protected function registerRay()
     {
-        if (!SoapWatcher::rayExists()) {
+        if (!class_exists("Spatie\\LaravelRay\\Ray")) {
             return;
         }
 
