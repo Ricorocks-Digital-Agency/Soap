@@ -293,6 +293,9 @@ app for you to inspect.
 This disables Ray support in the SOAP package. Requests will stop being recorded if previously
 enabled.
 
+> If you want to use the Ray integration inside of your tests, remember to register the `RayServiceProvider` along
+with your other providers.
+
 ### Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
