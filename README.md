@@ -109,14 +109,14 @@ However, this is not required if the XML node has a body.
 
 ```xml
 <PullRequest branch="dev" target="main">
-    <Author>Ricorocoks</Author>
+    <Author>Ricorocks</Author>
 </PullRequest>
 ```
 Now, the `array` would be as follows
 
 ```php
 'PullRequest' => [
-    'Author' => 'Ricorocks'
+    'Author' => 'Ricorocks',
     'branch' => 'dev',
     'target' => 'main'
 ]
@@ -130,7 +130,7 @@ Soap::to('...')
     ->information('PullRequest' => soap_node(['branch' => 'dev', 'target' => 'main']))
 
 'PullRequest' => [
-    '_' => ''
+    '_' => '',
     'branch' => 'dev',
     'target' => 'main'
 ]
@@ -139,7 +139,7 @@ Soap::to('...')
     ->information('PullRequest' => soap_node(['branch' => 'dev', 'target' => 'main'])->body(['Author' => 'Ricorocks']))
 
 'PullRequest' => [
-    'Author' => 'Ricorocks'
+    'Author' => 'Ricorocks',
     'branch' => 'dev',
     'target' => 'main'
 ]
