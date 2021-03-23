@@ -4,7 +4,7 @@
 namespace RicorocksDigitalAgency\Soap\Support;
 
 
-class Scoped
+abstract class Scoped
 {
     protected $endpoint;
     protected $method = null;
