@@ -32,7 +32,15 @@ interface Request
 
     public function getBody();
 
+    public function getOptions(): array;
+
     public function set($key, $value): self;
 
     public function trace($shouldTrace = true): self;
+
+    public function withOptions(array $options): self;
+
+    public function withBasicAuth($login, $password): self;
+
+    public function withDigestAuth($login, $password): self;
 }

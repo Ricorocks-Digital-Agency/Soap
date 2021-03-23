@@ -5,6 +5,7 @@ namespace RicorocksDigitalAgency\Soap\Request;
 use RicorocksDigitalAgency\Soap\Parameters\Builder;
 use RicorocksDigitalAgency\Soap\Response\Response;
 use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
+use SoapClient;
 
 class SoapClientRequest implements Request
 {
@@ -15,7 +16,7 @@ class SoapClientRequest implements Request
     protected Builder $builder;
     protected Response $response;
     protected $hooks = [];
-    protected $shouldTrace = false;
+    protected $options = [];
 
     public function __construct(Builder $builder)
     {
@@ -56,15 +57,7 @@ class SoapClientRequest implements Request
     {
         return tap(
             Response::new($this->makeRequest()),
-            fn($response) => $this->shouldTrace ? $this->addTrace($response) : $response
-        );
-    }
-
-    protected function addTrace($response)
-    {
-        return $response->setTrace(
-            Trace::thisXmlRequest($this->client()->__getLastRequest())
-                ->thisXmlResponse($this->client()->__getLastResponse())
+            fn($response) => data_get($this->options, 'trace') ? $this->addTrace($response) : $response
         );
     }
 
@@ -75,7 +68,13 @@ class SoapClientRequest implements Request
 
     protected function client()
     {
-        return $this->client ??= app(\SoapClient::class, ['wsdl' => $this->endpoint, 'options' => ['trace' => $this->shouldTrace]]);
+        return $this->client ??= app(
+            SoapClient::class,
+            [
+                'wsdl' => $this->endpoint,
+                'options' => $this->options
+            ]
+        );
     }
 
     public function getMethod()
@@ -86,6 +85,14 @@ class SoapClientRequest implements Request
     public function getBody()
     {
         return $this->body;
+    }
+
+    protected function addTrace($response)
+    {
+        return $response->setTrace(
+            Trace::thisXmlRequest($this->client()->__getLastRequest())
+                ->thisXmlResponse($this->client()->__getLastResponse())
+        );
     }
 
     public function functions(): array
@@ -128,7 +135,37 @@ class SoapClientRequest implements Request
 
     public function trace($shouldTrace = true): Request
     {
-        $this->shouldTrace = $shouldTrace;
+        $this->options['trace'] = $shouldTrace;
+
+        return $this;
+    }
+
+    public function withBasicAuth($login, $password): Request
+    {
+        $this->options['authentication'] = SOAP_AUTHENTICATION_BASIC;
+        $this->options['login'] = $login;
+        $this->options['password'] = $password;
+
+        return $this;
+    }
+
+    public function withDigestAuth($login, $password): Request
+    {
+        $this->options['authentication'] = SOAP_AUTHENTICATION_DIGEST;
+        $this->options['login'] = $login;
+        $this->options['password'] = $password;
+
+        return $this;
+    }
+
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
+
+    public function withOptions(array $options): Request
+    {
+        $this->options = array_merge($this->getOptions(), $options);
         return $this;
     }
 }

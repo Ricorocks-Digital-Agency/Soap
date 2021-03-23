@@ -14,7 +14,10 @@ A Laravel SOAP client that provides a clean interface for handling requests and 
     * [Call](#call)
         * [Parameters](#parameters)
             * [Nodes](#nodes)
-- [Tracing](#Tracing)
+- [Options](#options)
+  * [Tracing](#tracing)
+  * [Authentication](#authentication)
+  * [Global Options](#global-options)
 - [Hooks](#hooks)
 - [Faking](#faking)
 - [Configuration](#configuration)
@@ -148,7 +151,21 @@ Now, just by adding or removing a body to the `soap_node()` the outputted array 
 
 A node can be made with either the Facade `Soap::node()` or the helper method `soap_node()`.
 
-## Tracing
+## Options
+
+You can set custom options for each soap request that will be passed to the Soap Client using the `withOptions` method.
+
+```php
+Soap::to('...')->withOptions(['soap_version' => SOAP_1_2])->call('...');
+```
+
+See [https://www.php.net/manual/en/soapclient.construct.php](https://www.php.net/manual/en/soapclient.construct.php)
+for more details and available options.
+
+Soap also provides a number of methods that add syntactical sugar to the most commonly used options, which are detailed
+below.
+
+### Tracing
 Soap allows you to easily trace your interactions with the SOAP endpoint being accessed.
 
 To trace all requests, set the following in the register method of your `ServiceProvider`:
@@ -165,6 +182,37 @@ Soap::to('...')->trace()->call('...')
 Now, just this `Response` will have a valid `Trace`.
 
 Tracing is null safe. If `$response->getTrace()` is called when a `Trace` hasn't been set, a new `Trace` is returned. This `Trace`'s properties will all return `null`.
+
+### Authentication
+
+You can authenticate using Basic or Digest by calling `withBasicAuth` and `withDigestAuth` respectively.
+
+```php
+Soap::to('...')->withBasicAuth('username', 'password')->call('...');
+Soap::to('...')->withDigestAuth('username', 'password')->call('...');
+```
+
+### Global Options
+
+Sometimes, you may wish to include the same set of options on every SOAP request. You can do that using the `options`
+method on the `Soap` facade:
+
+```php
+// Every request will include these options automatically
+Soap::options(['login' => 'foo', 'password' => 'bar']);
+```
+
+You may also want to include options on every request, but only for a certain endpoint or action:
+
+```php
+// Only requests to this endpoint will include these options
+Soap::options(['login' => 'foo', 'password' => 'bar'])->for('https://api.example.com');
+
+// Only requests to this endpoint and the method Customers will include these options
+Soap::options(['login' => 'foo', 'password' => 'bar'])->for('https://api.example.com', 'Customers');
+```
+
+These calls are usually placed in the `boot` method of one of your application's Service Providers.
 
 ## Hooks
 
@@ -266,17 +314,28 @@ Configuration of Soap is via the `Soap` facade in the `boot()` method in your se
 
 ### Include
 
-Parameters can be set to be included with specific endpoints. These can be `arrays` or [nodes](#nodes)
+Parameters can be set to be automatically included in all requests. These can be `arrays` or [nodes](#nodes)
 
 ```php
-Soap::include(['credentials' => soap_node(['user' => '...', 'password' => '...'])])->for('...');
+Soap::include(['credentials' => soap_node(['user' => '...', 'password' => '...'])]);
 ```
 
 You can even use dot syntax on your array keys to permeate deeper into the request body.
 
 ```php
-Soap::include(['login.credentials' => soap_node(['user' => '...', 'password' => '...'])])->for('...');
+Soap::include(['login.credentials' => soap_node(['user' => '...', 'password' => '...'])]);
 ```
+
+Often, you'll want to target specific endpoints or actions. You can chain the `for` method to achieve this.
+
+```php
+// Only requests to https://api.example.com will include this data
+Soap::include(['credentials' => soap_node(['user' => '...', 'password' => '...'])])->for('https://api.example.com');
+
+// Only requests to https://api.example.com calling the Customers method will include this data
+Soap::include(['credentials' => soap_node(['user' => '...', 'password' => '...'])])->for('https://api.example.com', 'Customers');
+```
+
 
 ## Ray Support
 
