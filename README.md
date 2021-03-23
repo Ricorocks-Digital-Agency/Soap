@@ -198,7 +198,7 @@ Sometimes, you may wish to include the same set of options on every SOAP request
 method on the `Soap` facade:
 
 ```php
-// Every request will include this options automatically
+// Every request will include these options automatically
 Soap::options(['login' => 'foo', 'password' => 'bar']);
 ```
 
