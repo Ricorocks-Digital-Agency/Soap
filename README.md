@@ -17,7 +17,7 @@ A Laravel SOAP client that provides a clean interface for handling requests and 
 - [Options](#options)
   * [Tracing](#tracing)
   * [Authentication](#authentication)
-- [Global Options](#global-options)
+  * [Global Options](#global-options)
 - [Hooks](#hooks)
 - [Faking](#faking)
 - [Configuration](#configuration)
