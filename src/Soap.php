@@ -17,6 +17,7 @@ class Soap
 
     protected Fakery $fakery;
     protected $inclusions = [];
+    protected $optionsSets = [];
     protected $globalHooks = [];
 
     public function __construct(Fakery $fakery)
@@ -24,6 +25,7 @@ class Soap
         $this->fakery = $fakery;
         $this->beforeRequesting(fn($request) => $request->fakeUsing($this->fakery->mockResponseIfAvailable($request)));
         $this->beforeRequesting(fn($request) => $this->mergeInclusionsFor($request));
+        $this->beforeRequesting(fn($request) => $this->mergeOptionsFor($request));
         $this->afterRequesting(fn($request, $response) => $this->record($request, $response));
     }
 
@@ -47,6 +49,13 @@ class Soap
         return $inclusion;
     }
 
+    public function options(array $options)
+    {
+        $options = new OptionSet($options);
+        $this->optionsSets[] = $options;
+        return $options;
+    }
+
     protected function mergeInclusionsFor(Request $request)
     {
         collect($this->inclusions)
@@ -55,6 +64,16 @@ class Soap
             ->flatMap
             ->getParameters()
             ->each(fn($value, $key) => $request->set($key, $value));
+    }
+
+    protected function mergeOptionsFor(Request $request)
+    {
+        collect($this->optionsSets)
+            ->filter
+            ->matches($request->getEndpoint(), $request->getMethod())
+            ->map
+            ->getOptions()
+            ->each(fn($options) => $request->withOptions($options));
     }
 
     public function beforeRequesting(callable $hook)
