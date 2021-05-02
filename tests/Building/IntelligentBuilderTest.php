@@ -74,7 +74,8 @@ class IntelligentBuilderTest extends TestCase
 
         $this->assertEquals(
             [
-                'foo' => ['bar' => ['hello' => 'world'], 'email' => 'hi@me.com']
+                'foo' => ['bar' => ['hello' => 'world'], 'email' => 'hi@me.com'],
+                'bar' => ['baz', 'bang']
             ],
             $result
         );
@@ -94,7 +95,8 @@ class ExampleSoapable implements Soapable {
         return [
             'foo' => Soap
                 ::node(['email' => 'hi@me.com'])
-                ->body(['bar' => Soap::node()->body(['hello' => 'world'])])
+                ->body(['bar' => Soap::node()->body(['hello' => 'world'])]),
+            'bar' => ['baz', 'bang']
         ];
     }
 }
