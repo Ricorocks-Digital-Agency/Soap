@@ -2,6 +2,7 @@
 
 namespace RicorocksDigitalAgency\Soap\Tests\Building;
 
+use RicorocksDigitalAgency\Soap\Contracts\Soapable;
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 use RicorocksDigitalAgency\Soap\Parameters\Builder;
 use RicorocksDigitalAgency\Soap\Parameters\IntelligentBuilder;
@@ -66,9 +67,36 @@ class IntelligentBuilderTest extends TestCase
         );
     }
 
+    /** @test */
+    public function it_can_handle_a_Soapable()
+    {
+        $result = $this->builder->handle(new ExampleSoapable);
+
+        $this->assertEquals(
+            [
+                'foo' => ['bar' => ['hello' => 'world'], 'email' => 'hi@me.com'],
+                'bar' => ['baz', 'bang']
+            ],
+            $result
+        );
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
         $this->builder = app(IntelligentBuilder::class);
+    }
+}
+
+class ExampleSoapable implements Soapable {
+
+    public function toSoap()
+    {
+        return [
+            'foo' => Soap
+                ::node(['email' => 'hi@me.com'])
+                ->body(['bar' => Soap::node()->body(['hello' => 'world'])]),
+            'bar' => ['baz', 'bang']
+        ];
     }
 }

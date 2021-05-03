@@ -3,24 +3,19 @@
 namespace RicorocksDigitalAgency\Soap\Parameters;
 
 
+use RicorocksDigitalAgency\Soap\Contracts\Soapable;
+
 class IntelligentBuilder implements Builder
 {
     public function handle($parameters)
     {
-        return $this->walk($parameters);
-    }
-
-    protected function walk($parameters)
-    {
-        return collect($parameters)
-            ->map(fn($parameter) => $this->handleParameter($parameter))
-            ->toArray();
+        return $this->handleParameter($parameters);
     }
 
     protected function handleParameter($parameter)
     {
-        if ($parameter instanceof Node) {
-            $parameter = $parameter->toArray();
+        if ($parameter instanceof Soapable) {
+            $parameter = $parameter->toSoap();
         }
 
         if (is_array($parameter)) {
@@ -28,5 +23,12 @@ class IntelligentBuilder implements Builder
         }
 
         return $parameter;
+    }
+
+    protected function walk($parameters)
+    {
+        return collect($parameters)
+            ->map(fn($parameter) => $this->handleParameter($parameter))
+            ->toArray();
     }
 }
