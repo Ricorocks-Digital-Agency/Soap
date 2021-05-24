@@ -40,6 +40,10 @@ interface Request
 
     public function withOptions(array $options): self;
 
+    public function withHeaders(array $options): self;
+
+    public function withNamespace(string $namespace): self;
+
     public function withBasicAuth($login, $password): self;
 
     public function withDigestAuth($login, $password): self;
