@@ -13,6 +13,7 @@
         }
     },
     "require": {
+        "ext-soap": "*",
         "illuminate/support": "^8.16"
     },
     "require-dev": {
