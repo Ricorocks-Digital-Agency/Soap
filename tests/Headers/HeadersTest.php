@@ -5,6 +5,7 @@ namespace RicorocksDigitalAgency\Soap\Tests\Headers;
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 use RicorocksDigitalAgency\Soap\Request\SoapClientRequest;
 use RicorocksDigitalAgency\Soap\Tests\TestCase;
+use SoapVar;
 
 class HeadersTest extends TestCase
 {
@@ -109,6 +110,24 @@ class HeadersTest extends TestCase
             function (SoapClientRequest $request, $response) {
                 return $request->getHeaders() == [
                     Soap::header('Auth', 'xml')->data(['foo' => 'bar'])
+                ];
+            }
+        );
+    }
+
+    /** @test */
+    public function a_header_can_be_set_using_a_SoapVar()
+    {
+        Soap::fake();
+
+        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
+            ->withHeaders(soap_header('Auth', 'xml', new SoapVar(['foo' => 'bar'], null)))
+            ->call('Add', ['intA' => 10, 'intB' => 25]);
+
+        Soap::assertSent(
+            function (SoapClientRequest $request, $response) {
+                return $request->getHeaders() == [
+                    Soap::header('Auth', 'xml')->data(new SoapVar(['foo' => 'bar'], null))
                 ];
             }
         );

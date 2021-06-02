@@ -83,9 +83,7 @@ class SoapClientRequest implements Request
             'options' => $this->options
         ]);
 
-        $client->__setSoapHeaders($this->constructHeaders());
-
-        return $client;
+        return tap($client, fn ($client) => $client->__setSoapHeaders($this->constructHeaders()));
     }
 
     protected function constructHeaders()
@@ -101,7 +99,8 @@ class SoapClientRequest implements Request
                 'data' => $header->data,
                 'mustUnderstand' => $header->mustUnderstand,
                 'actor' => $header->actor
-            ]), $this->headers
+            ]),
+            $this->headers
         );
     }
 

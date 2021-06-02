@@ -24,16 +24,16 @@ class Soap
     public function __construct(Fakery $fakery)
     {
         $this->fakery = $fakery;
-        $this->beforeRequesting(fn($request) => $request->fakeUsing($this->fakery->mockResponseIfAvailable($request)));
-        $this->beforeRequesting(fn($request) => $this->mergeHeadersFor($request));
-        $this->beforeRequesting(fn($request) => $this->mergeInclusionsFor($request));
-        $this->beforeRequesting(fn($request) => $this->mergeOptionsFor($request));
-        $this->afterRequesting(fn($request, $response) => $this->record($request, $response));
+        $this->beforeRequesting(fn($request) => $request->fakeUsing($this->fakery->mockResponseIfAvailable($request)))
+            ->beforeRequesting(fn($request) => $this->mergeHeadersFor($request))
+            ->beforeRequesting(fn($request) => $this->mergeInclusionsFor($request))
+            ->beforeRequesting(fn($request) => $this->mergeOptionsFor($request))
+            ->afterRequesting(fn($request, $response) => $this->record($request, $response));
     }
 
     public function to(string $endpoint)
     {
-        return app(Request::class)
+        return resolve(Request::class)
             ->beforeRequesting(...$this->globalHooks['beforeRequesting'])
             ->afterRequesting(...$this->globalHooks['afterRequesting'])
             ->to($endpoint);
