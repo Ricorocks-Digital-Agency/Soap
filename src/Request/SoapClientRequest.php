@@ -60,7 +60,9 @@ class SoapClientRequest implements Request
     {
         return tap(
             Response::new($this->makeRequest()),
-            fn($response) => data_get($this->options, 'trace') ? $this->addTrace($response) : $response
+            fn($response) => data_get($this->options, 'trace')
+                ? $response->setTrace(Trace::client($this->client()))
+                : $response
         );
     }
 
@@ -111,14 +113,6 @@ class SoapClientRequest implements Request
     public function getBody()
     {
         return $this->body;
-    }
-
-    protected function addTrace($response)
-    {
-        return $response->setTrace(
-            Trace::thisXmlRequest($this->client()->__getLastRequest())
-                ->thisXmlResponse($this->client()->__getLastResponse())
-        );
     }
 
     public function functions(): array

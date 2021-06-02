@@ -46,6 +46,11 @@ class MockSoapClient
 
     public function __getLastRequestHeaders()
     {
+        if (!$this->shouldTrace) {
+            return null;
+        }
+
+        return 'Hello World';
     }
 
     public function __getLastResponse()
@@ -59,6 +64,11 @@ class MockSoapClient
 
     public function __getLastResponseHeaders()
     {
+        if (!$this->shouldTrace) {
+            return null;
+        }
+
+        return 'Foo Bar';
     }
 
     public function __getTypes()
