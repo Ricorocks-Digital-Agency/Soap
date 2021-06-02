@@ -7,3 +7,9 @@ if (!function_exists('soap_node')) {
         return Soap::node($attributes);
     }
 }
+
+if (!function_exists('soap_header')) {
+    function soap_header(?string $name = null, ?string $namespace = null, $data = null) {
+        return Soap::header($name, $namespace, $data);
+    }
+}

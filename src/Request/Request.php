@@ -2,6 +2,7 @@
 
 namespace RicorocksDigitalAgency\Soap\Request;
 
+use RicorocksDigitalAgency\Soap\Header;
 use RicorocksDigitalAgency\Soap\Response\Response;
 
 interface Request
@@ -43,4 +44,8 @@ interface Request
     public function withBasicAuth($login, $password): self;
 
     public function withDigestAuth($login, $password): self;
+
+    public function withHeaders(Header ...$headers): self;
+
+    public function getHeaders(): array;
 }
