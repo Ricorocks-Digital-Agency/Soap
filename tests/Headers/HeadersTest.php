@@ -33,10 +33,54 @@ class HeadersTest extends TestCase
         Soap::fake();
 
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
+            ->withHeaders(
+                Soap::header('Auth', 'xml')->data(['foo' => 'bar']),
+                Soap::header('Brand', 'xml')->data(['hello' => 'world'])
+            )
+            ->call('Add', ['intA' => 10, 'intB' => 25]);
+
+        Soap::assertSent(
+            function (SoapClientRequest $request, $response) {
+                return $request->getHeaders() == [
+                    Soap::header('Auth', 'xml')->data(['foo' => 'bar']),
+                    Soap::header('Brand', 'xml')->data(['hello' => 'world']),
+                ];
+            }
+        );
+    }
+
+    /** @test */
+    public function multiple_headers_can_be_defined_with_an_array_in_the_same_method()
+    {
+        Soap::fake();
+
+        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
             ->withHeaders(...[
                 Soap::header('Auth', 'xml')->data(['foo' => 'bar']),
-                Soap::header('Brand', 'xml')->data(['hello' => 'world']),
+                Soap::header('Brand', 'xml')->data(['hello' => 'world'])
             ])
+            ->call('Add', ['intA' => 10, 'intB' => 25]);
+
+        Soap::assertSent(
+            function (SoapClientRequest $request, $response) {
+                return $request->getHeaders() == [
+                    Soap::header('Auth', 'xml')->data(['foo' => 'bar']),
+                    Soap::header('Brand', 'xml')->data(['hello' => 'world']),
+                ];
+            }
+        );
+    }
+
+    /** @test */
+    public function multiple_headers_can_be_defined_with_a_collection_in_the_same_method()
+    {
+        Soap::fake();
+
+        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
+            ->withHeaders(...collect([
+                Soap::header('Auth', 'xml')->data(['foo' => 'bar']),
+                Soap::header('Brand', 'xml')->data(['hello' => 'world'])
+            ]))
             ->call('Add', ['intA' => 10, 'intB' => 25]);
 
         Soap::assertSent(
