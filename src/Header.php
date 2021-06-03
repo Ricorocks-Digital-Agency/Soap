@@ -10,13 +10,15 @@ class Header implements Arrayable
     public $namespace;
     public $data;
     public $actor;
-    public $mustUnderstand = false;
+    public $mustUnderstand;
 
-    public function __construct(?string $name = null, ?string $namespace = null, $data = null)
+    public function __construct(?string $name = null, ?string $namespace = null, $data = null, bool $mustUnderstand = false, ?string $actor = null)
     {
         $this->name = $name;
         $this->namespace = $namespace;
         $this->data = $data;
+        $this->mustUnderstand = $mustUnderstand;
+        $this->actor = $actor;
     }
 
     public function name(string $name): self
@@ -29,12 +31,12 @@ class Header implements Arrayable
         return tap($this, fn () => $this->namespace = $namespace);
     }
 
-    public function data($data): self
+    public function data($data = null): self
     {
         return tap($this, fn () => $this->data = $data);
     }
 
-    public function actor(string $actor): self
+    public function actor(?string $actor = null): self
     {
         return tap($this, fn () => $this->actor = $actor);
     }

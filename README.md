@@ -10,6 +10,7 @@ A Laravel SOAP client that provides a clean interface for handling requests and 
 - [Using Soap](#using-soap)
 - [Features/API](#features/api)
     * [Headers](#headers)
+        * [Global Headers](#global-headers)
     * [To](#to)
     * [Functions](#functions)
     * [Call](#call)

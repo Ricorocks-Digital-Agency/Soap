@@ -35,10 +35,18 @@ class SoapWatcher extends Watcher
             [
                 'Endpoint' => $request->getEndpoint(),
                 'Method' => $request->getMethod(),
+                'Headers' => $this->headers($request),
                 'Request' => $request->getBody(),
                 'Response' => $response->response,
             ],
             "SOAP"
         );
+    }
+
+    protected function headers(Request $request)
+    {
+        return $request->getHeaders()
+            ? collect($request->getHeaders())->map->toArray()->toArray()
+            : [];
     }
 }

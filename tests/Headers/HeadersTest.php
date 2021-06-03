@@ -15,13 +15,13 @@ class HeadersTest extends TestCase
         Soap::fake();
 
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-            ->withHeaders(Soap::header('Auth', 'xml')->data(['foo' => 'bar']))
+            ->withHeaders(Soap::header('Auth', 'test.com')->data(['foo' => 'bar']))
             ->call('Add', ['intA' => 10, 'intB' => 25]);
 
         Soap::assertSent(
             function (SoapClientRequest $request, $response) {
                 return $request->getHeaders() == [
-                    Soap::header('Auth', 'xml')->data(['foo' => 'bar'])
+                    Soap::header('Auth', 'test.com')->data(['foo' => 'bar'])
                 ];
             }
         );
@@ -34,16 +34,16 @@ class HeadersTest extends TestCase
 
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
             ->withHeaders(
-                Soap::header('Auth', 'xml')->data(['foo' => 'bar']),
-                Soap::header('Brand', 'xml')->data(['hello' => 'world'])
+                Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
+                Soap::header('Brand', 'test.com')->data(['hello' => 'world'])
             )
             ->call('Add', ['intA' => 10, 'intB' => 25]);
 
         Soap::assertSent(
             function (SoapClientRequest $request, $response) {
                 return $request->getHeaders() == [
-                    Soap::header('Auth', 'xml')->data(['foo' => 'bar']),
-                    Soap::header('Brand', 'xml')->data(['hello' => 'world']),
+                    Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
+                    Soap::header('Brand', 'test.com')->data(['hello' => 'world']),
                 ];
             }
         );
@@ -56,16 +56,16 @@ class HeadersTest extends TestCase
 
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
             ->withHeaders(...[
-                Soap::header('Auth', 'xml')->data(['foo' => 'bar']),
-                Soap::header('Brand', 'xml')->data(['hello' => 'world'])
+                Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
+                Soap::header('Brand', 'test.com')->data(['hello' => 'world'])
             ])
             ->call('Add', ['intA' => 10, 'intB' => 25]);
 
         Soap::assertSent(
             function (SoapClientRequest $request, $response) {
                 return $request->getHeaders() == [
-                    Soap::header('Auth', 'xml')->data(['foo' => 'bar']),
-                    Soap::header('Brand', 'xml')->data(['hello' => 'world']),
+                    Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
+                    Soap::header('Brand', 'test.com')->data(['hello' => 'world']),
                 ];
             }
         );
@@ -78,16 +78,16 @@ class HeadersTest extends TestCase
 
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
             ->withHeaders(...collect([
-                Soap::header('Auth', 'xml')->data(['foo' => 'bar']),
-                Soap::header('Brand', 'xml')->data(['hello' => 'world'])
+                Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
+                Soap::header('Brand', 'test.com')->data(['hello' => 'world'])
             ]))
             ->call('Add', ['intA' => 10, 'intB' => 25]);
 
         Soap::assertSent(
             function (SoapClientRequest $request, $response) {
                 return $request->getHeaders() == [
-                    Soap::header('Auth', 'xml')->data(['foo' => 'bar']),
-                    Soap::header('Brand', 'xml')->data(['hello' => 'world']),
+                    Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
+                    Soap::header('Brand', 'test.com')->data(['hello' => 'world']),
                 ];
             }
         );
@@ -99,15 +99,15 @@ class HeadersTest extends TestCase
         Soap::fake();
 
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-            ->withHeaders(Soap::header('Auth', 'xml')->data(['foo' => 'bar']))
-            ->withHeaders(Soap::header('Brand', 'xml')->data(['hello' => 'world']))
+            ->withHeaders(Soap::header('Auth', 'test.com')->data(['foo' => 'bar']))
+            ->withHeaders(Soap::header('Brand', 'test.com')->data(['hello' => 'world']))
             ->call('Add', ['intA' => 10, 'intB' => 25]);
 
         Soap::assertSent(
             function (SoapClientRequest $request, $response) {
                 return $request->getHeaders() == [
-                    Soap::header('Auth', 'xml')->data(['foo' => 'bar']),
-                    Soap::header('Brand', 'xml')->data(['hello' => 'world']),
+                    Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
+                    Soap::header('Brand', 'test.com')->data(['hello' => 'world']),
                 ];
             }
         );
@@ -122,7 +122,7 @@ class HeadersTest extends TestCase
             ->withHeaders(
                 Soap::header()
                     ->name('Auth')
-                    ->namespace('xml')
+                    ->namespace('test.com')
                     ->data(['foo' => 'bar'])
                     ->mustUnderstand()
                     ->actor('this.test')
@@ -132,7 +132,7 @@ class HeadersTest extends TestCase
         Soap::assertSent(
             function (SoapClientRequest $request, $response) {
                 return $request->getHeaders() == [
-                    Soap::header('Auth', 'xml')
+                    Soap::header('Auth', 'test.com')
                         ->data(['foo' => 'bar'])
                         ->mustUnderstand()
                         ->actor('this.test')
@@ -147,13 +147,13 @@ class HeadersTest extends TestCase
         Soap::fake();
 
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-            ->withHeaders(soap_header('Auth', 'xml', ['foo' => 'bar']))
+            ->withHeaders(soap_header('Auth', 'test.com', ['foo' => 'bar']))
             ->call('Add', ['intA' => 10, 'intB' => 25]);
 
         Soap::assertSent(
             function (SoapClientRequest $request, $response) {
                 return $request->getHeaders() == [
-                    Soap::header('Auth', 'xml')->data(['foo' => 'bar'])
+                    Soap::header('Auth', 'test.com')->data(['foo' => 'bar'])
                 ];
             }
         );
@@ -165,13 +165,33 @@ class HeadersTest extends TestCase
         Soap::fake();
 
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-            ->withHeaders(soap_header('Auth', 'xml', new SoapVar(['foo' => 'bar'], null)))
+            ->withHeaders(soap_header('Auth', 'test.com', new SoapVar(['foo' => 'bar'], null)))
             ->call('Add', ['intA' => 10, 'intB' => 25]);
 
         Soap::assertSent(
             function (SoapClientRequest $request, $response) {
                 return $request->getHeaders() == [
-                    Soap::header('Auth', 'xml')->data(new SoapVar(['foo' => 'bar'], null))
+                    Soap::header('Auth', 'test.com')->data(new SoapVar(['foo' => 'bar'], null))
+                ];
+            }
+        );
+    }
+
+    /** @test */
+    public function the_optional_parameters_of_the_SoapHeader_are_optional()
+    {
+        Soap::fake();
+
+        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
+            ->withHeaders(Soap::header('Auth', 'test.com')->data(null)->actor(null))
+            ->withHeaders(soap_header('Brand', 'test.com', null, false, null))
+            ->call('Add', ['intA' => 10, 'intB' => 25]);
+
+        Soap::assertSent(
+            function (SoapClientRequest $request, $response) {
+                return $request->getHeaders() == [
+                    Soap::header('Auth', 'test.com', null, false, null),
+                    Soap::header('Brand', 'test.com', null, false, null),
                 ];
             }
         );
