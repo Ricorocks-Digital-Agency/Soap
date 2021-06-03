@@ -65,7 +65,7 @@ $header = Soap::header()
                 'password' => '...'
             ])
             ->mustUnderstand()
-            ->author('foo.co.uk')
+            ->actor('foo.co.uk')
 ```
 This can also be expressed as:
 ```php
@@ -74,7 +74,7 @@ $header = Soap::header('Authentication', 'test.com', [
                 'password' => '...'
             ])
             ->mustUnderstand()
-            ->author('foo.co.uk')
+            ->actor('foo.co.uk')
 ```
 Plus, the `soap_header` helper method can be used:
 ```php
