@@ -4,16 +4,21 @@ namespace RicorocksDigitalAgency\Soap\Support\Tracing;
 
 class Trace
 {
+    public $client;
     public $xmlRequest;
     public $xmlResponse;
+    public $requestHeaders;
+    public $responseHeaders;
 
-    public static function thisXmlRequest($xml): self
+    public static function client($client): self
     {
-        return tap(new static, fn($instance) => $instance->xmlRequest = $xml);
-    }
+        $trace = new static;
+        $trace->client = $client;
+        $trace->xmlRequest = $client->__getLastRequest();
+        $trace->xmlResponse = $client->__getLastResponse();
+        $trace->requestHeaders = $client->__getLastRequestHeaders();
+        $trace->responseHeaders = $client->__getLastResponseHeaders();
 
-    public function thisXmlResponse($xml): self
-    {
-        return tap($this, fn($self) => $self->xmlResponse = $xml);
+        return $trace;
     }
 }

@@ -16,6 +16,7 @@ class Soap
     }
 
     protected Fakery $fakery;
+    protected $headerSets = [];
     protected $inclusions = [];
     protected $optionsSets = [];
     protected $globalHooks = [];
@@ -23,15 +24,16 @@ class Soap
     public function __construct(Fakery $fakery)
     {
         $this->fakery = $fakery;
-        $this->beforeRequesting(fn($request) => $request->fakeUsing($this->fakery->mockResponseIfAvailable($request)));
-        $this->beforeRequesting(fn($request) => $this->mergeInclusionsFor($request));
-        $this->beforeRequesting(fn($request) => $this->mergeOptionsFor($request));
-        $this->afterRequesting(fn($request, $response) => $this->record($request, $response));
+        $this->beforeRequesting(fn($request) => $request->fakeUsing($this->fakery->mockResponseIfAvailable($request)))
+            ->beforeRequesting(fn($request) => $this->mergeHeadersFor($request))
+            ->beforeRequesting(fn($request) => $this->mergeInclusionsFor($request))
+            ->beforeRequesting(fn($request) => $this->mergeOptionsFor($request))
+            ->afterRequesting(fn($request, $response) => $this->record($request, $response));
     }
 
     public function to(string $endpoint)
     {
-        return app(Request::class)
+        return resolve(Request::class)
             ->beforeRequesting(...$this->globalHooks['beforeRequesting'])
             ->afterRequesting(...$this->globalHooks['afterRequesting'])
             ->to($endpoint);
@@ -40,6 +42,11 @@ class Soap
     public function node($attributes = []): Node
     {
         return new Node($attributes);
+    }
+
+    public function header(?string $name = null, ?string $namespace = null, $data = null): Header
+    {
+        return new Header($name, $namespace, $data);
     }
 
     public function include($parameters)
@@ -54,6 +61,23 @@ class Soap
         $options = new OptionSet($options);
         $this->optionsSets[] = $options;
         return $options;
+    }
+
+    public function headers(Header ...$headers)
+    {
+        $headers = new HeaderSet(...$headers);
+        $this->headerSets[] = $headers;
+        return $headers;
+    }
+
+    protected function mergeHeadersFor(Request $request)
+    {
+        collect($this->headerSets)
+            ->filter
+            ->matches($request->getEndpoint(), $request->getMethod())
+            ->flatMap
+            ->getHeaders()
+            ->pipe(fn($headers) => $request->withHeaders(...$headers));
     }
 
     protected function mergeInclusionsFor(Request $request)

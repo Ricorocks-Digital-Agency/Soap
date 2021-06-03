@@ -23,6 +23,8 @@ class SoapTracingTest extends TestCase
 
         $this->assertEquals('<?xml version="1.0" encoding="UTF-8"?><FooBar><Hello>World</Hello></FooBar>', $response->trace()->xmlRequest);
         $this->assertEquals('<?xml version="1.0" encoding="UTF-8"?><Status>Success!</Status>', $response->trace()->xmlResponse);
+        $this->assertEquals('Hello World', $response->trace()->requestHeaders);
+        $this->assertEquals('Foo Bar', $response->trace()->responseHeaders);
     }
 
     /** @test */
@@ -35,6 +37,8 @@ class SoapTracingTest extends TestCase
 
         $this->assertEquals('<?xml version="1.0" encoding="UTF-8"?><FooBar><Hello>World</Hello></FooBar>', $response->trace()->xmlRequest);
         $this->assertEquals('<?xml version="1.0" encoding="UTF-8"?><Status>Success!</Status>', $response->trace()->xmlResponse);
+        $this->assertEquals('Hello World', $response->trace()->requestHeaders);
+        $this->assertEquals('Foo Bar', $response->trace()->responseHeaders);
     }
 
     /** @test */
@@ -45,5 +49,7 @@ class SoapTracingTest extends TestCase
 
         $this->assertEmpty($response->trace()->xmlRequest);
         $this->assertEmpty($response->trace()->xmlResponse);
+        $this->assertEmpty($response->trace()->requestHeaders);
+        $this->assertEmpty($response->trace()->responseHeaders);
     }
 }

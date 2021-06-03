@@ -2,10 +2,12 @@
 
 namespace RicorocksDigitalAgency\Soap\Request;
 
+use RicorocksDigitalAgency\Soap\Header;
 use RicorocksDigitalAgency\Soap\Parameters\Builder;
 use RicorocksDigitalAgency\Soap\Response\Response;
 use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
 use SoapClient;
+use SoapHeader;
 
 class SoapClientRequest implements Request
 {
@@ -17,6 +19,7 @@ class SoapClientRequest implements Request
     protected Response $response;
     protected $hooks = [];
     protected $options = [];
+    protected $headers = [];
 
     public function __construct(Builder $builder)
     {
@@ -57,7 +60,9 @@ class SoapClientRequest implements Request
     {
         return tap(
             Response::new($this->makeRequest()),
-            fn($response) => data_get($this->options, 'trace') ? $this->addTrace($response) : $response
+            fn($response) => data_get($this->options, 'trace')
+                ? $response->setTrace(Trace::client($this->client()))
+                : $response
         );
     }
 
@@ -68,12 +73,34 @@ class SoapClientRequest implements Request
 
     protected function client()
     {
-        return $this->client ??= app(
-            SoapClient::class,
-            [
-                'wsdl' => $this->endpoint,
-                'options' => $this->options
-            ]
+        return $this->client ??= $this->constructClient();
+    }
+
+    protected function constructClient()
+    {
+        $client = resolve(SoapClient::class, [
+            'wsdl' => $this->endpoint,
+            'options' => $this->options
+        ]);
+
+        return tap($client, fn ($client) => $client->__setSoapHeaders($this->constructHeaders()));
+    }
+
+    protected function constructHeaders()
+    {
+        if (empty($this->headers)) {
+            return;
+        }
+
+        return array_map(
+            fn ($header) => resolve(SoapHeader::class, [
+                'namespace' => $header->namespace,
+                'name' => $header->name,
+                'data' => $header->data,
+                'mustUnderstand' => $header->mustUnderstand,
+                'actor' => $header->actor
+            ]),
+            $this->headers
         );
     }
 
@@ -85,14 +112,6 @@ class SoapClientRequest implements Request
     public function getBody()
     {
         return $this->body;
-    }
-
-    protected function addTrace($response)
-    {
-        return $response->setTrace(
-            Trace::thisXmlRequest($this->client()->__getLastRequest())
-                ->thisXmlResponse($this->client()->__getLastResponse())
-        );
     }
 
     public function functions(): array
@@ -167,5 +186,16 @@ class SoapClientRequest implements Request
     {
         $this->options = array_merge($this->getOptions(), $options);
         return $this;
+    }
+
+    public function withHeaders(Header ...$headers): Request
+    {
+        $this->headers = array_merge($this->getHeaders(), $headers);
+        return $this;
+    }
+
+    public function getHeaders(): array
+    {
+        return $this->headers;
     }
 }

@@ -10,7 +10,6 @@ use RicorocksDigitalAgency\Soap\Tests\TestCase;
 
 class OptionsTest extends TestCase
 {
-
     /** @test */
     public function options_can_be_set()
     {
@@ -23,8 +22,8 @@ class OptionsTest extends TestCase
         Soap::assertSent(
             function (SoapClientRequest $request, $response) {
                 return $request->getOptions() == [
-                        'compression' => SOAP_COMPRESSION_GZIP,
-                    ];
+                    'compression' => SOAP_COMPRESSION_GZIP,
+                ];
             }
         );
     }
@@ -42,11 +41,11 @@ class OptionsTest extends TestCase
         Soap::assertSent(
             function (SoapClientRequest $request, $response) {
                 return $request->getOptions() == [
-                        'authentication' => SOAP_AUTHENTICATION_BASIC,
-                        'login' => 'foo',
-                        'password' => 'bar',
-                        'compression' => SOAP_COMPRESSION_GZIP,
-                    ];
+                    'authentication' => SOAP_AUTHENTICATION_BASIC,
+                    'login' => 'foo',
+                    'password' => 'bar',
+                    'compression' => SOAP_COMPRESSION_GZIP,
+                ];
             }
         );
     }
@@ -64,8 +63,8 @@ class OptionsTest extends TestCase
         Soap::assertSent(
             function (SoapClientRequest $request, $response) {
                 return $request->getOptions() == [
-                        'compression' => SOAP_COMPRESSION_GZIP,
-                    ];
+                    'compression' => SOAP_COMPRESSION_GZIP,
+                ];
             }
         );
     }

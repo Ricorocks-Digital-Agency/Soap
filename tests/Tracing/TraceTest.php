@@ -4,37 +4,19 @@ namespace RicorocksDigitalAgency\Soap\Tests\Tracing;
 
 use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
 use RicorocksDigitalAgency\Soap\Tests\TestCase;
+use SoapClient;
 
 class TraceTest extends TestCase
 {
     /** @test */
-    public function the_trace_object_has_a_static_thisXmlRequest_method()
+    public function the_trace_object_has_a_static_client_method()
     {
-        $xml = '<?xml version="1.0" encoding="UTF-8"?><FooBar><Hello>World</Hello></FooBar>';
+        $trace = Trace::client($client = new SoapClient(static::EXAMPLE_SOAP_ENDPOINT));
 
-        $trace = Trace::thisXmlRequest($xml);
-
-        $this->assertSame($xml, $trace->xmlRequest);
-    }
-
-    /** @test */
-    public function the_trace_object_has_a_thisXmlResponse_method()
-    {
-        $request = '<?xml version="1.0" encoding="UTF-8"?><FooBar><Hello>World</Hello></FooBar>';
-        $response = '<?xml version="1.0" encoding="UTF-8"?><Status>Success!</Status>';
-
-        $trace = Trace::thisXmlRequest($request)->thisXmlResponse($response);
-
-        $this->assertSame($response, $trace->xmlResponse);
-    }
-
-    /** @test */
-    public function a_null_trace_returns_gracefully()
-    {
-        $trace = Trace::thisXmlRequest(null)->thisXmlResponse(null);
-
-        $this->assertNull($trace->xmlRequest);
-        $this->assertNull($trace->xmlResponse);
+        $this->assertSame($client->__getLastRequest(), $trace->xmlRequest);
+        $this->assertSame($client->__getLastResponse(), $trace->xmlResponse);
+        $this->assertSame($client->__getLastRequestHeaders(), $trace->requestHeaders);
+        $this->assertSame($client->__getLastResponseHeaders(), $trace->responseHeaders);
     }
 
     /** @test */
@@ -42,7 +24,10 @@ class TraceTest extends TestCase
     {
         $trace = new Trace;
 
+        $this->assertNull($trace->client);
         $this->assertNull($trace->xmlRequest);
         $this->assertNull($trace->xmlResponse);
+        $this->assertNull($trace->requestHeaders);
+        $this->assertNull($trace->responseHeaders);
     }
 }
