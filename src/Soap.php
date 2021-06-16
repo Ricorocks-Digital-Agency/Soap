@@ -44,7 +44,7 @@ class Soap
         return new Node($attributes);
     }
 
-    public function header(?string $name = null, ?string $namespace = null, $data = null, bool $mustUnderstand = false, $actor = null): Header
+    public function header(?string $name = null, ?string $namespace = null, $data = null, bool $mustUnderstand = false, ?string $actor = null): Header
     {
         return new Header($name, $namespace, $data, $mustUnderstand, $actor);
     }

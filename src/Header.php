@@ -12,7 +12,7 @@ class Header implements Arrayable
     public $actor;
     public $mustUnderstand;
 
-    public function __construct(?string $name = null, ?string $namespace = null, $data = null, bool $mustUnderstand = false, $actor = null)
+    public function __construct(?string $name = null, ?string $namespace = null, $data = null, bool $mustUnderstand = false, ?string $actor = null)
     {
         $this->name = $name;
         $this->namespace = $namespace;
@@ -36,7 +36,7 @@ class Header implements Arrayable
         return tap($this, fn () => $this->data = $data);
     }
 
-    public function actor($actor = null): self
+    public function actor(?string $actor = null): self
     {
         return tap($this, fn () => $this->actor = $actor);
     }

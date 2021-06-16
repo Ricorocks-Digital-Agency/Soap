@@ -13,7 +13,8 @@
         }
     },
     "require": {
-        "illuminate/support": "^8.16"
+        "illuminate/support": "^8.16",
+        "ext-soap": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.4",

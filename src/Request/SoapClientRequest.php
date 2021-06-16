@@ -80,10 +80,10 @@ class SoapClientRequest implements Request
     {
         $client = resolve(SoapClient::class, [
             'wsdl' => $this->endpoint,
-            'options' => $this->options
+            'options' => $this->options,
         ]);
 
-        return tap($client, fn ($client) => $client->__setSoapHeaders($this->constructHeaders()));
+        return tap($client, fn($client) => $client->__setSoapHeaders($this->constructHeaders()));
     }
 
     protected function constructHeaders()
@@ -93,19 +93,15 @@ class SoapClientRequest implements Request
         }
 
         return array_map(
-            fn ($header) => resolve(SoapHeader::class, $this->hydrateSoapHeaderParameters($header)),
+            fn($header) => resolve(SoapHeader::class, [
+                'namespace' => $header->namespace,
+                'name' => $header->name,
+                'data' => $header->data,
+                'mustunderstand' => $header->mustUnderstand,
+                'actor' => $header->actor ?? SOAP_ACTOR_NONE,
+            ]),
             $this->headers
         );
-    }
-
-    protected function hydrateSoapHeaderParameters(Header $header): array
-    {
-        return array_merge([
-            'namespace' => $header->namespace,
-            'name' => $header->name,
-            'data' => $header->data,
-            'mustunderstand' => $header->mustUnderstand,
-        ], $header->actor ? ['actor' => $header->actor] : []);
     }
 
     public function getMethod()
