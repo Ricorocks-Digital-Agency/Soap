@@ -5,6 +5,7 @@ namespace RicorocksDigitalAgency\Soap\Tests\Headers;
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 use RicorocksDigitalAgency\Soap\Request\SoapClientRequest;
 use RicorocksDigitalAgency\Soap\Tests\TestCase;
+use SoapHeader;
 use SoapVar;
 
 class HeadersTest extends TestCase
@@ -178,22 +179,54 @@ class HeadersTest extends TestCase
     }
 
     /** @test */
-    public function the_optional_parameters_of_the_SoapHeader_are_optional()
+    public function the_data_parameter_is_optional()
     {
         Soap::fake();
 
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-            ->withHeaders(Soap::header('Auth', 'test.com')->data(null)->actor(null))
-            ->withHeaders(soap_header('Brand', 'test.com', null, false, null))
+            ->withHeaders(Soap::header('Auth', 'test.com')->data(null))
+            ->withHeaders(soap_header('Brand', 'test.com', null))
             ->call('Add', ['intA' => 10, 'intB' => 25]);
 
         Soap::assertSent(
             function (SoapClientRequest $request, $response) {
                 return $request->getHeaders() == [
-                    Soap::header('Auth', 'test.com', null, false, null),
-                    Soap::header('Brand', 'test.com', null, false, null),
+                    Soap::header('Auth', 'test.com', null),
+                    Soap::header('Brand', 'test.com', null),
                 ];
             }
         );
+    }
+
+    /** @test */
+    public function if_the_actor_is_provided_it_is_passed_to_the_php_soap_header()
+    {
+        $this->markTestSkipped('This makes a real API call to assert the correct header construction');
+
+        $this->app->beforeResolving(SoapHeader::class, function ($class, $arguments) {
+            $this->assertTrue(array_key_exists('actor', $arguments));
+        });
+
+        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
+            ->withHeaders(Soap::header('Auth', 'test.com')->actor('test.com'))
+            ->withHeaders(soap_header('Brand', 'test.com', ['hi'], false, 'test.com'))
+            ->withHeaders(soap_header('Service', 'bar.com')->actor('test.com'))
+            ->call('Add', ['intA' => 10, 'intB' => 25]);
+    }
+
+    /** @test */
+    public function if_the_actor_is_not_provided_it_is_not_passed_to_the_php_soap_header()
+    {
+        $this->markTestSkipped('This makes a real API call to assert the correct header construction');
+
+        $this->app->beforeResolving(SoapHeader::class, function ($class, $arguments) {
+            $this->assertFalse(array_key_exists('actor', $arguments));
+        });
+
+        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
+            ->withHeaders(Soap::header('Auth', 'test.com')->actor(null))
+            ->withHeaders(soap_header('Brand', 'test.com', null, false, null))
+            ->withHeaders(soap_header('Service', 'bar.com'))
+            ->call('Add', ['intA' => 10, 'intB' => 25]);
     }
 }
