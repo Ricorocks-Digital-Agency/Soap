@@ -9,6 +9,7 @@ use RicorocksDigitalAgency\Soap\Ray\SoapWatcher;
 use RicorocksDigitalAgency\Soap\Request\Request;
 use RicorocksDigitalAgency\Soap\Request\SoapClientRequest;
 use RicorocksDigitalAgency\Soap\Soap;
+use SoapHeader;
 
 class SoapServiceProvider extends ServiceProvider
 {
@@ -17,8 +18,23 @@ class SoapServiceProvider extends ServiceProvider
         $this->app->singleton('soap', fn() => app(Soap::class));
         $this->app->bind(Request::class, SoapClientRequest::class);
         $this->app->bind(Builder::class, IntelligentBuilder::class);
+        $this->bindSoapClasses();
 
         $this->registerRay();
+    }
+
+    protected function bindSoapClasses()
+    {
+        $this->app->bind(
+            SoapHeader::class,
+            fn ($app, $parameters) => new SoapHeader(
+                $parameters['namespace'],
+                $parameters['name'],
+                $parameters['data'],
+                $parameters['mustUnderstand'],
+                $parameters['actor']
+            )
+        );
     }
 
     public function boot()
