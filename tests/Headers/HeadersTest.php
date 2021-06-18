@@ -203,8 +203,8 @@ class HeadersTest extends TestCase
     {
         $this->markTestSkipped('This makes a real API call to assert the correct header construction');
 
-        $this->app->beforeResolving(SoapHeader::class, function ($class, $arguments) {
-            $this->assertTrue(array_key_exists('actor', $arguments));
+        $this->app->afterResolving(SoapHeader::class, function ($header) {
+            $this->assertEquals('test.com', $header->actor);
         });
 
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
@@ -215,12 +215,12 @@ class HeadersTest extends TestCase
     }
 
     /** @test */
-    public function if_the_actor_is_not_provided_it_is_not_passed_to_the_php_soap_header()
+    public function if_the_actor_is_not_provided_the_php_soap_actor_none_constant_is_passed()
     {
         $this->markTestSkipped('This makes a real API call to assert the correct header construction');
 
-        $this->app->beforeResolving(SoapHeader::class, function ($class, $arguments) {
-            $this->assertFalse(array_key_exists('actor', $arguments));
+        $this->app->afterResolving(SoapHeader::class, function ($header) {
+            $this->assertEquals(SOAP_ACTOR_NONE, $header->actor);
         });
 
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)

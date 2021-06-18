@@ -32,7 +32,7 @@ class SoapServiceProvider extends ServiceProvider
                 $parameters['name'],
                 $parameters['data'],
                 $parameters['mustunderstand'],
-                $parameters['actor']
+                $parameters['actor'] ?? SOAP_ACTOR_NONE
             )
         );
     }
