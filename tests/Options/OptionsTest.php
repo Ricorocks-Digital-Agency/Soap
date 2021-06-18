@@ -1,8 +1,6 @@
 <?php
 
-
 namespace RicorocksDigitalAgency\Soap\Tests\Options;
-
 
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 use RicorocksDigitalAgency\Soap\Request\SoapClientRequest;
@@ -11,7 +9,7 @@ use RicorocksDigitalAgency\Soap\Tests\TestCase;
 class OptionsTest extends TestCase
 {
     /** @test */
-    public function options_can_be_set()
+    public function optionsCanBeSet()
     {
         Soap::fake();
 
@@ -29,7 +27,7 @@ class OptionsTest extends TestCase
     }
 
     /** @test */
-    public function it_merges_with_other_options()
+    public function itMergesWithOtherOptions()
     {
         Soap::fake();
 
@@ -51,7 +49,7 @@ class OptionsTest extends TestCase
     }
 
     /** @test */
-    public function it_overrides_previous_values()
+    public function itOverridesPreviousValues()
     {
         Soap::fake();
 
@@ -68,5 +66,4 @@ class OptionsTest extends TestCase
             }
         );
     }
-
 }

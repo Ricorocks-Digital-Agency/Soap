@@ -10,7 +10,7 @@ use RicorocksDigitalAgency\Soap\Tests\TestCase;
 class SoapFakeTest extends TestCase
 {
     /** @test */
-    public function it_can_record_requests()
+    public function itCanRecordRequests()
     {
         Soap::fake();
         Soap::assertNothingSent();
@@ -20,7 +20,7 @@ class SoapFakeTest extends TestCase
     }
 
     /** @test */
-    public function it_can_fake_requests()
+    public function itCanFakeRequests()
     {
         Soap::fake();
         Soap::to(self::EXAMPLE_SOAP_ENDPOINT)->call('Bob', ['intA' => 10, 'intB' => 20]);
@@ -28,15 +28,15 @@ class SoapFakeTest extends TestCase
     }
 
     /** @test */
-    public function calling_fake_with_no_paramaters_returns_a_new_response()
+    public function callingFakeWithNoParamatersReturnsANewResponse()
     {
         Soap::fake();
         Soap::to(self::EXAMPLE_SOAP_ENDPOINT)->call('Bob', ['intA' => 10, 'intB' => 20]);
-        Soap::assertSent(fn(Request $request, Response $response) => $response->response == []);
+        Soap::assertSent(fn (Request $request, Response $response) => $response->response == []);
     }
 
     /** @test */
-    public function it_can_fake_specific_endpoints()
+    public function itCanFakeSpecificEndpoints()
     {
         Soap::fake();
         Soap::fake(['http://foobar.com' => Response::new(['foo' => 'bar'])]);
@@ -44,13 +44,13 @@ class SoapFakeTest extends TestCase
 
         Soap::to('http://foobar.com')->call('Bob', ['intA' => 10, 'intB' => 20]);
 
-        Soap::assertSent(fn($request, Response $response) => $response->response['foo'] === 'bar');
-        Soap::assertSent(fn(Request $request, Response $response) => $request->getMethod() === 'Bob');
-        Soap::assertNotSent(fn(Request $request, Response $response) => $request->getMethod() === 'Trudy');
+        Soap::assertSent(fn ($request, Response $response) => $response->response['foo'] === 'bar');
+        Soap::assertSent(fn (Request $request, Response $response) => $request->getMethod() === 'Bob');
+        Soap::assertNotSent(fn (Request $request, Response $response) => $request->getMethod() === 'Trudy');
     }
 
     /** @test */
-    public function it_can_handle_wildcards()
+    public function itCanHandleWildcards()
     {
         Soap::fake(['http://foobar.*' => Response::new(['foo' => 'bar'])]);
 
@@ -60,27 +60,27 @@ class SoapFakeTest extends TestCase
 
         Soap::assertSentCount(3);
         Soap::assertSent(
-            fn($request, $response) => $request->getBody() === [
+            fn ($request, $response) => $request->getBody() === [
                     'intA' => 10,
-                    'intB' => 20
+                    'intB' => 20,
                 ] && $response->response === ['foo' => 'bar']
         );
         Soap::assertSent(
-            fn($request, $response) => $request->getBody() === [
+            fn ($request, $response) => $request->getBody() === [
                     'intA' => 20,
-                    'intB' => 30
+                    'intB' => 30,
                 ] && $response->response === ['foo' => 'bar']
         );
         Soap::assertSent(
-            fn($request, $response) => $request->getBody() === [
+            fn ($request, $response) => $request->getBody() === [
                     'intA' => 30,
-                    'intB' => 40
+                    'intB' => 40,
                 ] && $response->response === ['foo' => 'bar']
         );
     }
 
     /** @test */
-    public function it_can_handle_multiple_wildcards()
+    public function itCanHandleMultipleWildcards()
     {
         Soap::fake(
             [
@@ -95,21 +95,21 @@ class SoapFakeTest extends TestCase
 
         Soap::assertSentCount(3);
         Soap::assertSent(
-            fn($request, $response) => $request->getBody() === [
+            fn ($request, $response) => $request->getBody() === [
                     'intA' => 10,
-                    'intB' => 20
+                    'intB' => 20,
                 ] && $response->response === ['foo' => 'bar']
         );
         Soap::assertSent(
-            fn($request, $response) => $request->getBody() === [
+            fn ($request, $response) => $request->getBody() === [
                     'intA' => 20,
-                    'intB' => 30
+                    'intB' => 30,
                 ] && $response->response === ['foo' => 'bar']
         );
         Soap::assertSent(
-            fn($request, $response) => $request->getBody() === [
+            fn ($request, $response) => $request->getBody() === [
                     'intA' => 30,
-                    'intB' => 40
+                    'intB' => 40,
                 ] && $response->response === ['baz' => 'english dear']
         );
     }

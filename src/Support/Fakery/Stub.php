@@ -8,7 +8,7 @@ use RicorocksDigitalAgency\Soap\Request\Request;
 
 class Stub
 {
-    const REGEX_PATTERN = "/:([\w\d|]+$)/";
+    public const REGEX_PATTERN = "/:([\w\d|]+$)/";
 
     public $endpoint;
     public $methods;
@@ -16,7 +16,7 @@ class Stub
 
     public static function for($endpoint): self
     {
-        return tap(new static, fn($instance) => $instance->register($endpoint));
+        return tap(new static(), fn ($instance) => $instance->register($endpoint));
     }
 
     public function respondWith($callback): self
@@ -35,8 +35,8 @@ class Stub
 
     protected function register($endpoint)
     {
-        $this->endpoint = Str::of($endpoint)->replaceMatches(self::REGEX_PATTERN, "")->start('*')->__toString();
-        $this->methods = Str::of($endpoint)->afterLast(".")->match(self::REGEX_PATTERN)->start('*')->__toString();
+        $this->endpoint = Str::of($endpoint)->replaceMatches(self::REGEX_PATTERN, '')->start('*')->__toString();
+        $this->methods = Str::of($endpoint)->afterLast('.')->match(self::REGEX_PATTERN)->start('*')->__toString();
     }
 
     public function isForEndpoint($endpoint)
@@ -48,8 +48,8 @@ class Stub
     {
         return Str::of($this->methods)
                 ->explode('|')
-                ->map(fn($availableMethod) => Str::start($availableMethod, '*'))
-                ->contains(fn($availableMethod) => Str::is($availableMethod, $method));
+                ->map(fn ($availableMethod) => Str::start($availableMethod, '*'))
+                ->contains(fn ($availableMethod) => Str::is($availableMethod, $method));
     }
 
     public function hasWildcardMethods()

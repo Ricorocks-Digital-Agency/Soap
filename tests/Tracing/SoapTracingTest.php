@@ -3,7 +3,6 @@
 namespace RicorocksDigitalAgency\Soap\Tests\Tracing;
 
 use RicorocksDigitalAgency\Soap\Facades\Soap;
-use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
 use RicorocksDigitalAgency\Soap\Tests\TestCase;
 
 class SoapTracingTest extends TestCase
@@ -15,7 +14,7 @@ class SoapTracingTest extends TestCase
     }
 
     /** @test */
-    public function a_trace_can_be_requested_at_time_of_request()
+    public function aTraceCanBeRequestedAtTimeOfRequest()
     {
         $response = Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
                         ->trace()
@@ -28,7 +27,7 @@ class SoapTracingTest extends TestCase
     }
 
     /** @test */
-    public function a_trace_can_be_requested_globally()
+    public function aTraceCanBeRequestedGlobally()
     {
         Soap::trace();
 
@@ -42,7 +41,7 @@ class SoapTracingTest extends TestCase
     }
 
     /** @test */
-    public function by_default_the_trace_has_no_content_on_the_response()
+    public function byDefaultTheTraceHasNoContentOnTheResponse()
     {
         $response = Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
                         ->call('Add', ['intA' => 10, 'intB' => 25]);

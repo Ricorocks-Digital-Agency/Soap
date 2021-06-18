@@ -9,7 +9,7 @@ use SoapClient;
 class TraceTest extends TestCase
 {
     /** @test */
-    public function the_trace_object_has_a_static_client_method()
+    public function theTraceObjectHasAStaticClientMethod()
     {
         $trace = Trace::client($client = new SoapClient(static::EXAMPLE_SOAP_ENDPOINT));
 
@@ -20,9 +20,9 @@ class TraceTest extends TestCase
     }
 
     /** @test */
-    public function a_fresh_trace_returns_gracefully()
+    public function aFreshTraceReturnsGracefully()
     {
-        $trace = new Trace;
+        $trace = new Trace();
 
         $this->assertNull($trace->client);
         $this->assertNull($trace->xmlRequest);

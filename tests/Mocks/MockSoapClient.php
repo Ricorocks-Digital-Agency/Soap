@@ -1,8 +1,6 @@
 <?php
 
-
 namespace RicorocksDigitalAgency\Soap\Tests\Mocks;
-
 
 class MockSoapClient
 {
@@ -31,7 +29,7 @@ class MockSoapClient
     public function __getFunctions()
     {
         return [
-            "The mock client does not actually have functions!"
+            'The mock client does not actually have functions!',
         ];
     }
 
@@ -100,5 +98,4 @@ class MockSoapClient
     {
         return new static($wsdl, $options);
     }
-
 }

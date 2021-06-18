@@ -2,7 +2,6 @@
 
 namespace RicorocksDigitalAgency\Soap\Parameters;
 
-
 use RicorocksDigitalAgency\Soap\Contracts\Soapable;
 
 class IntelligentBuilder implements Builder
@@ -28,7 +27,7 @@ class IntelligentBuilder implements Builder
     protected function walk($parameters)
     {
         return collect($parameters)
-            ->map(fn($parameter) => $this->handleParameter($parameter))
+            ->map(fn ($parameter) => $this->handleParameter($parameter))
             ->toArray();
     }
 }

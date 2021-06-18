@@ -24,11 +24,11 @@ class Soap
     public function __construct(Fakery $fakery)
     {
         $this->fakery = $fakery;
-        $this->beforeRequesting(fn($request) => $request->fakeUsing($this->fakery->mockResponseIfAvailable($request)))
-            ->beforeRequesting(fn($request) => $this->mergeHeadersFor($request))
-            ->beforeRequesting(fn($request) => $this->mergeInclusionsFor($request))
-            ->beforeRequesting(fn($request) => $this->mergeOptionsFor($request))
-            ->afterRequesting(fn($request, $response) => $this->record($request, $response));
+        $this->beforeRequesting(fn ($request) => $request->fakeUsing($this->fakery->mockResponseIfAvailable($request)))
+            ->beforeRequesting(fn ($request) => $this->mergeHeadersFor($request))
+            ->beforeRequesting(fn ($request) => $this->mergeInclusionsFor($request))
+            ->beforeRequesting(fn ($request) => $this->mergeOptionsFor($request))
+            ->afterRequesting(fn ($request, $response) => $this->record($request, $response));
     }
 
     public function to(string $endpoint)
@@ -53,6 +53,7 @@ class Soap
     {
         $inclusion = new Inclusion($parameters);
         $this->inclusions[] = $inclusion;
+
         return $inclusion;
     }
 
@@ -60,6 +61,7 @@ class Soap
     {
         $options = new OptionSet($options);
         $this->optionsSets[] = $options;
+
         return $options;
     }
 
@@ -67,6 +69,7 @@ class Soap
     {
         $headers = new HeaderSet(...$headers);
         $this->headerSets[] = $headers;
+
         return $headers;
     }
 
@@ -77,7 +80,7 @@ class Soap
             ->matches($request->getEndpoint(), $request->getMethod())
             ->flatMap
             ->getHeaders()
-            ->pipe(fn($headers) => $request->withHeaders(...$headers));
+            ->pipe(fn ($headers) => $request->withHeaders(...$headers));
     }
 
     protected function mergeInclusionsFor(Request $request)
@@ -87,7 +90,7 @@ class Soap
             ->matches($request->getEndpoint(), $request->getMethod())
             ->flatMap
             ->getParameters()
-            ->each(fn($value, $key) => $request->set($key, $value));
+            ->each(fn ($value, $key) => $request->set($key, $value));
     }
 
     protected function mergeOptionsFor(Request $request)
@@ -97,24 +100,27 @@ class Soap
             ->matches($request->getEndpoint(), $request->getMethod())
             ->map
             ->getOptions()
-            ->each(fn($options) => $request->withOptions($options));
+            ->each(fn ($options) => $request->withOptions($options));
     }
 
     public function beforeRequesting(callable $hook)
     {
         ($this->globalHooks['beforeRequesting'] ??= collect())->push($hook);
+
         return $this;
     }
 
     public function afterRequesting(callable $hook)
     {
         ($this->globalHooks['afterRequesting'] ??= collect())->push($hook);
+
         return $this;
     }
 
     public function trace($shouldTrace = true)
     {
-        $this->beforeRequesting(fn($request) => $request->trace($shouldTrace));
+        $this->beforeRequesting(fn ($request) => $request->trace($shouldTrace));
+
         return $this;
     }
 

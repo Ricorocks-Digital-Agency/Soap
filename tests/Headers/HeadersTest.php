@@ -10,7 +10,7 @@ use SoapVar;
 class HeadersTest extends TestCase
 {
     /** @test */
-    public function headers_can_be_set()
+    public function headersCanBeSet()
     {
         Soap::fake();
 
@@ -21,14 +21,14 @@ class HeadersTest extends TestCase
         Soap::assertSent(
             function (SoapClientRequest $request, $response) {
                 return $request->getHeaders() == [
-                    Soap::header('Auth', 'test.com')->data(['foo' => 'bar'])
+                    Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
                 ];
             }
         );
     }
 
     /** @test */
-    public function multiple_headers_can_be_defined_in_the_same_method()
+    public function multipleHeadersCanBeDefinedInTheSameMethod()
     {
         Soap::fake();
 
@@ -50,14 +50,14 @@ class HeadersTest extends TestCase
     }
 
     /** @test */
-    public function multiple_headers_can_be_defined_with_an_array_in_the_same_method()
+    public function multipleHeadersCanBeDefinedWithAnArrayInTheSameMethod()
     {
         Soap::fake();
 
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
             ->withHeaders(...[
                 Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
-                Soap::header('Brand', 'test.com')->data(['hello' => 'world'])
+                Soap::header('Brand', 'test.com')->data(['hello' => 'world']),
             ])
             ->call('Add', ['intA' => 10, 'intB' => 25]);
 
@@ -72,14 +72,14 @@ class HeadersTest extends TestCase
     }
 
     /** @test */
-    public function multiple_headers_can_be_defined_with_a_collection_in_the_same_method()
+    public function multipleHeadersCanBeDefinedWithACollectionInTheSameMethod()
     {
         Soap::fake();
 
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
             ->withHeaders(...collect([
                 Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
-                Soap::header('Brand', 'test.com')->data(['hello' => 'world'])
+                Soap::header('Brand', 'test.com')->data(['hello' => 'world']),
             ]))
             ->call('Add', ['intA' => 10, 'intB' => 25]);
 
@@ -94,7 +94,7 @@ class HeadersTest extends TestCase
     }
 
     /** @test */
-    public function multiple_headers_can_be_defined_in_the_multiple_methods()
+    public function multipleHeadersCanBeDefinedInTheMultipleMethods()
     {
         Soap::fake();
 
@@ -114,7 +114,7 @@ class HeadersTest extends TestCase
     }
 
     /** @test */
-    public function a_header_can_be_created_without_any_parameters_and_be_composed_fluently()
+    public function aHeaderCanBeCreatedWithoutAnyParametersAndBeComposedFluently()
     {
         Soap::fake();
 
@@ -135,14 +135,14 @@ class HeadersTest extends TestCase
                     Soap::header('Auth', 'test.com')
                         ->data(['foo' => 'bar'])
                         ->mustUnderstand()
-                        ->actor('this.test')
+                        ->actor('this.test'),
                 ];
             }
         );
     }
 
     /** @test */
-    public function a_header_can_be_created_with_the_helper_method()
+    public function aHeaderCanBeCreatedWithTheHelperMethod()
     {
         Soap::fake();
 
@@ -153,14 +153,14 @@ class HeadersTest extends TestCase
         Soap::assertSent(
             function (SoapClientRequest $request, $response) {
                 return $request->getHeaders() == [
-                    Soap::header('Auth', 'test.com')->data(['foo' => 'bar'])
+                    Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
                 ];
             }
         );
     }
 
     /** @test */
-    public function a_header_can_be_set_using_a_SoapVar()
+    public function aHeaderCanBeSetUsingASoapVar()
     {
         Soap::fake();
 
@@ -171,14 +171,14 @@ class HeadersTest extends TestCase
         Soap::assertSent(
             function (SoapClientRequest $request, $response) {
                 return $request->getHeaders() == [
-                    Soap::header('Auth', 'test.com')->data(new SoapVar(['foo' => 'bar'], null))
+                    Soap::header('Auth', 'test.com')->data(new SoapVar(['foo' => 'bar'], null)),
                 ];
             }
         );
     }
 
     /** @test */
-    public function the_optional_parameters_of_the_SoapHeader_are_optional()
+    public function theOptionalParametersOfTheSoapHeaderAreOptional()
     {
         Soap::fake();
 

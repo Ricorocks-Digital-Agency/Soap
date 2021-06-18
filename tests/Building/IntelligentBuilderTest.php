@@ -13,35 +13,35 @@ class IntelligentBuilderTest extends TestCase
     protected Builder $builder;
 
     /** @test */
-    public function it_can_handle_an_array()
+    public function itCanHandleAnArray()
     {
         $result = $this->builder->handle(['foo' => 'bar', 'baz' => 'huh?']);
         $this->assertEquals(['foo' => 'bar', 'baz' => 'huh?'], $result);
     }
 
     /** @test */
-    public function it_can_handle_a_nested_array()
+    public function itCanHandleANestedArray()
     {
         $result = $this->builder->handle(['foo' => ['bar' => ['foo', 'bar', 'baz']], 'baz' => 'huh?']);
         $this->assertEquals(['foo' => ['bar' => ['foo', 'bar', 'baz']], 'baz' => 'huh?'], $result);
     }
 
     /** @test */
-    public function it_can_handle_a_node()
+    public function itCanHandleANode()
     {
         $result = $this->builder->handle(['foo' => Soap::node()->body(['bar' => 'baz']), 'baz' => 'huh?']);
         $this->assertEquals(['foo' => ['bar' => 'baz'], 'baz' => 'huh?'], $result);
     }
 
     /** @test */
-    public function it_can_handle_a_node_with_only_attributes()
+    public function itCanHandleANodeWithOnlyAttributes()
     {
         $result = $this->builder->handle(['foo' => Soap::node(['foo' => 'bar', 'baz' => 'boom']), 'baz' => 'huh?']);
         $this->assertEquals(['foo' => ['_' => '', 'foo' => 'bar', 'baz' => 'boom'], 'baz' => 'huh?'], $result);
     }
 
     /** @test */
-    public function it_can_handle_a_node_with_attributes_and_body()
+    public function itCanHandleANodeWithAttributesAndBody()
     {
         $result = $this->builder->handle(
             ['foo' => Soap::node(['foo' => 'bar', 'baz' => 'boom'])->body(['gee' => 'whiz']), 'baz' => 'huh?']
@@ -50,32 +50,32 @@ class IntelligentBuilderTest extends TestCase
     }
 
     /** @test */
-    public function it_can_handle_nested_nodes()
+    public function itCanHandleNestedNodes()
     {
         $result = $this->builder->handle(
             [
                 'foo' => Soap
                     ::node(['email' => 'hi@me.com'])
-                    ->body(['bar' => Soap::node()->body(['hello' => 'world'])])
+                    ->body(['bar' => Soap::node()->body(['hello' => 'world'])]),
             ]
         );
         $this->assertEquals(
             [
-                'foo' => ['bar' => ['hello' => 'world'], 'email' => 'hi@me.com']
+                'foo' => ['bar' => ['hello' => 'world'], 'email' => 'hi@me.com'],
             ],
             $result
         );
     }
 
     /** @test */
-    public function it_can_handle_a_Soapable()
+    public function itCanHandleASoapable()
     {
-        $result = $this->builder->handle(new ExampleSoapable);
+        $result = $this->builder->handle(new ExampleSoapable());
 
         $this->assertEquals(
             [
                 'foo' => ['bar' => ['hello' => 'world'], 'email' => 'hi@me.com'],
-                'bar' => ['baz', 'bang']
+                'bar' => ['baz', 'bang'],
             ],
             $result
         );
@@ -88,15 +88,15 @@ class IntelligentBuilderTest extends TestCase
     }
 }
 
-class ExampleSoapable implements Soapable {
-
+class ExampleSoapable implements Soapable
+{
     public function toSoap()
     {
         return [
             'foo' => Soap
                 ::node(['email' => 'hi@me.com'])
                 ->body(['bar' => Soap::node()->body(['hello' => 'world'])]),
-            'bar' => ['baz', 'bang']
+            'bar' => ['baz', 'bang'],
         ];
     }
 }

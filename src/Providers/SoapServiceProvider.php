@@ -14,7 +14,7 @@ class SoapServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->app->singleton('soap', fn() => app(Soap::class));
+        $this->app->singleton('soap', fn () => app(Soap::class));
         $this->app->bind(Request::class, SoapClientRequest::class);
         $this->app->bind(Builder::class, IntelligentBuilder::class);
 
@@ -28,7 +28,7 @@ class SoapServiceProvider extends ServiceProvider
 
     protected function registerRay()
     {
-        if (!class_exists("Spatie\\LaravelRay\\Ray")) {
+        if (!class_exists('Spatie\\LaravelRay\\Ray')) {
             return;
         }
         $this->app->singleton(SoapWatcher::class);

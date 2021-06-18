@@ -8,22 +8,22 @@ use RicorocksDigitalAgency\Soap\Tests\TestCase;
 class GlobalHeadersTest extends TestCase
 {
     /** @test */
-    public function it_can_include_global_headers_for_every_request()
+    public function itCanIncludeGlobalHeadersForEveryRequest()
     {
         Soap::fake();
 
         Soap::headers(soap_header('Auth', 'test.com', ['foo' => 'bar']));
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->call('Add', (['intB' => 25]));
 
-        Soap::assertSent(function($request) {
+        Soap::assertSent(function ($request) {
             return $request->getHeaders() == [
-                soap_header('Auth', 'test.com', ['foo' => 'bar'])
+                soap_header('Auth', 'test.com', ['foo' => 'bar']),
             ];
         });
     }
 
     /** @test */
-    public function it_can_scope_headers_based_on_the_endpoint()
+    public function itCanScopeHeadersBasedOnTheEndpoint()
     {
         Soap::fake();
 
@@ -32,15 +32,15 @@ class GlobalHeadersTest extends TestCase
 
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->call('Add', (['intB' => 25]));
 
-        Soap::assertSent(function($request) {
+        Soap::assertSent(function ($request) {
             return $request->getHeaders() == [
-                soap_header('Auth', 'test.com', ['foo' => 'bar'])
+                soap_header('Auth', 'test.com', ['foo' => 'bar']),
             ];
         });
     }
 
     /** @test */
-    public function it_can_scope_headers_based_on_the_endpoint_and_method()
+    public function itCanScopeHeadersBasedOnTheEndpointAndMethod()
     {
         Soap::fake();
 
@@ -49,15 +49,15 @@ class GlobalHeadersTest extends TestCase
 
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->call('Add', (['intB' => 25]));
 
-        Soap::assertSent(function($request) {
+        Soap::assertSent(function ($request) {
             return $request->getHeaders() == [
-                soap_header('Brand', 'test.coms', ['hello' => 'world'])
+                soap_header('Brand', 'test.coms', ['hello' => 'world']),
             ];
         });
     }
 
     /** @test */
-    public function the_global_headers_are_merged_with_local_headers()
+    public function theGlobalHeadersAreMergedWithLocalHeaders()
     {
         Soap::fake();
 
@@ -67,10 +67,10 @@ class GlobalHeadersTest extends TestCase
             ->withHeaders(soap_header('Auth', 'test.com', ['foo' => 'bar']))
             ->call('Add', (['intB' => 25]));
 
-        Soap::assertSent(function($request) {
+        Soap::assertSent(function ($request) {
             return $request->getHeaders() == [
                 soap_header('Auth', 'test.com', ['foo' => 'bar']),
-                soap_header('Brand', 'test.coms', ['hello' => 'world'])
+                soap_header('Brand', 'test.coms', ['hello' => 'world']),
             ];
         });
     }
