@@ -98,7 +98,7 @@ class SoapClientRequest implements Request
                 'name' => $header->name,
                 'data' => $header->data,
                 'mustunderstand' => $header->mustUnderstand,
-                'actor' => $header->actor
+                'actor' => $header->actor ?? SOAP_ACTOR_NONE
             ]),
             $this->headers
         );
