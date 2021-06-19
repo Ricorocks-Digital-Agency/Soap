@@ -9,7 +9,7 @@ if (!function_exists('soap_node')) {
 }
 
 if (!function_exists('soap_header')) {
-    function soap_header(?string $name = null, ?string $namespace = null, $data = null, bool $mustUnderstand = false, ?string $actor = null) {
+    function soap_header(?string $name = null, ?string $namespace = null, $data = null, bool $mustUnderstand = false, $actor = null) {
         return Soap::header($name, $namespace, $data, $mustUnderstand, $actor);
     }
 }
