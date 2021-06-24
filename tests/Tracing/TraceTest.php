@@ -11,6 +11,8 @@ class TraceTest extends TestCase
     /** @test */
     public function the_trace_object_has_a_static_client_method()
     {
+        $this->markTestSkipped('This makes a real API call to retrieve the WSDL');
+
         $trace = Trace::client($client = new SoapClient(static::EXAMPLE_SOAP_ENDPOINT));
 
         $this->assertSame($client->__getLastRequest(), $trace->xmlRequest);
