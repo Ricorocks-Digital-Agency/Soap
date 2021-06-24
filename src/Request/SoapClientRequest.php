@@ -29,7 +29,6 @@ class SoapClientRequest implements Request
     public function to(string $endpoint): Request
     {
         $this->endpoint = $endpoint;
-
         return $this;
     }
 
@@ -43,11 +42,11 @@ class SoapClientRequest implements Request
         $this->method = $method;
         $this->body = $parameters;
 
-        $this->hooks['beforeRequesting']->each(fn ($callback) => $callback($this));
+        $this->hooks['beforeRequesting']->each(fn($callback) => $callback($this));
         $this->body = $this->builder->handle($this->body);
 
         $response = $this->getResponse();
-        $this->hooks['afterRequesting']->each(fn ($callback) => $callback($this, $response));
+        $this->hooks['afterRequesting']->each(fn($callback) => $callback($this, $response));
 
         return $response;
     }
@@ -61,7 +60,7 @@ class SoapClientRequest implements Request
     {
         return tap(
             Response::new($this->makeRequest()),
-            fn ($response) => data_get($this->options, 'trace')
+            fn($response) => data_get($this->options, 'trace')
                 ? $response->setTrace(Trace::client($this->client()))
                 : $response
         );
@@ -81,7 +80,7 @@ class SoapClientRequest implements Request
     {
         $client = resolve(SoapClient::class, [
             'wsdl' => $this->endpoint,
-            'options' => $this->options,
+            'options' => $this->options
         ]);
 
         return tap($client, fn ($client) => $client->__setSoapHeaders($this->constructHeaders()));
@@ -98,8 +97,8 @@ class SoapClientRequest implements Request
                 'namespace' => $header->namespace,
                 'name' => $header->name,
                 'data' => $header->data,
-                'mustUnderstand' => $header->mustUnderstand,
-                'actor' => $header->actor,
+                'mustunderstand' => $header->mustUnderstand,
+                'actor' => $header->actor ?? SOAP_ACTOR_NONE
             ]),
             $this->headers
         );
@@ -123,14 +122,12 @@ class SoapClientRequest implements Request
     public function beforeRequesting(...$closures): Request
     {
         ($this->hooks['beforeRequesting'] ??= collect())->push(...$closures);
-
         return $this;
     }
 
     public function afterRequesting(...$closures): Request
     {
         ($this->hooks['afterRequesting'] ??= collect())->push(...$closures);
-
         return $this;
     }
 
@@ -146,14 +143,12 @@ class SoapClientRequest implements Request
         }
 
         $this->response = $response instanceof Response ? $response : $response($this);
-
         return $this;
     }
 
     public function set($key, $value): Request
     {
         data_set($this->body, $key, $value);
-
         return $this;
     }
 
@@ -190,14 +185,12 @@ class SoapClientRequest implements Request
     public function withOptions(array $options): Request
     {
         $this->options = array_merge($this->getOptions(), $options);
-
         return $this;
     }
 
     public function withHeaders(Header ...$headers): Request
     {
         $this->headers = array_merge($this->getHeaders(), $headers);
-
         return $this;
     }
 
