@@ -1,51 +1,40 @@
 <?php
 
-namespace RicorocksDigitalAgency\Soap\Tests\Options;
-
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 use RicorocksDigitalAgency\Soap\Request\SoapClientRequest;
 use RicorocksDigitalAgency\Soap\Tests\TestCase;
 
-class AuthTest extends TestCase
-{
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
+it('can use basic auth', function() {
+    $soap = soap();
+    $soap->fake();
 
-    /** @test */
-    public function basic_auth_can_be_set()
-    {
-        Soap::fake();
+    $soap->to(EXAMPLE_SOAP_ENDPOINT)
+        ->withBasicAuth('hello', 'world')
+        ->call('Add', ['intA' => 10, 'intB' => 25]);
 
-        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-            ->withBasicAuth('hello', 'world')
-            ->call('Add', ['intA' => 10, 'intB' => 25]);
+    $soap->assertSent(function (SoapClientRequest $request) {
+        return $request->getOptions() == [
+                'authentication' => SOAP_AUTHENTICATION_BASIC,
+                'login' => 'hello',
+                'password' => 'world',
+            ];
+    });
+});
 
-        Soap::assertSent(function (SoapClientRequest $request, $response) {
-            return $request->getOptions() == [
-                    'authentication' => SOAP_AUTHENTICATION_BASIC,
-                    'login' => 'hello',
-                    'password' => 'world',
-                ];
-        });
-    }
+it('can use digest auth', function() {
+    $soap = soap();
+    $soap->fake();
 
-    /** @test */
-    public function digest_auth_can_be_set()
-    {
-        Soap::fake();
+    $soap->to(EXAMPLE_SOAP_ENDPOINT)
+        ->withDigestAuth('hello', 'world')
+        ->call('Add', ['intA' => 10, 'intB' => 25]);
 
-        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-            ->withDigestAuth('hello', 'world')
-            ->call('Add', ['intA' => 10, 'intB' => 25]);
+    $soap->assertSent(function (SoapClientRequest $request) {
+        return $request->getOptions() == [
+                'authentication' => SOAP_AUTHENTICATION_DIGEST,
+                'login' => 'hello',
+                'password' => 'world',
+            ];
+    });
+});
 
-        Soap::assertSent(function (SoapClientRequest $request, $response) {
-            return $request->getOptions() == [
-                    'authentication' => SOAP_AUTHENTICATION_DIGEST,
-                    'login' => 'hello',
-                    'password' => 'world',
-                ];
-        });
-    }
-}

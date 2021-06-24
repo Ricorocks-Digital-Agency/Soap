@@ -1,54 +1,39 @@
 <?php
 
-namespace RicorocksDigitalAgency\Soap\Tests\Tracing;
+use RicorocksDigitalAgency\Soap\Parameters\IntelligentBuilder;
+use RicorocksDigitalAgency\Soap\Request\SoapClientRequest;
+use RicorocksDigitalAgency\Soap\Tests\Mocks\MockSoapClient;
 
-use RicorocksDigitalAgency\Soap\Facades\Soap;
-use RicorocksDigitalAgency\Soap\Tests\TestCase;
-
-class SoapTracingTest extends TestCase
-{
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->fakeClient();
-    }
-
-    /** @test */
-    public function a_trace_can_be_requested_at_time_of_request()
-    {
-        $response = Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-                        ->trace()
-                        ->call('Add', ['intA' => 10, 'intB' => 25]);
-
-        $this->assertEquals('<?xml version="1.0" encoding="UTF-8"?><FooBar><Hello>World</Hello></FooBar>', $response->trace()->xmlRequest);
-        $this->assertEquals('<?xml version="1.0" encoding="UTF-8"?><Status>Success!</Status>', $response->trace()->xmlResponse);
-        $this->assertEquals('Hello World', $response->trace()->requestHeaders);
-        $this->assertEquals('Foo Bar', $response->trace()->responseHeaders);
-    }
-
-    /** @test */
-    public function a_trace_can_be_requested_globally()
-    {
-        Soap::trace();
-
-        $response = Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-                        ->call('Add', ['intA' => 10, 'intB' => 25]);
-
-        $this->assertEquals('<?xml version="1.0" encoding="UTF-8"?><FooBar><Hello>World</Hello></FooBar>', $response->trace()->xmlRequest);
-        $this->assertEquals('<?xml version="1.0" encoding="UTF-8"?><Status>Success!</Status>', $response->trace()->xmlResponse);
-        $this->assertEquals('Hello World', $response->trace()->requestHeaders);
-        $this->assertEquals('Foo Bar', $response->trace()->responseHeaders);
-    }
-
-    /** @test */
-    public function by_default_the_trace_has_no_content_on_the_response()
-    {
-        $response = Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-                        ->call('Add', ['intA' => 10, 'intB' => 25]);
-
-        $this->assertEmpty($response->trace()->xmlRequest);
-        $this->assertEmpty($response->trace()->xmlResponse);
-        $this->assertEmpty($response->trace()->requestHeaders);
-        $this->assertEmpty($response->trace()->responseHeaders);
-    }
+function traceableSoap() {
+    return soap(null, new SoapClientRequest(
+                        new IntelligentBuilder(),
+                        new MockSoapClient(EXAMPLE_SOAP_ENDPOINT, ['trace' => true]))
+    );
 }
+
+it('can request a trace at the time of request', function() {
+    expect(traceableSoap()->to(EXAMPLE_SOAP_ENDPOINT)->trace()->call('Add', ['intA' => 10, 'intB' => 25])->trace())
+        ->xmlRequest->toEqual('<?xml version="1.0" encoding="UTF-8"?><FooBar><Hello>World</Hello></FooBar>')
+        ->xmlResponse->toEqual('<?xml version="1.0" encoding="UTF-8"?><Status>Success!</Status>')
+        ->requestHeaders->toEqual('Hello World')
+        ->responseHeaders->toEqual('Foo Bar');
+});
+
+it('can request traces globally', function() {
+    $soap = traceableSoap();
+    $soap->trace();
+
+    expect($soap->to(EXAMPLE_SOAP_ENDPOINT)->call('Add', ['intA' => 10, 'intB' => 25])->trace())
+        ->xmlRequest->toEqual('<?xml version="1.0" encoding="UTF-8"?><FooBar><Hello>World</Hello></FooBar>')
+        ->xmlResponse->toEqual('<?xml version="1.0" encoding="UTF-8"?><Status>Success!</Status>')
+        ->requestHeaders->toEqual('Hello World')
+        ->responseHeaders->toEqual('Foo Bar');
+});
+
+it('has no content in the trace be default', function() {
+    expect(traceableSoap()->to(EXAMPLE_SOAP_ENDPOINT)->call('Add', ['intA' => 10, 'intB' => 25])->trace())
+        ->xmlRequest->toBeEmpty()
+        ->xmlResponse->toBeEmpty()
+        ->requestHeaders->toBeEmpty()
+        ->responseHeaders->toBeEmpty();
+});
