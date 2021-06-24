@@ -11,7 +11,7 @@ use SoapVar;
 class HeadersTest extends TestCase
 {
     /** @test */
-    public function headersCanBeSet()
+    public function headers_can_be_set()
     {
         Soap::fake();
 
@@ -29,7 +29,7 @@ class HeadersTest extends TestCase
     }
 
     /** @test */
-    public function multipleHeadersCanBeDefinedInTheSameMethod()
+    public function multiple_headers_can_be_defined_in_the_same_method()
     {
         Soap::fake();
 
@@ -51,7 +51,7 @@ class HeadersTest extends TestCase
     }
 
     /** @test */
-    public function multipleHeadersCanBeDefinedWithAnArrayInTheSameMethod()
+    public function multiple_headers_can_be_defined_with_an_array_in_the_same_method()
     {
         Soap::fake();
 
@@ -73,7 +73,7 @@ class HeadersTest extends TestCase
     }
 
     /** @test */
-    public function multipleHeadersCanBeDefinedWithACollectionInTheSameMethod()
+    public function multiple_headers_can_be_defined_with_a_collection_in_the_same_method()
     {
         Soap::fake();
 
@@ -95,7 +95,7 @@ class HeadersTest extends TestCase
     }
 
     /** @test */
-    public function multipleHeadersCanBeDefinedInTheMultipleMethods()
+    public function multiple_headers_can_be_defined_in_the_multiple_methods()
     {
         Soap::fake();
 
@@ -115,7 +115,7 @@ class HeadersTest extends TestCase
     }
 
     /** @test */
-    public function aHeaderCanBeCreatedWithoutAnyParametersAndBeComposedFluently()
+    public function a_header_can_be_created_without_any_parameters_and_be_composed_fluently()
     {
         Soap::fake();
 
@@ -143,7 +143,7 @@ class HeadersTest extends TestCase
     }
 
     /** @test */
-    public function aHeaderCanBeCreatedWithTheHelperMethod()
+    public function a_header_can_be_created_with_the_helper_method()
     {
         Soap::fake();
 
@@ -161,7 +161,7 @@ class HeadersTest extends TestCase
     }
 
     /** @test */
-    public function aHeaderCanBeSetUsingASoapVar()
+    public function a_header_can_be_set_using_a_soap_var()
     {
         Soap::fake();
 
@@ -179,7 +179,7 @@ class HeadersTest extends TestCase
     }
 
     /** @test */
-    public function theDataParameterIsOptional()
+    public function the_data_parameter_is_optional()
     {
         Soap::fake();
 
@@ -199,7 +199,7 @@ class HeadersTest extends TestCase
     }
 
     /** @test */
-    public function ifTheActorIsProvidedItIsPassedToThePhpSoapHeader()
+    public function if_the_actor_is_provided_it_is_passed_to_the_php_soap_header()
     {
         $this->markTestSkipped('This makes a real API call to assert the correct header construction');
 
@@ -215,7 +215,7 @@ class HeadersTest extends TestCase
     }
 
     /** @test */
-    public function ifTheActorIsNotProvidedThePhpSoapActorNoneConstantIsPassed()
+    public function if_the_actor_is_not_provided_the_php_soap_actor_none_constant_is_passed()
     {
         $this->markTestSkipped('This makes a real API call to assert the correct header construction');
 

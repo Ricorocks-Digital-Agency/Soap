@@ -12,6 +12,7 @@ $rules = [
     'yoda_style' => false,
     'concat_space' => ['spacing' => 'one'],
     'not_operator_with_space' => false,
+    'php_unit_method_casing' => ['case' => 'snake_case'],
 ];
 
 $rules['increment_style'] = ['style' => 'post'];

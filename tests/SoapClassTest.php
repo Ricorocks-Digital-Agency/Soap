@@ -10,7 +10,7 @@ use RicorocksDigitalAgency\Soap\Response\Response;
 class SoapClassTest extends TestCase
 {
     /** @test */
-    public function itCanObtainAWsdl()
+    public function it_can_obtain_a_wsdl()
     {
         $this->mock(Request::class)
             ->shouldReceive('beforeRequesting', 'afterRequesting', 'to')->andReturnSelf()
@@ -34,7 +34,7 @@ class SoapClassTest extends TestCase
     }
 
     /** @test */
-    public function itCanCallASOAPFunction()
+    public function it_can_call_asoap_function()
     {
         Soap::fake(['*' => Response::new(['AddResult' => 35])]);
         $result = Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->call('Add', ['intA' => 10, 'intB' => 25]);
@@ -42,7 +42,7 @@ class SoapClassTest extends TestCase
     }
 
     /** @test */
-    public function itCanUseNodes()
+    public function it_can_use_nodes()
     {
         Soap::fake(['*' => Response::new(['AddResult' => 35])]);
         $result = Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->call('Add', soap_node()->body(['intA' => 10, 'intB' => 25]));
@@ -50,7 +50,7 @@ class SoapClassTest extends TestCase
     }
 
     /** @test */
-    public function itCanForwardMethodCalls()
+    public function it_can_forward_method_calls()
     {
         Soap::fake(['*' => Response::new(['AddResult' => 35])]);
         $result = Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->Add(['intA' => 10, 'intB' => 25]);
@@ -58,7 +58,7 @@ class SoapClassTest extends TestCase
     }
 
     /** @test */
-    public function itWorksWithASoapable()
+    public function it_works_with_a_soapable()
     {
         Soap::fake(['*' => Response::new(['AddResult' => 35])]);
         $result = Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->Add(new ExampleSoapable());

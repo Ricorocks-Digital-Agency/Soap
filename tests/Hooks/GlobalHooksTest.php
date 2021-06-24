@@ -13,7 +13,7 @@ class GlobalHooksTest extends TestCase
     public static $increment = 0;
 
     /** @test */
-    public function itCanPerformGlobalBeforeRequestingHooks()
+    public function it_can_perform_global_before_requesting_hooks()
     {
         Soap::fake(['http://endpoint.com' => Response::new(), 'http://foobar.com' => Response::new()]);
 
@@ -26,7 +26,7 @@ class GlobalHooksTest extends TestCase
     }
 
     /** @test */
-    public function itCanPerformGlobalAfterRequestingHooks()
+    public function it_can_perform_global_after_requesting_hooks()
     {
         Soap::fake(['http://endpoint.com' => Response::new(), 'http://foobar.com' => Response::new()]);
 
@@ -39,7 +39,7 @@ class GlobalHooksTest extends TestCase
     }
 
     /** @test */
-    public function hooksRunEvenWithoutFaking()
+    public function hooks_run_even_without_faking()
     {
         $this->expectException(Exception::class);
         Soap::beforeRequesting(function () { throw new Exception('Yippee! We hit this instead'); });
@@ -47,7 +47,7 @@ class GlobalHooksTest extends TestCase
     }
 
     /** @test */
-    public function theBeforeRequestingHooksCanTransformTheRequestObject()
+    public function the_before_requesting_hooks_can_transform_the_request_object()
     {
         Soap::fake();
 
@@ -59,7 +59,7 @@ class GlobalHooksTest extends TestCase
     }
 
     /** @test */
-    public function theAfterRequestingHooksCanTransformTheResponseObject()
+    public function the_after_requesting_hooks_can_transform_the_response_object()
     {
         Soap::fake();
 

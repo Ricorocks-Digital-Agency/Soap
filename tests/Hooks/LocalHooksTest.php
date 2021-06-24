@@ -12,7 +12,7 @@ class LocalHooksTest extends TestCase
     protected $counter = [];
 
     /** @test */
-    public function itCanPerformLocalBeforeRequestingHooks()
+    public function it_can_perform_local_before_requesting_hooks()
     {
         Soap::fake(['http://endpoint.com' => Response::new(), 'http://foobar.com' => Response::new()]);
 
@@ -27,7 +27,7 @@ class LocalHooksTest extends TestCase
     }
 
     /** @test */
-    public function itCanPerformLocalAfterRequestingHooks()
+    public function it_can_perform_local_after_requesting_hooks()
     {
         Soap::fake(['http://endpoint.com' => Response::new(), 'http://foobar.com' => Response::new()]);
 
@@ -42,7 +42,7 @@ class LocalHooksTest extends TestCase
     }
 
     /** @test */
-    public function hooksCanBeChained()
+    public function hooks_can_be_chained()
     {
         Soap::fake(['http://endpoint.com' => Response::new()]);
 
@@ -59,7 +59,7 @@ class LocalHooksTest extends TestCase
     }
 
     /** @test */
-    public function theBeforeHookHasAccessToTheRequest()
+    public function the_before_hook_has_access_to_the_request()
     {
         Soap::fake(['http://endpoint.com' => Response::new()]);
 
@@ -69,7 +69,7 @@ class LocalHooksTest extends TestCase
     }
 
     /** @test */
-    public function theAfterHookHasAccessToTheRequestAndTheResponse()
+    public function the_after_hook_has_access_to_the_request_and_the_response()
     {
         Soap::fake(['http://endpoint.com' => Response::new(['foo' => 'bar'])]);
 
@@ -80,7 +80,7 @@ class LocalHooksTest extends TestCase
     }
 
     /** @test */
-    public function theBeforeRequestingHooksCanTransformTheRequestObject()
+    public function the_before_requesting_hooks_can_transform_the_request_object()
     {
         Soap::fake();
 
@@ -93,7 +93,7 @@ class LocalHooksTest extends TestCase
     }
 
     /** @test */
-    public function theAfterRequestingHooksCanTransformTheResponseObject()
+    public function the_after_requesting_hooks_can_transform_the_response_object()
     {
         Soap::fake();
 

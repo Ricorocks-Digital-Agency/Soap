@@ -14,7 +14,7 @@ class SoapTracingTest extends TestCase
     }
 
     /** @test */
-    public function aTraceCanBeRequestedAtTimeOfRequest()
+    public function a_trace_can_be_requested_at_time_of_request()
     {
         $response = Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
                         ->trace()
@@ -27,7 +27,7 @@ class SoapTracingTest extends TestCase
     }
 
     /** @test */
-    public function aTraceCanBeRequestedGlobally()
+    public function a_trace_can_be_requested_globally()
     {
         Soap::trace();
 
@@ -41,7 +41,7 @@ class SoapTracingTest extends TestCase
     }
 
     /** @test */
-    public function byDefaultTheTraceHasNoContentOnTheResponse()
+    public function by_default_the_trace_has_no_content_on_the_response()
     {
         $response = Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
                         ->call('Add', ['intA' => 10, 'intB' => 25]);

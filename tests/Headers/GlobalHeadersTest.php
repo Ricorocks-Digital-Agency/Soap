@@ -8,7 +8,7 @@ use RicorocksDigitalAgency\Soap\Tests\TestCase;
 class GlobalHeadersTest extends TestCase
 {
     /** @test */
-    public function itCanIncludeGlobalHeadersForEveryRequest()
+    public function it_can_include_global_headers_for_every_request()
     {
         Soap::fake();
 
@@ -23,7 +23,7 @@ class GlobalHeadersTest extends TestCase
     }
 
     /** @test */
-    public function itCanScopeHeadersBasedOnTheEndpoint()
+    public function it_can_scope_headers_based_on_the_endpoint()
     {
         Soap::fake();
 
@@ -40,7 +40,7 @@ class GlobalHeadersTest extends TestCase
     }
 
     /** @test */
-    public function itCanScopeHeadersBasedOnTheEndpointAndMethod()
+    public function it_can_scope_headers_based_on_the_endpoint_and_method()
     {
         Soap::fake();
 
@@ -57,7 +57,7 @@ class GlobalHeadersTest extends TestCase
     }
 
     /** @test */
-    public function theGlobalHeadersAreMergedWithLocalHeaders()
+    public function the_global_headers_are_merged_with_local_headers()
     {
         Soap::fake();
 

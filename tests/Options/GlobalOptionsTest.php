@@ -8,7 +8,7 @@ use RicorocksDigitalAgency\Soap\Tests\TestCase;
 class GlobalOptionsTest extends TestCase
 {
     /** @test */
-    public function itCanIncludeGlobalOptionsForEveryRequest()
+    public function it_can_include_global_options_for_every_request()
     {
         Soap::fake();
 
@@ -21,7 +21,7 @@ class GlobalOptionsTest extends TestCase
     }
 
     /** @test */
-    public function itCanScopeOptionsBasedOnTheEndpoint()
+    public function it_can_scope_options_based_on_the_endpoint()
     {
         Soap::fake();
 
@@ -36,7 +36,7 @@ class GlobalOptionsTest extends TestCase
     }
 
     /** @test */
-    public function itCanScopeOptionsBasedOnTheEndpointAndMethod()
+    public function it_can_scope_options_based_on_the_endpoint_and_method()
     {
         Soap::fake();
 

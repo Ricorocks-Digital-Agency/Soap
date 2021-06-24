@@ -8,7 +8,7 @@ use RicorocksDigitalAgency\Soap\Facades\Soap;
 class MacroableTest extends TestCase
 {
     /** @test */
-    public function soapIsMacroable()
+    public function soap_is_macroable()
     {
         $this->expectExceptionObject(new Exception('You sucessfully called this!'));
 

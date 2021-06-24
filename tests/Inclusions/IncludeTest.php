@@ -9,7 +9,7 @@ use RicorocksDigitalAgency\Soap\Tests\TestCase;
 class IncludeTest extends TestCase
 {
     /** @test */
-    public function itCanIncludeAnArrayAtTheRootWithoutUsingFor()
+    public function it_can_include_an_array_at_the_root_without_using_for()
     {
         Soap::fake();
         $this->mock(Builder::class)
@@ -30,7 +30,7 @@ class IncludeTest extends TestCase
     }
 
     /** @test */
-    public function itCanIncludeAnArrayAtTheRootWhenSpecifiedUsingTheIncludeMethod()
+    public function it_can_include_an_array_at_the_root_when_specified_using_the_include_method()
     {
         Soap::fake();
         $this->mock(Builder::class)
@@ -51,7 +51,7 @@ class IncludeTest extends TestCase
     }
 
     /** @test */
-    public function itCanIncludeANodeAtTheRootWhenSpecifiedUsingTheIncludeMethod()
+    public function it_can_include_a_node_at_the_root_when_specified_using_the_include_method()
     {
         Soap::fake();
         $this->mock(Builder::class)
@@ -73,7 +73,7 @@ class IncludeTest extends TestCase
     }
 
     /** @test */
-    public function itOnlyIncludesIfTheMethodNameMatches()
+    public function it_only_includes_if_the_method_name_matches()
     {
         Soap::fake();
         $this->mock(Builder::class)
@@ -94,7 +94,7 @@ class IncludeTest extends TestCase
     }
 
     /** @test */
-    public function inclusionsCanBePlacedFurtherDownTheTreeUsingDotSyntax()
+    public function inclusions_can_be_placed_further_down_the_tree_using_dot_syntax()
     {
         Soap::fake();
         Soap::include(['foo.bar' => 'Hello World'])->for(static::EXAMPLE_SOAP_ENDPOINT, 'Bar');

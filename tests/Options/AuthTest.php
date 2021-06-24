@@ -14,7 +14,7 @@ class AuthTest extends TestCase
     }
 
     /** @test */
-    public function basicAuthCanBeSet()
+    public function basic_auth_can_be_set()
     {
         Soap::fake();
 
@@ -32,7 +32,7 @@ class AuthTest extends TestCase
     }
 
     /** @test */
-    public function digestAuthCanBeSet()
+    public function digest_auth_can_be_set()
     {
         Soap::fake();
 

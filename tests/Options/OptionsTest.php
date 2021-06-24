@@ -9,7 +9,7 @@ use RicorocksDigitalAgency\Soap\Tests\TestCase;
 class OptionsTest extends TestCase
 {
     /** @test */
-    public function optionsCanBeSet()
+    public function options_can_be_set()
     {
         Soap::fake();
 
@@ -27,7 +27,7 @@ class OptionsTest extends TestCase
     }
 
     /** @test */
-    public function itMergesWithOtherOptions()
+    public function it_merges_with_other_options()
     {
         Soap::fake();
 
@@ -49,7 +49,7 @@ class OptionsTest extends TestCase
     }
 
     /** @test */
-    public function itOverridesPreviousValues()
+    public function it_overrides_previous_values()
     {
         Soap::fake();
 

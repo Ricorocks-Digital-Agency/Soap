@@ -10,7 +10,7 @@ use RicorocksDigitalAgency\Soap\Tests\TestCase;
 class SoapFakeTest extends TestCase
 {
     /** @test */
-    public function itCanRecordRequests()
+    public function it_can_record_requests()
     {
         Soap::fake();
         Soap::assertNothingSent();
@@ -20,7 +20,7 @@ class SoapFakeTest extends TestCase
     }
 
     /** @test */
-    public function itCanFakeRequests()
+    public function it_can_fake_requests()
     {
         Soap::fake();
         Soap::to(self::EXAMPLE_SOAP_ENDPOINT)->call('Bob', ['intA' => 10, 'intB' => 20]);
@@ -28,7 +28,7 @@ class SoapFakeTest extends TestCase
     }
 
     /** @test */
-    public function callingFakeWithNoParamatersReturnsANewResponse()
+    public function calling_fake_with_no_paramaters_returns_a_new_response()
     {
         Soap::fake();
         Soap::to(self::EXAMPLE_SOAP_ENDPOINT)->call('Bob', ['intA' => 10, 'intB' => 20]);
@@ -36,7 +36,7 @@ class SoapFakeTest extends TestCase
     }
 
     /** @test */
-    public function itCanFakeSpecificEndpoints()
+    public function it_can_fake_specific_endpoints()
     {
         Soap::fake();
         Soap::fake(['http://foobar.com' => Response::new(['foo' => 'bar'])]);
@@ -50,7 +50,7 @@ class SoapFakeTest extends TestCase
     }
 
     /** @test */
-    public function itCanHandleWildcards()
+    public function it_can_handle_wildcards()
     {
         Soap::fake(['http://foobar.*' => Response::new(['foo' => 'bar'])]);
 
@@ -80,7 +80,7 @@ class SoapFakeTest extends TestCase
     }
 
     /** @test */
-    public function itCanHandleMultipleWildcards()
+    public function it_can_handle_multiple_wildcards()
     {
         Soap::fake(
             [
