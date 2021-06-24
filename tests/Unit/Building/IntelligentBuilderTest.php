@@ -2,7 +2,8 @@
 
 use RicorocksDigitalAgency\Soap\Parameters\IntelligentBuilder;
 
-function builder() {
+function builder()
+{
     return new IntelligentBuilder();
 }
 
@@ -36,4 +37,3 @@ it('can handle a Soapable')
         'foo' => ['bar' => ['hello' => 'world'], 'email' => 'hi@me.com'],
         'bar' => ['baz', 'bang'],
     ]);
-

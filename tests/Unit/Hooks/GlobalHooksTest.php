@@ -3,64 +3,48 @@
 use RicorocksDigitalAgency\Soap\Request\Request;
 use RicorocksDigitalAgency\Soap\Response\Response;
 
-trait ProvidesIncrementingCounter {
-    static $increment = 0;
+trait ProvidesIncrementingCounter
+{
+    public $increment = 0;
 }
 
-uses(ProvidesIncrementingCounter::class);
+uses(ProvidesIncrementingCounter::class)->afterEach(function () { $this->increment = 0; });
 
-it('can perform global beforeRequesting hooks', function() {
-    $soap = soap();
+it('can perform global beforeRequesting hooks')
+    ->fake(['http://endpoint.com' => Response::new(), 'http://foobar.com' => Response::new()])
+    ->tap(fn($t) => $t->soap()->beforeRequesting(fn () => $t->increment++))
+    ->tap(fn($t) => $t->soap()->to('http://endpoint.com')->Test())
+    ->tap(fn($t) => $t->soap()->to('http://foobar.com')->Test())
+    ->defer(fn($t) => expect($t->increment)->toEqual(2));
 
-    $soap->fake(['http://endpoint.com' => Response::new(), 'http://foobar.com' => Response::new()]);
+it('can perform global afterRequesting hooks')
+    ->fake(['http://endpoint.com' => Response::new(), 'http://foobar.com' => Response::new()])
+    ->tap(fn($t) => $t->soap()->afterRequesting(fn () => $t->increment++))
+    ->tap(fn($t) => $t->soap()->to('http://endpoint.com')->Test())
+    ->tap(fn($t) => $t->soap()->to('http://foobar.com')->Test())
+    ->defer(fn($t) => expect($t->increment)->toEqual(2));
 
-    $soap->beforeRequesting(fn () => static::$increment++);
+it('can run hooks without having to fake')
+    ->tap(fn($t) => $t->expectException(Exception::class))
+    ->tap(fn($t) => $t->soap()->beforeRequesting(function () { throw new Exception('Yippee! We hit this instead'); }))
+    ->tap(fn($t) => $t->soap()->to('http://endpoint.com')->Test());
 
-    $soap->to('http://endpoint.com')->Test();
-    $soap->to('http://foobar.com')->Test();
+it('can use beforeRequesting hooks to transform the request object', function () {
+    $this->soap()->fake();
 
-    $this->assertEquals(2, static::$increment);
+    $this->soap()->beforeRequesting(fn (Request $request) => $request->set('hello.world', ['foo', 'bar']));
+    $this->soap()->beforeRequesting(fn (Request $request) => $request->set('hello.person', 'Richard'));
+    $this->soap()->to('http://endpoint.com')->Test();
+
+    $this->soap()->assertSent(fn ($request) => $request->getBody()['hello'] === ['world' => ['foo', 'bar'], 'person' => 'Richard']);
 });
 
-it('can perform global afterRequesting hooks', function() {
-    $soap = soap();
-    $soap->fake(['http://endpoint.com' => Response::new(), 'http://foobar.com' => Response::new()]);
+it('can use afterRequesting hooks to transform the response object', function () {
+    $this->soap()->fake();
 
-    $soap->afterRequesting(fn () => static::$increment++);
+    $this->soap()->afterRequesting(fn ($request, Response $response) => $response->set('hello.world', ['foo', 'bar']));
+    $this->soap()->afterRequesting(fn ($request, Response $response) => $response->set('hello.person', 'Richard'));
+    $this->soap()->to('http://endpoint.com')->Test();
 
-    $soap->to('http://endpoint.com')->Test();
-    $soap->to('http://foobar.com')->Test();
-
-    $this->assertEquals(2, static::$increment);
+    $this->soap()->assertSent(fn ($request, Response $response) => $response->response['hello'] === ['world' => ['foo', 'bar'], 'person' => 'Richard']);
 });
-
-it('can run hooks without having to fake', function() {
-    $soap = soap();
-    $this->expectException(Exception::class);
-    $soap->beforeRequesting(function () { throw new Exception('Yippee! We hit this instead'); });
-    $soap->to('http://endpoint.com')->Test();
-});
-
-it('can use beforeRequesting hooks to transform the request object', function() {
-    $soap = soap();
-    $soap->fake();
-
-    $soap->beforeRequesting(fn (Request $request) => $request->set('hello.world', ['foo', 'bar']));
-    $soap->beforeRequesting(fn (Request $request) => $request->set('hello.person', 'Richard'));
-    $soap->to('http://endpoint.com')->Test();
-
-    $soap->assertSent(fn ($request) => $request->getBody()['hello'] === ['world' => ['foo', 'bar'], 'person' => 'Richard']);
-});
-
-it('can use afterRequesting hooks to transform the response object', function() {
-    $soap = soap();
-    $soap->fake();
-
-    $soap->afterRequesting(fn ($request, Response $response) => $response->set('hello.world', ['foo', 'bar']));
-    $soap->afterRequesting(fn ($request, Response $response) => $response->set('hello.person', 'Richard'));
-    $soap->to('http://endpoint.com')->Test();
-
-    $soap->assertSent(fn ($request, Response $response) => $response->response['hello'] === ['world' => ['foo', 'bar'], 'person' => 'Richard']);
-});
-
-afterEach(function() { static::$increment = 0; });

@@ -8,6 +8,9 @@ use RicorocksDigitalAgency\Soap\Parameters\Node;
 use RicorocksDigitalAgency\Soap\Request\Request;
 use RicorocksDigitalAgency\Soap\Support\Fakery\Fakery;
 
+/**
+ * @mixin Fakery
+ */
 class Soap
 {
     use ForwardsCalls;

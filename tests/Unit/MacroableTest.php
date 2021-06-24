@@ -1,6 +1,6 @@
 <?php
 
-it('is macroable', function() {
+it('is macroable', function () {
     $this->expectExceptionObject(new Exception('You sucessfully called this!'));
 
     $soap = soap();
@@ -13,4 +13,3 @@ it('is macroable', function() {
 
     $this->fail('An exception should have been thrown!');
 });
-

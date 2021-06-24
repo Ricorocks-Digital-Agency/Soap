@@ -1,9 +1,9 @@
 <?php
 
-use RicorocksDigitalAgency\Soap\Request\Request;
 use Mockery as m;
+use RicorocksDigitalAgency\Soap\Request\Request;
 
-it('can obtain a WSDL', function() {
+it('can obtain a WSDL', function () {
     $mock = m::mock(Request::class);
     $mock->shouldReceive('beforeRequesting', 'afterRequesting', 'to')->andReturnSelf()
         ->shouldReceive('functions')->andReturn(
@@ -19,30 +19,29 @@ it('can obtain a WSDL', function() {
             ]
         );
 
-    expect(soap(null, $mock)
-        ->to(EXAMPLE_SOAP_ENDPOINT)->functions())
+    $soap = soap(null, $mock);
+
+    expect($soap->to(EXAMPLE_SOAP_ENDPOINT)->functions())
         ->toBeArray()
         ->not->toBeEmpty();
-
-    m::close();
 });
 
-it('can call a SOAP function')
+it('can call a SOAP function', function () {})
     ->fakeRequest(35)
-    ->expect(soap()->to(EXAMPLE_SOAP_ENDPOINT)->Add(['intA' => 10, 'intB' => 25])->AddResult)
+    ->defer(fn ($instance) => expect($instance->soap()->to(EXAMPLE_SOAP_ENDPOINT)->Add(['intA' => 10, 'intB' => 25])->AddResult))
     ->toEqual(35);
 
-it('can use nodes')
+it('can use nodes', function () {})
     ->fakeRequest(35)
-    ->expect(soap()->to(EXAMPLE_SOAP_ENDPOINT)->call('Add', soap()->node()->body(['intA' => 10, 'intB' => 25]))->AddResult)
+    ->defer(fn ($instance) => expect($instance->soap()->to(EXAMPLE_SOAP_ENDPOINT)->call('Add', soap()->node()->body(['intA' => 10, 'intB' => 25]))->AddResult))
     ->toEqual(35);
 
-it('can forward method calls')
+it('can forward method calls', function () {})
     ->fakeRequest(35)
-    ->expect(soap()->to(EXAMPLE_SOAP_ENDPOINT)->Add(['intA' => 10, 'intB' => 25])->AddResult)
+    ->defer(fn ($instance) => expect($instance->soap()->to(EXAMPLE_SOAP_ENDPOINT)->Add(['intA' => 10, 'intB' => 25])->AddResult))
     ->toEqual(35);
 
-it('works with a soapable')
+it('works with a soapable', function () {})
     ->fakeRequest(35)
-    ->expect(soap()->to(EXAMPLE_SOAP_ENDPOINT)->Add(new ExampleSoapable())->AddResult)
+    ->defer(fn ($instance) => expect($instance->soap()->to(EXAMPLE_SOAP_ENDPOINT)->Add(new ExampleSoapable())->AddResult))
     ->toEqual(35);
