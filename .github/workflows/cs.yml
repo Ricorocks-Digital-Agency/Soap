@@ -1,7 +1,7 @@
 name: CS Fixer
 
 on:
-  pull_request:
+  push:
     branches: [ main ]
 
 jobs:
