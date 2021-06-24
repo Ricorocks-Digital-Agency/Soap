@@ -3,7 +3,6 @@
 namespace RicorocksDigitalAgency\Soap\Tests\Tracing;
 
 use RicorocksDigitalAgency\Soap\Facades\Soap;
-use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
 use RicorocksDigitalAgency\Soap\Tests\TestCase;
 
 class SoapTracingTest extends TestCase

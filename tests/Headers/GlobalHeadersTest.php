@@ -15,9 +15,9 @@ class GlobalHeadersTest extends TestCase
         Soap::headers(soap_header('Auth', 'test.com', ['foo' => 'bar']));
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->call('Add', (['intB' => 25]));
 
-        Soap::assertSent(function($request) {
+        Soap::assertSent(function ($request) {
             return $request->getHeaders() == [
-                soap_header('Auth', 'test.com', ['foo' => 'bar'])
+                soap_header('Auth', 'test.com', ['foo' => 'bar']),
             ];
         });
     }
@@ -32,9 +32,9 @@ class GlobalHeadersTest extends TestCase
 
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->call('Add', (['intB' => 25]));
 
-        Soap::assertSent(function($request) {
+        Soap::assertSent(function ($request) {
             return $request->getHeaders() == [
-                soap_header('Auth', 'test.com', ['foo' => 'bar'])
+                soap_header('Auth', 'test.com', ['foo' => 'bar']),
             ];
         });
     }
@@ -49,9 +49,9 @@ class GlobalHeadersTest extends TestCase
 
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->call('Add', (['intB' => 25]));
 
-        Soap::assertSent(function($request) {
+        Soap::assertSent(function ($request) {
             return $request->getHeaders() == [
-                soap_header('Brand', 'test.coms', ['hello' => 'world'])
+                soap_header('Brand', 'test.coms', ['hello' => 'world']),
             ];
         });
     }
@@ -67,10 +67,10 @@ class GlobalHeadersTest extends TestCase
             ->withHeaders(soap_header('Auth', 'test.com', ['foo' => 'bar']))
             ->call('Add', (['intB' => 25]));
 
-        Soap::assertSent(function($request) {
+        Soap::assertSent(function ($request) {
             return $request->getHeaders() == [
                 soap_header('Auth', 'test.com', ['foo' => 'bar']),
-                soap_header('Brand', 'test.coms', ['hello' => 'world'])
+                soap_header('Brand', 'test.coms', ['hello' => 'world']),
             ];
         });
     }

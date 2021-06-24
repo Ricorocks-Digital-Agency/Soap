@@ -56,26 +56,26 @@ class IntelligentBuilderTest extends TestCase
             [
                 'foo' => Soap
                     ::node(['email' => 'hi@me.com'])
-                    ->body(['bar' => Soap::node()->body(['hello' => 'world'])])
+                    ->body(['bar' => Soap::node()->body(['hello' => 'world'])]),
             ]
         );
         $this->assertEquals(
             [
-                'foo' => ['bar' => ['hello' => 'world'], 'email' => 'hi@me.com']
+                'foo' => ['bar' => ['hello' => 'world'], 'email' => 'hi@me.com'],
             ],
             $result
         );
     }
 
     /** @test */
-    public function it_can_handle_a_Soapable()
+    public function it_can_handle_a_soapable()
     {
-        $result = $this->builder->handle(new ExampleSoapable);
+        $result = $this->builder->handle(new ExampleSoapable());
 
         $this->assertEquals(
             [
                 'foo' => ['bar' => ['hello' => 'world'], 'email' => 'hi@me.com'],
-                'bar' => ['baz', 'bang']
+                'bar' => ['baz', 'bang'],
             ],
             $result
         );
@@ -88,15 +88,15 @@ class IntelligentBuilderTest extends TestCase
     }
 }
 
-class ExampleSoapable implements Soapable {
-
+class ExampleSoapable implements Soapable
+{
     public function toSoap()
     {
         return [
             'foo' => Soap
                 ::node(['email' => 'hi@me.com'])
                 ->body(['bar' => Soap::node()->body(['hello' => 'world'])]),
-            'bar' => ['baz', 'bang']
+            'bar' => ['baz', 'bang'],
         ];
     }
 }

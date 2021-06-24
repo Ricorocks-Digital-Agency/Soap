@@ -17,7 +17,7 @@ class MethodFakeTest extends TestCase
         Soap::to('http://foobar.com')->call('Add', ['intA' => 10, 'intB' => 20]);
 
         Soap::assertSent(
-            fn($request, $response) => $request->getMethod() == 'Add' && $response->response == ['foo' => 'bar']
+            fn ($request, $response) => $request->getMethod() == 'Add' && $response->response == ['foo' => 'bar']
         );
     }
 
@@ -34,16 +34,16 @@ class MethodFakeTest extends TestCase
         Soap::to('http://foobar.com')->Divide(['intA' => 10, 'intB' => 20]);
 
         Soap::assertSent(
-            fn($request, $response) => $request->getMethod() == 'Add' && $response->response == ['foo' => 'bar']
+            fn ($request, $response) => $request->getMethod() == 'Add' && $response->response == ['foo' => 'bar']
         );
         Soap::assertSent(
-            fn($request, $response) => $request->getMethod() == 'Subtract' && $response->response == ['foo' => 'bar']
+            fn ($request, $response) => $request->getMethod() == 'Subtract' && $response->response == ['foo' => 'bar']
         );
         Soap::assertSent(
-            fn($request, $response) => $request->getMethod() == 'Multiply' && $response->response == ['baz' => 'boom']
+            fn ($request, $response) => $request->getMethod() == 'Multiply' && $response->response == ['baz' => 'boom']
         );
         Soap::assertSent(
-            fn($request, $response) => $request->getMethod() == 'Divide' && $response->response == ['baz' => 'boom']
+            fn ($request, $response) => $request->getMethod() == 'Divide' && $response->response == ['baz' => 'boom']
         );
     }
 
@@ -58,7 +58,7 @@ class MethodFakeTest extends TestCase
         Soap::to('http://foobar.com')->call('Add', ['intA' => 10, 'intB' => 20]);
 
         Soap::assertSent(
-            fn($request, $response) => $request->getMethod() == 'Add' && $response->response == ['foo' => 'bar']
+            fn ($request, $response) => $request->getMethod() == 'Add' && $response->response == ['foo' => 'bar']
         );
     }
 }

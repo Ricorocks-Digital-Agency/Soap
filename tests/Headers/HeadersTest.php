@@ -22,7 +22,7 @@ class HeadersTest extends TestCase
         Soap::assertSent(
             function (SoapClientRequest $request, $response) {
                 return $request->getHeaders() == [
-                    Soap::header('Auth', 'test.com')->data(['foo' => 'bar'])
+                    Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
                 ];
             }
         );
@@ -58,7 +58,7 @@ class HeadersTest extends TestCase
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
             ->withHeaders(...[
                 Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
-                Soap::header('Brand', 'test.com')->data(['hello' => 'world'])
+                Soap::header('Brand', 'test.com')->data(['hello' => 'world']),
             ])
             ->call('Add', ['intA' => 10, 'intB' => 25]);
 
@@ -80,7 +80,7 @@ class HeadersTest extends TestCase
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
             ->withHeaders(...collect([
                 Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
-                Soap::header('Brand', 'test.com')->data(['hello' => 'world'])
+                Soap::header('Brand', 'test.com')->data(['hello' => 'world']),
             ]))
             ->call('Add', ['intA' => 10, 'intB' => 25]);
 
@@ -136,7 +136,7 @@ class HeadersTest extends TestCase
                     Soap::header('Auth', 'test.com')
                         ->data(['foo' => 'bar'])
                         ->mustUnderstand()
-                        ->actor('this.test')
+                        ->actor('this.test'),
                 ];
             }
         );
@@ -154,14 +154,14 @@ class HeadersTest extends TestCase
         Soap::assertSent(
             function (SoapClientRequest $request, $response) {
                 return $request->getHeaders() == [
-                    Soap::header('Auth', 'test.com')->data(['foo' => 'bar'])
+                    Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
                 ];
             }
         );
     }
 
     /** @test */
-    public function a_header_can_be_set_using_a_SoapVar()
+    public function a_header_can_be_set_using_a_soap_var()
     {
         Soap::fake();
 
@@ -172,7 +172,7 @@ class HeadersTest extends TestCase
         Soap::assertSent(
             function (SoapClientRequest $request, $response) {
                 return $request->getHeaders() == [
-                    Soap::header('Auth', 'test.com')->data(new SoapVar(['foo' => 'bar'], null))
+                    Soap::header('Auth', 'test.com')->data(new SoapVar(['foo' => 'bar'], null)),
                 ];
             }
         );

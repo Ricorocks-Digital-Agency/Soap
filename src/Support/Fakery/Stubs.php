@@ -21,7 +21,7 @@ class Stubs
     public function getForRequest(Request $request)
     {
         return $this->stubs
-                ->pipe(fn($stubs) => $this->filterAndSortStubs($stubs, $request))
+                ->pipe(fn ($stubs) => $this->filterAndSortStubs($stubs, $request))
                 ->map
                 ->getResponse($request)
                 ->filter()
@@ -31,8 +31,8 @@ class Stubs
     protected function filterAndSortStubs($stubs, Request $request)
     {
         return $stubs
-                ->filter(fn(Stub $stub) => $stub->isForEndpoint($request->getEndpoint()))
-                ->pipe(fn($stubs) => $this->retrieveCorrectStubsForMethod($stubs, $request));
+                ->filter(fn (Stub $stub) => $stub->isForEndpoint($request->getEndpoint()))
+                ->pipe(fn ($stubs) => $this->retrieveCorrectStubsForMethod($stubs, $request));
     }
 
     protected function retrieveCorrectStubsForMethod($stubs, Request $request)
@@ -45,8 +45,8 @@ class Stubs
     protected function getStubsForMethod($stubs, $request)
     {
         return $stubs
-                ->filter(fn(Stub $stub) => $stub->isForMethod($request->getMethod()))
-                ->pipe(fn($stubs) => $this->sortMethodStubs($stubs));
+                ->filter(fn (Stub $stub) => $stub->isForMethod($request->getMethod()))
+                ->pipe(fn ($stubs) => $this->sortMethodStubs($stubs));
     }
 
     protected function sortMethodStubs($stubs)

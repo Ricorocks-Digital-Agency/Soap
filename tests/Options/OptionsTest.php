@@ -1,8 +1,6 @@
 <?php
 
-
 namespace RicorocksDigitalAgency\Soap\Tests\Options;
-
 
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 use RicorocksDigitalAgency\Soap\Request\SoapClientRequest;
@@ -68,5 +66,4 @@ class OptionsTest extends TestCase
             }
         );
     }
-
 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace RicorocksDigitalAgency\Soap;
-
 
 use RicorocksDigitalAgency\Soap\Support\Scoped;
 

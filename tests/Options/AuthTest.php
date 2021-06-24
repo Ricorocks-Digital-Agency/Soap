@@ -1,17 +1,13 @@
 <?php
 
-
 namespace RicorocksDigitalAgency\Soap\Tests\Options;
 
-
 use RicorocksDigitalAgency\Soap\Facades\Soap;
-use RicorocksDigitalAgency\Soap\Request\Request;
 use RicorocksDigitalAgency\Soap\Request\SoapClientRequest;
 use RicorocksDigitalAgency\Soap\Tests\TestCase;
 
 class AuthTest extends TestCase
 {
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -26,7 +22,7 @@ class AuthTest extends TestCase
             ->withBasicAuth('hello', 'world')
             ->call('Add', ['intA' => 10, 'intB' => 25]);
 
-        Soap::assertSent(function(SoapClientRequest $request, $response) {
+        Soap::assertSent(function (SoapClientRequest $request, $response) {
             return $request->getOptions() == [
                     'authentication' => SOAP_AUTHENTICATION_BASIC,
                     'login' => 'hello',
@@ -44,7 +40,7 @@ class AuthTest extends TestCase
             ->withDigestAuth('hello', 'world')
             ->call('Add', ['intA' => 10, 'intB' => 25]);
 
-        Soap::assertSent(function(SoapClientRequest $request, $response) {
+        Soap::assertSent(function (SoapClientRequest $request, $response) {
             return $request->getOptions() == [
                     'authentication' => SOAP_AUTHENTICATION_DIGEST,
                     'login' => 'hello',
@@ -52,5 +48,4 @@ class AuthTest extends TestCase
                 ];
         });
     }
-
 }

@@ -1,15 +1,12 @@
 <?php
 
-
 namespace RicorocksDigitalAgency\Soap\Tests\Options;
-
 
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 use RicorocksDigitalAgency\Soap\Tests\TestCase;
 
 class GlobalOptionsTest extends TestCase
 {
-
     /** @test */
     public function it_can_include_global_options_for_every_request()
     {
@@ -18,7 +15,7 @@ class GlobalOptionsTest extends TestCase
         Soap::options(['login' => 'foo', 'password' => 'bar']);
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->call('Add', (['intB' => 25]));
 
-        Soap::assertSent(function($request) {
+        Soap::assertSent(function ($request) {
             return $request->getOptions() == ['login' => 'foo', 'password' => 'bar'];
         });
     }
@@ -33,7 +30,7 @@ class GlobalOptionsTest extends TestCase
 
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->call('Add', (['intB' => 25]));
 
-        Soap::assertSent(function($request) {
+        Soap::assertSent(function ($request) {
             return $request->getOptions() == ['compression' => SOAP_COMPRESSION_GZIP];
         });
     }
@@ -48,9 +45,8 @@ class GlobalOptionsTest extends TestCase
 
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->call('Add', (['intB' => 25]));
 
-        Soap::assertSent(function($request) {
+        Soap::assertSent(function ($request) {
             return $request->getOptions() == ['login' => 'foo', 'password' => 'bar'];
         });
     }
-
 }

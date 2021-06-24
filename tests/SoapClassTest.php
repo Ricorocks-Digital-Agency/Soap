@@ -17,14 +17,14 @@ class SoapClassTest extends TestCase
             ->shouldReceive('functions')
             ->andReturn(
                 [
-                    "AddResponse Add(Add \$parameters)",
-                    "SubtractResponse Subtract(Subtract \$parameters)",
-                    "MultiplyResponse Multiply(Multiply \$parameters)",
-                    "DivideResponse Divide(Divide \$parameters)",
-                    "AddResponse Add(Add \$parameters)",
-                    "SubtractResponse Subtract(Subtract \$parameters)",
-                    "MultiplyResponse Multiply(Multiply \$parameters)",
-                    "DivideResponse Divide(Divide \$parameters)",
+                    'AddResponse Add(Add $parameters)',
+                    'SubtractResponse Subtract(Subtract $parameters)',
+                    'MultiplyResponse Multiply(Multiply $parameters)',
+                    'DivideResponse Divide(Divide $parameters)',
+                    'AddResponse Add(Add $parameters)',
+                    'SubtractResponse Subtract(Subtract $parameters)',
+                    'MultiplyResponse Multiply(Multiply $parameters)',
+                    'DivideResponse Divide(Divide $parameters)',
                 ]
             );
 
@@ -34,7 +34,7 @@ class SoapClassTest extends TestCase
     }
 
     /** @test */
-    public function it_can_call_a_SOAP_function()
+    public function it_can_call_asoap_function()
     {
         Soap::fake(['*' => Response::new(['AddResult' => 35])]);
         $result = Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->call('Add', ['intA' => 10, 'intB' => 25]);
@@ -61,19 +61,18 @@ class SoapClassTest extends TestCase
     public function it_works_with_a_soapable()
     {
         Soap::fake(['*' => Response::new(['AddResult' => 35])]);
-        $result = Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->Add(new ExampleSoapable);
+        $result = Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->Add(new ExampleSoapable());
         $this->assertEquals(35, $result->AddResult);
     }
 }
 
 class ExampleSoapable implements Soapable
 {
-
     public function toSoap()
     {
         return [
             'intA' => 10,
-            'intB' => 25
+            'intB' => 25,
         ];
     }
 }

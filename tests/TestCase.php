@@ -9,7 +9,7 @@ use Spatie\LaravelRay\RayServiceProvider;
 
 abstract class TestCase extends OrchestraTestCase
 {
-    const EXAMPLE_SOAP_ENDPOINT = "http://www.dneonline.com/calculator.asmx?WSDL";
+    public const EXAMPLE_SOAP_ENDPOINT = 'http://www.dneonline.com/calculator.asmx?WSDL';
 
     protected function fakeClient()
     {
@@ -20,5 +20,4 @@ abstract class TestCase extends OrchestraTestCase
     {
         return [RayServiceProvider::class, SoapServiceProvider::class];
     }
-
 }

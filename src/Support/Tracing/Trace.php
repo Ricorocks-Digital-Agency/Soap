@@ -12,7 +12,7 @@ class Trace
 
     public static function client($client): self
     {
-        $trace = new static;
+        $trace = new static();
         $trace->client = $client;
         $trace->xmlRequest = $client->__getLastRequest();
         $trace->xmlResponse = $client->__getLastResponse();

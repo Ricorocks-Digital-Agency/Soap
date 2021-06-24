@@ -32,7 +32,7 @@ class SoapFakeTest extends TestCase
     {
         Soap::fake();
         Soap::to(self::EXAMPLE_SOAP_ENDPOINT)->call('Bob', ['intA' => 10, 'intB' => 20]);
-        Soap::assertSent(fn(Request $request, Response $response) => $response->response == []);
+        Soap::assertSent(fn (Request $request, Response $response) => $response->response == []);
     }
 
     /** @test */
@@ -44,9 +44,9 @@ class SoapFakeTest extends TestCase
 
         Soap::to('http://foobar.com')->call('Bob', ['intA' => 10, 'intB' => 20]);
 
-        Soap::assertSent(fn($request, Response $response) => $response->response['foo'] === 'bar');
-        Soap::assertSent(fn(Request $request, Response $response) => $request->getMethod() === 'Bob');
-        Soap::assertNotSent(fn(Request $request, Response $response) => $request->getMethod() === 'Trudy');
+        Soap::assertSent(fn ($request, Response $response) => $response->response['foo'] === 'bar');
+        Soap::assertSent(fn (Request $request, Response $response) => $request->getMethod() === 'Bob');
+        Soap::assertNotSent(fn (Request $request, Response $response) => $request->getMethod() === 'Trudy');
     }
 
     /** @test */
@@ -60,21 +60,21 @@ class SoapFakeTest extends TestCase
 
         Soap::assertSentCount(3);
         Soap::assertSent(
-            fn($request, $response) => $request->getBody() === [
+            fn ($request, $response) => $request->getBody() === [
                     'intA' => 10,
-                    'intB' => 20
+                    'intB' => 20,
                 ] && $response->response === ['foo' => 'bar']
         );
         Soap::assertSent(
-            fn($request, $response) => $request->getBody() === [
+            fn ($request, $response) => $request->getBody() === [
                     'intA' => 20,
-                    'intB' => 30
+                    'intB' => 30,
                 ] && $response->response === ['foo' => 'bar']
         );
         Soap::assertSent(
-            fn($request, $response) => $request->getBody() === [
+            fn ($request, $response) => $request->getBody() === [
                     'intA' => 30,
-                    'intB' => 40
+                    'intB' => 40,
                 ] && $response->response === ['foo' => 'bar']
         );
     }
@@ -95,21 +95,21 @@ class SoapFakeTest extends TestCase
 
         Soap::assertSentCount(3);
         Soap::assertSent(
-            fn($request, $response) => $request->getBody() === [
+            fn ($request, $response) => $request->getBody() === [
                     'intA' => 10,
-                    'intB' => 20
+                    'intB' => 20,
                 ] && $response->response === ['foo' => 'bar']
         );
         Soap::assertSent(
-            fn($request, $response) => $request->getBody() === [
+            fn ($request, $response) => $request->getBody() === [
                     'intA' => 20,
-                    'intB' => 30
+                    'intB' => 30,
                 ] && $response->response === ['foo' => 'bar']
         );
         Soap::assertSent(
-            fn($request, $response) => $request->getBody() === [
+            fn ($request, $response) => $request->getBody() === [
                     'intA' => 30,
-                    'intB' => 40
+                    'intB' => 40,
                 ] && $response->response === ['baz' => 'english dear']
         );
     }

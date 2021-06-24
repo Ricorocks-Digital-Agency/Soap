@@ -20,14 +20,13 @@ class IncludeTest extends TestCase
                     return $parameters ==
                         [
                             'intA' => 10,
-                            'intB' => 25
+                            'intB' => 25,
                         ];
                 }
             );
 
         Soap::include(['intA' => 10]);
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->call('Add', (['intB' => 25]));
-
     }
 
     /** @test */
@@ -42,7 +41,7 @@ class IncludeTest extends TestCase
                     return $parameters ==
                         [
                             'intA' => 10,
-                            'intB' => 25
+                            'intB' => 25,
                         ];
                 }
             );
@@ -64,7 +63,7 @@ class IncludeTest extends TestCase
                         [
                             'intA' => 10,
                             'intB' => 25,
-                            'foo' => soap_node(['foo' => 'bar'])
+                            'foo' => soap_node(['foo' => 'bar']),
                         ];
                 }
             );
@@ -85,7 +84,7 @@ class IncludeTest extends TestCase
                     return $parameters ==
                         [
                             'intA' => 10,
-                            'intB' => 25
+                            'intB' => 25,
                         ];
                 }
             );
@@ -101,6 +100,6 @@ class IncludeTest extends TestCase
         Soap::include(['foo.bar' => 'Hello World'])->for(static::EXAMPLE_SOAP_ENDPOINT, 'Bar');
         Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->call('Bar', (['foo' => ['baz' => 'cool']]));
 
-        Soap::assertSent(fn($request) => $request->getBody() == ['foo' => ['baz' => 'cool', 'bar' => 'Hello World']]);
+        Soap::assertSent(fn ($request) => $request->getBody() == ['foo' => ['baz' => 'cool', 'bar' => 'Hello World']]);
     }
 }
