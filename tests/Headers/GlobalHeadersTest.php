@@ -1,77 +1,67 @@
 <?php
 
-namespace RicorocksDigitalAgency\Soap\Tests\Headers;
+it('can include global headers for every request', function() {
+    $soap = soap();
+    $soap->fake();
 
-use RicorocksDigitalAgency\Soap\Facades\Soap;
-use RicorocksDigitalAgency\Soap\Tests\TestCase;
+    $soap->headers($soap->header('Auth', 'test.com', ['foo' => 'bar']));
+    $soap->to(EXAMPLE_SOAP_ENDPOINT)->call('Add', (['intB' => 25]));
 
-class GlobalHeadersTest extends TestCase
-{
-    /** @test */
-    public function it_can_include_global_headers_for_every_request()
-    {
-        Soap::fake();
-
-        Soap::headers(soap_header('Auth', 'test.com', ['foo' => 'bar']));
-        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->call('Add', (['intB' => 25]));
-
-        Soap::assertSent(function ($request) {
-            return $request->getHeaders() == [
-                soap_header('Auth', 'test.com', ['foo' => 'bar']),
+    $soap->assertSent(function ($request) use ($soap) {
+        return $request->getHeaders() == [
+                $soap->header('Auth', 'test.com', ['foo' => 'bar']),
             ];
-        });
-    }
+    });
+});
 
-    /** @test */
-    public function it_can_scope_headers_based_on_the_endpoint()
-    {
-        Soap::fake();
+it('can include scoped headers based on the endpoint', function() {
+    $soap = soap();
+    $soap->fake();
 
-        Soap::headers(soap_header('Brand', 'test.coms', ['hello' => 'world']))->for('https://foo.bar');
-        Soap::headers(soap_header('Auth', 'test.com', ['foo' => 'bar']))->for(static::EXAMPLE_SOAP_ENDPOINT);
+    $soap->headers($soap->header('Brand', 'test.coms', ['hello' => 'world']))->for('https://foo.bar');
+    $soap->headers($soap->header('Auth', 'test.com', ['foo' => 'bar']))->for(EXAMPLE_SOAP_ENDPOINT);
 
-        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->call('Add', (['intB' => 25]));
+    $soap->to(EXAMPLE_SOAP_ENDPOINT)->call('Add', (['intB' => 25]));
 
-        Soap::assertSent(function ($request) {
-            return $request->getHeaders() == [
-                soap_header('Auth', 'test.com', ['foo' => 'bar']),
+    $soap->assertSent(function ($request) use ($soap) {
+        return $request->getHeaders() == [
+                $soap->header('Auth', 'test.com', ['foo' => 'bar']),
             ];
-        });
-    }
+    });
+});
 
-    /** @test */
-    public function it_can_scope_headers_based_on_the_endpoint_and_method()
-    {
-        Soap::fake();
+it('can scope headers based on the endpoint and method', function() {
+    $soap = soap();
+    $soap->fake();
 
-        Soap::headers(soap_header('Brand', 'test.coms', ['hello' => 'world']))->for(static::EXAMPLE_SOAP_ENDPOINT, 'Add');
-        Soap::headers(soap_header('Auth', 'test.com', ['foo' => 'bar']))->for(static::EXAMPLE_SOAP_ENDPOINT, 'Subtract');
+    $soap->headers($soap->header('Brand', 'test.coms', ['hello' => 'world']))->for(EXAMPLE_SOAP_ENDPOINT, 'Add');
+    $soap->headers($soap->header('Auth', 'test.com', ['foo' => 'bar']))->for(EXAMPLE_SOAP_ENDPOINT, 'Subtract');
 
-        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)->call('Add', (['intB' => 25]));
+    $soap->to(EXAMPLE_SOAP_ENDPOINT)->call('Add', (['intB' => 25]));
 
-        Soap::assertSent(function ($request) {
-            return $request->getHeaders() == [
-                soap_header('Brand', 'test.coms', ['hello' => 'world']),
+    $soap->assertSent(function ($request) use ($soap) {
+        return $request->getHeaders() == [
+                $soap->header('Brand', 'test.coms', ['hello' => 'world']),
             ];
-        });
-    }
+    });
+});
 
-    /** @test */
-    public function the_global_headers_are_merged_with_local_headers()
-    {
-        Soap::fake();
+it('merges the global headers with the local headers', function() {
+    $soap = soap();
+    $soap->fake();
 
-        Soap::headers(soap_header('Brand', 'test.coms', ['hello' => 'world']));
+    $soap->headers($soap->header('Brand', 'test.coms', ['hello' => 'world']));
 
-        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-            ->withHeaders(soap_header('Auth', 'test.com', ['foo' => 'bar']))
-            ->call('Add', (['intB' => 25]));
+    $soap->to(EXAMPLE_SOAP_ENDPOINT)
+        ->withHeaders($soap->header('Auth', 'test.com', ['foo' => 'bar']))
+        ->call('Add', (['intB' => 25]));
 
-        Soap::assertSent(function ($request) {
-            return $request->getHeaders() == [
-                soap_header('Auth', 'test.com', ['foo' => 'bar']),
-                soap_header('Brand', 'test.coms', ['hello' => 'world']),
+    $soap->assertSent(function ($request) use ($soap) {
+        return $request->getHeaders() == [
+                $soap->header('Auth', 'test.com', ['foo' => 'bar']),
+                $soap->header('Brand', 'test.coms', ['hello' => 'world']),
             ];
-        });
-    }
-}
+    });
+});
+
+

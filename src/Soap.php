@@ -16,24 +16,28 @@ class Soap
     }
 
     protected Fakery $fakery;
+    protected Request $request;
+
     protected $headerSets = [];
     protected $inclusions = [];
     protected $optionsSets = [];
     protected $globalHooks = [];
 
-    public function __construct(Fakery $fakery)
+    public function __construct(Fakery $fakery, Request $request)
     {
         $this->fakery = $fakery;
-        $this->beforeRequesting(fn ($request) => $request->fakeUsing($this->fakery->mockResponseIfAvailable($request)))
-            ->beforeRequesting(fn ($request) => $this->mergeHeadersFor($request))
-            ->beforeRequesting(fn ($request) => $this->mergeInclusionsFor($request))
-            ->beforeRequesting(fn ($request) => $this->mergeOptionsFor($request))
-            ->afterRequesting(fn ($request, $response) => $this->record($request, $response));
+        $this->request = $request;
+
+        $this->beforeRequesting(fn ($requestInstance) => $requestInstance->fakeUsing($this->fakery->mockResponseIfAvailable($requestInstance)))
+            ->beforeRequesting(fn ($requestInstance) => $this->mergeHeadersFor($requestInstance))
+            ->beforeRequesting(fn ($requestInstance) => $this->mergeInclusionsFor($requestInstance))
+            ->beforeRequesting(fn ($requestInstance) => $this->mergeOptionsFor($requestInstance))
+            ->afterRequesting(fn ($requestInstance, $response) => $this->record($requestInstance, $response));
     }
 
     public function to(string $endpoint)
     {
-        return resolve(Request::class)
+        return (clone $this->request)
             ->beforeRequesting(...$this->globalHooks['beforeRequesting'])
             ->afterRequesting(...$this->globalHooks['afterRequesting'])
             ->to($endpoint);

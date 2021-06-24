@@ -18,7 +18,9 @@
     "require-dev": {
         "phpunit/phpunit": "^9.4",
         "orchestra/testbench": "^6.5",
-        "spatie/ray": "^1.17"
+        "spatie/ray": "^1.17",
+        "pestphp/pest-plugin-laravel": "^1.0",
+        "ext-soap": "*"
     },
     "license": "MIT",
     "authors": [

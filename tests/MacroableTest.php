@@ -1,23 +1,16 @@
 <?php
 
-namespace RicorocksDigitalAgency\Soap\Tests;
+it('is macroable', function() {
+    $this->expectExceptionObject(new Exception('You sucessfully called this!'));
 
-use Exception;
-use RicorocksDigitalAgency\Soap\Facades\Soap;
+    $soap = soap();
 
-class MacroableTest extends TestCase
-{
-    /** @test */
-    public function soap_is_macroable()
-    {
-        $this->expectExceptionObject(new Exception('You sucessfully called this!'));
+    $soap->macro('test', function () {
+        throw new Exception('You sucessfully called this!');
+    });
 
-        Soap::macro('test', function () {
-            throw new Exception('You sucessfully called this!');
-        });
+    $soap->test();
 
-        Soap::test();
+    $this->fail('An exception should have been thrown!');
+});
 
-        $this->fail('An exception should have been thrown!');
-    }
-}

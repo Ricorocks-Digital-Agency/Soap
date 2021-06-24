@@ -1,232 +1,205 @@
 <?php
 
-namespace RicorocksDigitalAgency\Soap\Tests\Headers;
-
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 use RicorocksDigitalAgency\Soap\Request\SoapClientRequest;
-use RicorocksDigitalAgency\Soap\Tests\TestCase;
-use SoapHeader;
-use SoapVar;
 
-class HeadersTest extends TestCase
-{
-    /** @test */
-    public function headers_can_be_set()
-    {
-        Soap::fake();
+it('can set headers', function() {
+    $soap = soap();
+    $soap->fake();
 
-        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-            ->withHeaders(Soap::header('Auth', 'test.com')->data(['foo' => 'bar']))
-            ->call('Add', ['intA' => 10, 'intB' => 25]);
+    $soap->to(EXAMPLE_SOAP_ENDPOINT)
+        ->withHeaders($soap->header('Auth', 'test.com')->data(['foo' => 'bar']))
+        ->call('Add', ['intA' => 10, 'intB' => 25]);
 
-        Soap::assertSent(
-            function (SoapClientRequest $request, $response) {
-                return $request->getHeaders() == [
-                    Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
+    $soap->assertSent(
+        function (SoapClientRequest $request) use ($soap) {
+            return $request->getHeaders() == [
+                    $soap->header('Auth', 'test.com')->data(['foo' => 'bar']),
                 ];
-            }
-        );
-    }
+        }
+    );
+});
 
-    /** @test */
-    public function multiple_headers_can_be_defined_in_the_same_method()
-    {
-        Soap::fake();
+it('can define multiple headers in the same method', function() {
+    $soap = soap();
+    $soap->fake();
 
-        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-            ->withHeaders(
-                Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
-                Soap::header('Brand', 'test.com')->data(['hello' => 'world'])
-            )
-            ->call('Add', ['intA' => 10, 'intB' => 25]);
+    $soap->to(EXAMPLE_SOAP_ENDPOINT)
+        ->withHeaders(
+            $soap->header('Auth', 'test.com')->data(['foo' => 'bar']),
+            $soap->header('Brand', 'test.com')->data(['hello' => 'world'])
+        )
+        ->call('Add', ['intA' => 10, 'intB' => 25]);
 
-        Soap::assertSent(
-            function (SoapClientRequest $request, $response) {
-                return $request->getHeaders() == [
-                    Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
-                    Soap::header('Brand', 'test.com')->data(['hello' => 'world']),
+    $soap->assertSent(
+        function (SoapClientRequest $request) use ($soap) {
+            return $request->getHeaders() == [
+                    $soap->header('Auth', 'test.com')->data(['foo' => 'bar']),
+                    $soap->header('Brand', 'test.com')->data(['hello' => 'world']),
                 ];
-            }
-        );
-    }
+        }
+    );
+});
 
-    /** @test */
-    public function multiple_headers_can_be_defined_with_an_array_in_the_same_method()
-    {
-        Soap::fake();
+it('can define multiple headers with an array in the same method', function() {
+    $soap = soap();
+    $soap->fake();
 
-        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-            ->withHeaders(...[
-                Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
-                Soap::header('Brand', 'test.com')->data(['hello' => 'world']),
-            ])
-            ->call('Add', ['intA' => 10, 'intB' => 25]);
+    $soap->to(EXAMPLE_SOAP_ENDPOINT)
+        ->withHeaders(...[
+                             $soap->header('Auth', 'test.com')->data(['foo' => 'bar']),
+                             $soap->header('Brand', 'test.com')->data(['hello' => 'world']),
+                         ])
+        ->call('Add', ['intA' => 10, 'intB' => 25]);
 
-        Soap::assertSent(
-            function (SoapClientRequest $request, $response) {
-                return $request->getHeaders() == [
-                    Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
-                    Soap::header('Brand', 'test.com')->data(['hello' => 'world']),
+    $soap->assertSent(
+        function (SoapClientRequest $request) use($soap) {
+            return $request->getHeaders() == [
+                    $soap->header('Auth', 'test.com')->data(['foo' => 'bar']),
+                    $soap->header('Brand', 'test.com')->data(['hello' => 'world']),
                 ];
-            }
-        );
-    }
+        }
+    );
+});
 
-    /** @test */
-    public function multiple_headers_can_be_defined_with_a_collection_in_the_same_method()
-    {
-        Soap::fake();
+it('can define multiple headers using a collection in the same method', function() {
+    $soap = soap();
+    $soap->fake();
 
-        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-            ->withHeaders(...collect([
-                Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
-                Soap::header('Brand', 'test.com')->data(['hello' => 'world']),
-            ]))
-            ->call('Add', ['intA' => 10, 'intB' => 25]);
+    $soap->to(EXAMPLE_SOAP_ENDPOINT)
+        ->withHeaders(...collect([
+            $soap->header('Auth', 'test.com')->data(['foo' => 'bar']),
+            $soap->header('Brand', 'test.com')->data(['hello' => 'world']),
+        ]))
+        ->call('Add', ['intA' => 10, 'intB' => 25]);
 
-        Soap::assertSent(
-            function (SoapClientRequest $request, $response) {
-                return $request->getHeaders() == [
-                    Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
-                    Soap::header('Brand', 'test.com')->data(['hello' => 'world']),
+    $soap->assertSent(
+        function (SoapClientRequest $request) use ($soap) {
+            return $request->getHeaders() == [
+                $soap->header('Auth', 'test.com')->data(['foo' => 'bar']),
+                $soap->header('Brand', 'test.com')->data(['hello' => 'world']),
+            ];
+        }
+    );
+});
+
+it('can define multiple headers in multiple methods', function() {
+    $soap = soap();
+    $soap->fake();
+
+    $soap->to(EXAMPLE_SOAP_ENDPOINT)
+        ->withHeaders($soap->header('Auth', 'test.com')->data(['foo' => 'bar']))
+        ->withHeaders($soap->header('Brand', 'test.com')->data(['hello' => 'world']))
+        ->call('Add', ['intA' => 10, 'intB' => 25]);
+
+    $soap->assertSent(
+        function (SoapClientRequest $request) use ($soap) {
+            return $request->getHeaders() == [
+                    $soap->header('Auth', 'test.com')->data(['foo' => 'bar']),
+                    $soap->header('Brand', 'test.com')->data(['hello' => 'world']),
                 ];
-            }
-        );
-    }
+        }
+    );
+});
 
-    /** @test */
-    public function multiple_headers_can_be_defined_in_the_multiple_methods()
-    {
-        Soap::fake();
+it('can create a header without any parameters and be composed fluently', function() {
+    $soap = soap();
+    $soap->fake();
 
-        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-            ->withHeaders(Soap::header('Auth', 'test.com')->data(['foo' => 'bar']))
-            ->withHeaders(Soap::header('Brand', 'test.com')->data(['hello' => 'world']))
-            ->call('Add', ['intA' => 10, 'intB' => 25]);
+    $soap->to(EXAMPLE_SOAP_ENDPOINT)
+        ->withHeaders(
+            $soap->header()
+                ->name('Auth')
+                ->namespace('test.com')
+                ->data(['foo' => 'bar'])
+                ->mustUnderstand()
+                ->actor('this.test')
+        )
+        ->call('Add', ['intA' => 10, 'intB' => 25]);
 
-        Soap::assertSent(
-            function (SoapClientRequest $request, $response) {
-                return $request->getHeaders() == [
-                    Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
-                    Soap::header('Brand', 'test.com')->data(['hello' => 'world']),
-                ];
-            }
-        );
-    }
-
-    /** @test */
-    public function a_header_can_be_created_without_any_parameters_and_be_composed_fluently()
-    {
-        Soap::fake();
-
-        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-            ->withHeaders(
-                Soap::header()
-                    ->name('Auth')
-                    ->namespace('test.com')
-                    ->data(['foo' => 'bar'])
-                    ->mustUnderstand()
-                    ->actor('this.test')
-            )
-            ->call('Add', ['intA' => 10, 'intB' => 25]);
-
-        Soap::assertSent(
-            function (SoapClientRequest $request, $response) {
-                return $request->getHeaders() == [
-                    Soap::header('Auth', 'test.com')
+    $soap->assertSent(
+        function (SoapClientRequest $request) use ($soap) {
+            return $request->getHeaders() == [
+                    $soap->header('Auth', 'test.com')
                         ->data(['foo' => 'bar'])
                         ->mustUnderstand()
                         ->actor('this.test'),
                 ];
-            }
-        );
-    }
+        }
+    );
+});
 
-    /** @test */
-    public function a_header_can_be_created_with_the_helper_method()
-    {
-        Soap::fake();
+it('can create a header with the helper method', function() {
+    $soap = soap();
+    $soap->fake();
 
-        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-            ->withHeaders(soap_header('Auth', 'test.com', ['foo' => 'bar']))
-            ->call('Add', ['intA' => 10, 'intB' => 25]);
+    $soap->to(EXAMPLE_SOAP_ENDPOINT)
+        ->withHeaders(soap_header('Auth', 'test.com', ['foo' => 'bar']))
+        ->call('Add', ['intA' => 10, 'intB' => 25]);
 
-        Soap::assertSent(
-            function (SoapClientRequest $request, $response) {
-                return $request->getHeaders() == [
-                    Soap::header('Auth', 'test.com')->data(['foo' => 'bar']),
-                ];
-            }
-        );
-    }
+    $soap->assertSent(
+        function (SoapClientRequest $request) use ($soap) {
+            return $request->getHeaders() == [
+                $soap->header('Auth', 'test.com')->data(['foo' => 'bar']),
+            ];
+        }
+    );
+})->skip('Needs moving to a Laravel test case because it uses facades');
 
-    /** @test */
-    public function a_header_can_be_set_using_a_soap_var()
-    {
-        Soap::fake();
+it('can set up a header using a SoapVar', function() {
+    $soap = soap();
+    $soap->fake();
 
-        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-            ->withHeaders(soap_header('Auth', 'test.com', new SoapVar(['foo' => 'bar'], null)))
-            ->call('Add', ['intA' => 10, 'intB' => 25]);
+    $soap->to(EXAMPLE_SOAP_ENDPOINT)
+        ->withHeaders($soap->header('Auth', 'test.com', new SoapVar(['foo' => 'bar'], null)))
+        ->call('Add', ['intA' => 10, 'intB' => 25]);
 
-        Soap::assertSent(
-            function (SoapClientRequest $request, $response) {
-                return $request->getHeaders() == [
-                    Soap::header('Auth', 'test.com')->data(new SoapVar(['foo' => 'bar'], null)),
-                ];
-            }
-        );
-    }
+    $soap->assertSent(fn(SoapClientRequest $request) => $request->getHeaders() == [
+        $soap->header('Auth', 'test.com')->data(new SoapVar(['foo' => 'bar'], null)),
+    ]);
+});
 
-    /** @test */
-    public function the_data_parameter_is_optional()
-    {
-        Soap::fake();
+it('does not require the data parameter', function() {
+    $soap = soap();
+    $soap->fake();
 
-        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-            ->withHeaders(Soap::header('Auth', 'test.com')->data(null))
-            ->withHeaders(soap_header('Brand', 'test.com', null))
-            ->call('Add', ['intA' => 10, 'intB' => 25]);
+    $soap->to(EXAMPLE_SOAP_ENDPOINT)
+        ->withHeaders($soap->header('Auth', 'test.com')->data(null))
+        ->withHeaders($soap->header('Brand', 'test.com', null))
+        ->call('Add', ['intA' => 10, 'intB' => 25]);
 
-        Soap::assertSent(
-            function (SoapClientRequest $request, $response) {
-                return $request->getHeaders() == [
-                    Soap::header('Auth', 'test.com', null),
-                    Soap::header('Brand', 'test.com', null),
-                ];
-            }
-        );
-    }
+    $soap->assertSent(fn(SoapClientRequest $request) => $request->getHeaders() == [
+        $soap->header('Auth', 'test.com', null),
+        $soap->header('Brand', 'test.com', null),
+    ]);
+});
 
-    /** @test */
-    public function if_the_actor_is_provided_it_is_passed_to_the_php_soap_header()
-    {
-        $this->markTestSkipped('This makes a real API call to assert the correct header construction');
+it('will pass a provided actor to the php soap header', function() {
+    $this->app->afterResolving(SoapHeader::class, function ($header) {
+        $this->assertEquals('test.com', $header->actor);
+    });
 
-        $this->app->afterResolving(SoapHeader::class, function ($header) {
-            $this->assertEquals('test.com', $header->actor);
-        });
+    Soap::to(EXAMPLE_SOAP_ENDPOINT)
+        ->withHeaders(Soap::header('Auth', 'test.com')->actor('test.com'))
+        ->withHeaders(soap_header('Brand', 'test.com', ['hi'], false, 'test.com'))
+        ->withHeaders(soap_header('Service', 'bar.com')->actor('test.com'))
+        ->call('Add', ['intA' => 10, 'intB' => 25]);
+})
+    ->skip('This makes a real API call to assert the correct header construction')
+    ->addWarning('Needs moving to a Laravel enabled test environment');
 
-        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-            ->withHeaders(Soap::header('Auth', 'test.com')->actor('test.com'))
-            ->withHeaders(soap_header('Brand', 'test.com', ['hi'], false, 'test.com'))
-            ->withHeaders(soap_header('Service', 'bar.com')->actor('test.com'))
-            ->call('Add', ['intA' => 10, 'intB' => 25]);
-    }
+it('will send the SOAP_ACTOR_NONE constant if no actor is provided', function() {
+    $this->app->afterResolving(SoapHeader::class, function ($header) {
+        $this->assertEquals(SOAP_ACTOR_NONE, $header->actor);
+    });
 
-    /** @test */
-    public function if_the_actor_is_not_provided_the_php_soap_actor_none_constant_is_passed()
-    {
-        $this->markTestSkipped('This makes a real API call to assert the correct header construction');
+    Soap::to(EXAMPLE_SOAP_ENDPOINT)
+        ->withHeaders(Soap::header('Auth', 'test.com')->actor(null))
+        ->withHeaders(soap_header('Brand', 'test.com', null, false, null))
+        ->withHeaders(soap_header('Service', 'bar.com'))
+        ->call('Add', ['intA' => 10, 'intB' => 25]);
+})
+    ->skip('This makes a real API call to assert the correct header construction')
+    ->addWarning('Needs moving to a Laravel enabled test environment');
 
-        $this->app->afterResolving(SoapHeader::class, function ($header) {
-            $this->assertEquals(SOAP_ACTOR_NONE, $header->actor);
-        });
 
-        Soap::to(static::EXAMPLE_SOAP_ENDPOINT)
-            ->withHeaders(Soap::header('Auth', 'test.com')->actor(null))
-            ->withHeaders(soap_header('Brand', 'test.com', null, false, null))
-            ->withHeaders(soap_header('Service', 'bar.com'))
-            ->call('Add', ['intA' => 10, 'intB' => 25]);
-    }
-}
