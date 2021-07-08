@@ -4,6 +4,8 @@ namespace RicorocksDigitalAgency\Soap\Request;
 
 use RicorocksDigitalAgency\Soap\Header;
 use RicorocksDigitalAgency\Soap\Response\Response;
+use Soap\Engine\Metadata\Collection\MethodCollection;
+use Soap\Engine\Metadata\Collection\TypeCollection;
 
 interface Request
 {
@@ -11,7 +13,8 @@ interface Request
 
     public function __call($name, $arguments);
 
-    public function functions(): array;
+    public function functions(): MethodCollection;
+    public function types(): TypeCollection;
 
     /**
      * @param array $parameters

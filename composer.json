@@ -13,7 +13,13 @@
         }
     },
     "require": {
-        "illuminate/support": "^8.16"
+        "php": "^8.0",
+        "illuminate/support": "^8.16",
+        "illuminate/http": "^8.49",
+        "guzzlehttp/guzzle": "^7.3",
+        "nyholm/psr7": "^1.4",
+        "php-soap/ext-soap-engine": "^0.1.0",
+        "php-soap/psr18-transport": "^0.1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.4",

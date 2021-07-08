@@ -2,22 +2,24 @@
 
 namespace RicorocksDigitalAgency\Soap\Support\Tracing;
 
+use Soap\ExtSoapEngine\Transport\TraceableTransport;
+
 class Trace
 {
-    public $client;
     public $xmlRequest;
     public $xmlResponse;
     public $requestHeaders;
     public $responseHeaders;
 
-    public static function client($client): self
+    public static function transport(TraceableTransport $transport): self
     {
+        $lastRequest = $transport->collectLastRequestInfo();
+
         $trace = new static();
-        $trace->client = $client;
-        $trace->xmlRequest = $client->__getLastRequest();
-        $trace->xmlResponse = $client->__getLastResponse();
-        $trace->requestHeaders = $client->__getLastRequestHeaders();
-        $trace->responseHeaders = $client->__getLastResponseHeaders();
+        $trace->xmlRequest = $lastRequest->getLastRequest();
+        $trace->xmlResponse = $lastRequest->getLastResponse();
+        $trace->requestHeaders = $lastRequest->getLastRequestHeaders();
+        $trace->responseHeaders = $lastRequest->getLastResponseHeaders();
 
         return $trace;
     }
