@@ -33,7 +33,7 @@ it('can call a SOAP function', function () {})
 
 it('can use nodes', function () {})
     ->fakeRequest(35)
-    ->defer(fn ($instance) => expect($instance->soap()->to(EXAMPLE_SOAP_ENDPOINT)->call('Add', soap()->node()->body(['intA' => 10, 'intB' => 25]))->AddResult))
+    ->expect(fn() => $this->soap()->to(EXAMPLE_SOAP_ENDPOINT)->call('Add', soap()->node()->body(['intA' => 10, 'intB' => 25]))->AddResult)
     ->toEqual(35);
 
 it('can forward method calls', function () {})
@@ -43,5 +43,5 @@ it('can forward method calls', function () {})
 
 it('works with a soapable', function () {})
     ->fakeRequest(35)
-    ->defer(fn ($instance) => expect($instance->soap()->to(EXAMPLE_SOAP_ENDPOINT)->Add(new ExampleSoapable())->AddResult))
+    ->expect(fn() => $this->soap()->to(EXAMPLE_SOAP_ENDPOINT)->Add(new ExampleSoapable())->AddResult)
     ->toEqual(35);
