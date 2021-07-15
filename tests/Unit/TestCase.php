@@ -52,24 +52,6 @@ class TestCase extends \PHPUnit\Framework\TestCase
         return $this;
     }
 
-    /**
-     * Execute the given callable, which is passed the TestCase, and return it.
-     */
-    public function defer(callable $callable)
-    {
-        return $callable($this);
-    }
-
-    /**
-     * Execute the given callable, which is passed the TestCase, then return the TestCase.
-     */
-    public function tap(callable $callable)
-    {
-        $callable($this);
-
-        return $this;
-    }
-
     public function fakeRequest($expectation)
     {
         $this->soap()->fake(['*' => Response::new(['AddResult' => $expectation])]);

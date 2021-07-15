@@ -28,7 +28,7 @@ it('can obtain a WSDL', function () {
 
 it('can call a SOAP function', function () {})
     ->fakeRequest(35)
-    ->defer(fn ($instance) => expect($instance->soap()->to(EXAMPLE_SOAP_ENDPOINT)->Add(['intA' => 10, 'intB' => 25])->AddResult))
+    ->expect(fn() => $this->soap()->to(EXAMPLE_SOAP_ENDPOINT)->Add(['intA' => 10, 'intB' => 25])->AddResult)
     ->toEqual(35);
 
 it('can use nodes', function () {})
@@ -38,7 +38,7 @@ it('can use nodes', function () {})
 
 it('can forward method calls', function () {})
     ->fakeRequest(35)
-    ->defer(fn ($instance) => expect($instance->soap()->to(EXAMPLE_SOAP_ENDPOINT)->Add(['intA' => 10, 'intB' => 25])->AddResult))
+    ->expect(fn() => $this->soap()->to(EXAMPLE_SOAP_ENDPOINT)->Add(['intA' => 10, 'intB' => 25])->AddResult)
     ->toEqual(35);
 
 it('works with a soapable', function () {})
