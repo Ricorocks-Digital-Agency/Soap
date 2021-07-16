@@ -27,6 +27,11 @@ A Laravel SOAP client that provides a clean interface for handling requests and 
 - [Ray Support](#ray-support)
 
 
+## Requirements
+
+- PHP 7.4 or greater
+- Laravel 8.16 or greater
+
 ## Installation
 
 You can install the package via composer
