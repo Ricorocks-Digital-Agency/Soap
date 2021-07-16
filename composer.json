@@ -2,6 +2,7 @@
     "name": "ricorocks-digital-agency/soap",
     "description": "A SOAP client that provides a clean interface for handling requests and responses.",
     "type": "library",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "RicorocksDigitalAgency\\Soap\\": "src/"
@@ -20,10 +21,10 @@
         "phpunit/phpunit": "^9.4",
         "orchestra/testbench": "^6.5",
         "spatie/ray": "^1.17",
-        "pestphp/pest-plugin-laravel": "^1.0",
-        "ext-soap": "*"
+        "ext-soap": "*",
+        "pestphp/pest": "^1.0"
     },
-    "license": "MIT",
+    "prefer-stable": true,
     "authors": [
         {
             "name": "Luke Downing",

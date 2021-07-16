@@ -12,11 +12,10 @@ it('has a static client method', function () {
         ->__getLastResponseHeaders()->toBe($trace->responseHeaders);
 })->skip('This makes a real API call to retrieve the WSDL');
 
-it('returns gracefully', function () {
-    expect(new Trace())
-        ->client->toBeNull()
-        ->xmlRequest->toBeNull()
-        ->xmlResponse->toBeNull()
-        ->requestHeaders->toBeNull()
-        ->responseHeaders->toBeNull();
-});
+it('returns gracefully')
+    ->expect(new Trace())
+    ->client->toBeNull()
+    ->xmlRequest->toBeNull()
+    ->xmlResponse->toBeNull()
+    ->requestHeaders->toBeNull()
+    ->responseHeaders->toBeNull();

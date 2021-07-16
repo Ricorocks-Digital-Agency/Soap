@@ -25,6 +25,8 @@ it('can obtain a WSDL', function () {
         ->not->toBeEmpty();
 });
 
+it('is empty', function() {});
+
 it('can call a SOAP function')
     ->fake(['*' => Response::new(['AddResult' => 35])])
     ->expect(fn () => $this->soap()->to(EXAMPLE_SOAP_ENDPOINT)->Add(['intA' => 10, 'intB' => 25])->AddResult)
