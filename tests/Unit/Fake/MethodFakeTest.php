@@ -7,8 +7,8 @@ it('can fake specific methods')
         'http://foobar.com' => Response::new(['baz' => 'boom']),
         'http://foobar.com:Add' => Response::new(['foo' => 'bar']),
     ])
-    ->tap(fn () => $this->soap()->to('http://foobar.com')->call('Add', ['intA' => 10, 'intB' => 20]))
-    ->assertSent(fn ($request, $response) => $request->getMethod() == 'Add' && $response->response == ['foo' => 'bar']);
+    ->soap()->to('http://foobar.com')->call('Add', ['intA' => 10, 'intB' => 20])
+    ->test()->assertSent(fn ($request, $response) => $request->getMethod() == 'Add' && $response->response == ['foo' => 'bar']);
 
 it('can fake multiple methods declared by a pipe operator')
     ->fake([
@@ -31,5 +31,5 @@ it('will use methods as a precedent over other fakes')
                'http://foobar.com:Add' => Response::new(['foo' => 'bar']),
                'http://foobar.com*' => Response::new(['gee' => 'whizz']),
     ])
-    ->tap(fn () => $this->soap()->to('http://foobar.com')->call('Add', ['intA' => 10, 'intB' => 20]))
-    ->assertSent(fn ($request, $response) => $request->getMethod() == 'Add' && $response->response == ['foo' => 'bar']);
+    ->soap()->to('http://foobar.com')->call('Add', ['intA' => 10, 'intB' => 20])
+    ->test()->assertSent(fn ($request, $response) => $request->getMethod() == 'Add' && $response->response == ['foo' => 'bar']);

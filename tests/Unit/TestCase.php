@@ -2,12 +2,17 @@
 
 namespace RicorocksDigitalAgency\Soap\Tests\Unit;
 
+use Closure;
 use Mockery as m;
+use Pest\PendingObjects\TestCall;
 use RicorocksDigitalAgency\Soap\Request\Request;
 use RicorocksDigitalAgency\Soap\Response\Response;
 use RicorocksDigitalAgency\Soap\Soap;
 use RicorocksDigitalAgency\Soap\Support\Fakery\Fakery;
 
+/**
+ * @mixin TestCall
+ */
 class TestCase extends \PHPUnit\Framework\TestCase
 {
     protected ?Soap $soap;
@@ -26,14 +31,14 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
     public function assertSent(callable $callable)
     {
-        $this->soap()->assertSent($callable);
+        $this->soap()->assertSent(Closure::bind($callable, $this));
 
         return $this;
     }
 
     public function assertNotSent(callable $callable)
     {
-        $this->soap()->assertNotSent($callable);
+        $this->soap()->assertNotSent(Closure::bind($callable, $this));
 
         return $this;
     }

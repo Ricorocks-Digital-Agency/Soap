@@ -3,89 +3,55 @@
 use RicorocksDigitalAgency\Soap\Request\Request;
 use RicorocksDigitalAgency\Soap\Response\Response;
 
-trait ProvidesCounter
-{
-    public $counter = [];
-}
+it('can perform local beforeRequesting hooks')
+    ->fake(['http://endpoint.com' => Response::new(), 'http://foobar.com' => Response::new()])
+    ->tap(fn () => $this->soap()->to('http://endpoint.com')->beforeRequesting(fn () => $this->data['endpoint'] = 5)->Test())
+    ->tap(fn () => $this->soap()->to('http://foobar.com')->beforeRequesting(fn () => $this->data['foobar'] = 2)->Test())
+    ->expect(fn () => $this->data['endpoint'])->toBe(5)
+    ->and(fn () => $this->data['foobar'])->toBe(2);
 
-uses(ProvidesCounter::class)->afterEach(function () { $this->counter = []; });
+it('can perform local afterRequesting hooks')
+    ->fake(['http://endpoint.com' => Response::new(), 'http://foobar.com' => Response::new()])
+    ->tap(fn () => $this->soap()->to('http://endpoint.com')->afterRequesting(fn () => $this->data['endpoint'] = 5)->Test())
+    ->tap(fn () => $this->soap()->to('http://foobar.com')->afterRequesting(fn () => $this->data['foobar'] = 2)->Test())
+    ->expect(fn () => $this->data['endpoint'])->toBe(5)
+    ->and(fn () => $this->data['foobar'])->toBe(2);
 
-it('can perform local beforeRequesting hooks', function () {
-    $this->soap()->fake(['http://endpoint.com' => Response::new(), 'http://foobar.com' => Response::new()]);
+it('can chain hooks')
+    ->fake(['http://endpoint.com' => Response::new()])
+    ->tap(fn () => $this->soap()->to('http://endpoint.com')
+        ->beforeRequesting(fn () => $this->data['before'] = 5)
+        ->afterRequesting(fn () => $this->data['after'] = 2)
+        ->call('method')
+    )
+    ->expect(fn () => $this->data['before'])->toBe(5)
+    ->and(fn () => $this->data['after'])->toBe(2);
 
-    $this->counter['endpoint'] = 0;
-    $this->coutner['foobar'] = 0;
+it('provides access to the request in the before hook')
+    ->fake(['http://endpoint.com' => Response::new()])
+    ->soap()->to('http://endpoint.com')
+    ->beforeRequesting(fn (Request $request) => expect($request->getEndpoint())->toBe('http://endpoint.com'))
+    ->call('method');
 
-    $this->soap()->to('http://endpoint.com')->beforeRequesting(fn () => $this->counter['endpoint'] = 5)->Test();
-    $this->soap()->to('http://foobar.com')->beforeRequesting(fn () => $this->counter['foobar'] = 2)->Test();
+it('provides access to the request and the response in the after hook')
+    ->fake(['http://endpoint.com' => Response::new(['foo' => 'bar'])])
+    ->soap()->to('http://endpoint.com')
+    ->afterRequesting(fn (Request $request) => expect($request->getEndpoint())->toBe('http://endpoint.com'))
+    ->afterRequesting(fn (Request $request, Response $response) => expect($response->foo)->toBe('bar'))
+    ->call('method');
 
-    $this->assertEquals(5, $this->counter['endpoint']);
-    $this->assertEquals(2, $this->counter['foobar']);
-});
+it('allows beforeRequesting hooks to transform the request object')
+    ->fake()
+    ->soap()->to('http://endpoint.com')
+    ->beforeRequesting(fn (Request $request) => $request->set('hello.world', ['foo', 'bar']))
+    ->beforeRequesting(fn (Request $request) => $request->set('hello.person', 'Richard'))
+    ->call('method')
+    ->test()->assertSent(fn ($request) => $request->getBody()['hello'] === ['world' => ['foo', 'bar'], 'person' => 'Richard']);
 
-it('can perform local afterRequesting hooks', function () {
-    $this->soap()->fake(['http://endpoint.com' => Response::new(), 'http://foobar.com' => Response::new()]);
-
-    $this->counter['endpoint'] = 0;
-    $this->coutner['foobar'] = 0;
-
-    $this->soap()->to('http://endpoint.com')->afterRequesting(fn () => $this->counter['endpoint'] = 5)->Test();
-    $this->soap()->to('http://foobar.com')->afterRequesting(fn () => $this->counter['foobar'] = 2)->Test();
-
-    $this->assertEquals(5, $this->counter['endpoint']);
-    $this->assertEquals(2, $this->counter['foobar']);
-});
-
-it('can chain hooks', function () {
-    $this->soap()->fake(['http://endpoint.com' => Response::new()]);
-
-    $this->counter['before'] = 0;
-    $this->counter['after'] = 0;
-
-    $this->soap()->to('http://endpoint.com')
-        ->beforeRequesting(fn () => $this->counter['before'] = 5)
-        ->afterRequesting(fn () => $this->counter['after'] = 2)
-        ->Test();
-
-    $this->assertEquals(5, $this->counter['before']);
-    $this->assertEquals(2, $this->counter['after']);
-});
-
-it('provides access to the request in the before hook', function () {
-    $this->soap()->fake(['http://endpoint.com' => Response::new()]);
-
-    $this->soap()->to('http://endpoint.com')
-        ->beforeRequesting(fn (Request $request) => $this->assertEquals('http://endpoint.com', $request->getEndpoint()))
-        ->Test();
-});
-
-it('provides access to the request and the response in the after hook', function () {
-    $this->soap()->fake(['http://endpoint.com' => Response::new(['foo' => 'bar'])]);
-
-    $this->soap()->to('http://endpoint.com')
-        ->afterRequesting(fn (Request $request) => $this->assertEquals('http://endpoint.com', $request->getEndpoint()))
-        ->afterRequesting(fn (Request $request, Response $response) => $this->assertEquals('bar', $response->foo))
-        ->Test();
-});
-
-it('allows beforeRequesting hooks to transform the request object', function () {
-    $this->soap()->fake();
-
-    $this->soap()->to('http://endpoint.com')
-        ->beforeRequesting(fn (Request $request) => $request->set('hello.world', ['foo', 'bar']))
-        ->beforeRequesting(fn (Request $request) => $request->set('hello.person', 'Richard'))
-        ->Test();
-
-    $this->soap()->assertSent(fn ($request) => $request->getBody()['hello'] === ['world' => ['foo', 'bar'], 'person' => 'Richard']);
-});
-
-it('allows afterRequesting hooks to transform the response object', function () {
-    $this->soap()->fake();
-
-    $this->soap()->to('http://endpoint.com')
-        ->afterRequesting(fn ($request, Response $response) => $response->set('hello.world', ['foo', 'bar']))
-        ->afterRequesting(fn ($request, Response $response) => $response->set('hello.person', 'Richard'))
-        ->Test();
-
-    $this->soap()->assertSent(fn ($request, Response $response) => $response->response['hello'] === ['world' => ['foo', 'bar'], 'person' => 'Richard']);
-});
+it('allows afterRequesting hooks to transform the response object')
+    ->fake()
+    ->soap()->to('http://endpoint.com')
+    ->afterRequesting(fn ($request, Response $response) => $response->set('hello.world', ['foo', 'bar']))
+    ->afterRequesting(fn ($request, Response $response) => $response->set('hello.person', 'Richard'))
+    ->call('method')
+    ->test()->assertSent(fn ($request, Response $response) => $response->response['hello'] === ['world' => ['foo', 'bar'], 'person' => 'Richard']);
