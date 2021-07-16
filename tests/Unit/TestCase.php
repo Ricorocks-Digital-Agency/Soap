@@ -6,7 +6,6 @@ use Closure;
 use Mockery as m;
 use Pest\PendingObjects\TestCall;
 use RicorocksDigitalAgency\Soap\Request\Request;
-use RicorocksDigitalAgency\Soap\Response\Response;
 use RicorocksDigitalAgency\Soap\Soap;
 use RicorocksDigitalAgency\Soap\Support\Fakery\Fakery;
 
@@ -55,11 +54,6 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $this->soap()->assertNothingSent();
 
         return $this;
-    }
-
-    public function fakeRequest($expectation)
-    {
-        $this->soap()->fake(['*' => Response::new(['AddResult' => $expectation])]);
     }
 
     protected function tearDown(): void
