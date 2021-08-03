@@ -11,18 +11,13 @@ it('can fake specific methods')
     ->test()->assertSent(fn ($request, $response) => $request->getMethod() == 'Add' && $response->response == ['foo' => 'bar']);
 
 it('can fake multiple methods declared by a pipe operator')
-    ->fake([
-        'http://foobar.com:Multiply|Divide' => Response::new(['baz' => 'boom']),
-        'http://foobar.com:Add|Subtract' => Response::new(['foo' => 'bar']),
-    ])
-    ->tap(fn () => $this->soap()->to('http://foobar.com')->call('Add', ['intA' => 10, 'intB' => 20]))
-    ->tap(fn () => $this->soap()->to('http://foobar.com')->Subtract(['intA' => 10, 'intB' => 20]))
-    ->tap(fn () => $this->soap()->to('http://foobar.com')->Multiply(['intA' => 10, 'intB' => 20]))
-    ->tap(fn () => $this->soap()->to('http://foobar.com')->Divide(['intA' => 10, 'intB' => 20]))
-    ->assertSent(fn ($request, $response) => $request->getMethod() == 'Add' && $response->response == ['foo' => 'bar'])
-    ->assertSent(fn ($request, $response) => $request->getMethod() == 'Subtract' && $response->response == ['foo' => 'bar'])
-    ->assertSent(fn ($request, $response) => $request->getMethod() == 'Multiply' && $response->response == ['baz' => 'boom'])
-    ->assertSent(fn ($request, $response) => $request->getMethod() == 'Divide' && $response->response == ['baz' => 'boom']);
+    ->with([['Add'], ['Subtract'], ['Multiply'], ['Divide']])
+    ->fake(['http://foobar.com:Add|Subtract|Multiply|Divide' => Response::new(['foo' => 'bar'])])
+    ->tap(fn($method) => $this->soap()->to('http://foobar.com')->call($method, ['intA' => 10, 'intB' => 20]))
+    ->tap(fn($method) => $this->assertSent(fn ($request, $response) =>
+        $request->getMethod() == $method
+        && $response->response == ['foo' => 'bar'])
+    );
 
 it('will use methods as a precedent over other fakes')
     ->fake([
