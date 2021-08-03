@@ -11,19 +11,20 @@ use SoapHeader;
 
 class SoapClientRequest implements Request
 {
+    protected Builder $builder;
+    protected $client = null;
     protected string $endpoint;
     protected string $method;
     protected $body = [];
-    protected $client;
-    protected Builder $builder;
     protected Response $response;
     protected $hooks = [];
     protected $options = [];
     protected $headers = [];
 
-    public function __construct(Builder $builder)
+    public function __construct(Builder $builder, $client = null)
     {
         $this->builder = $builder;
+        $this->client = $client;
     }
 
     public function to(string $endpoint): Request
@@ -79,12 +80,12 @@ class SoapClientRequest implements Request
 
     protected function constructClient()
     {
-        $client = resolve(SoapClient::class, [
+        $this->client ??= resolve(SoapClient::class, [
             'wsdl' => $this->endpoint,
             'options' => $this->options,
         ]);
 
-        return tap($client, fn ($client) => $client->__setSoapHeaders($this->constructHeaders()));
+        return tap($this->client, fn ($client) => $client->__setSoapHeaders($this->constructHeaders()));
     }
 
     protected function constructHeaders()
