@@ -11,23 +11,18 @@ it('can obtain a WSDL', function () {
             [
                 'AddResponse Add(Add $parameters)',
                 'SubtractResponse Subtract(Subtract $parameters)',
-                'MultiplyResponse Multiply(Multiply $parameters)',
-                'DivideResponse Divide(Divide $parameters)',
-                'AddResponse Add(Add $parameters)',
-                'SubtractResponse Subtract(Subtract $parameters)',
-                'MultiplyResponse Multiply(Multiply $parameters)',
-                'DivideResponse Divide(Divide $parameters)',
             ]
         );
 
     expect(soap(null, $mock)->to(EXAMPLE_SOAP_ENDPOINT)->functions())
         ->toBeArray()
+        ->toHaveCount(2)
         ->not->toBeEmpty();
 });
 
 it('can call a SOAP function')
     ->fake(['*' => Response::new(['AddResult' => 35])])
-    ->expect(fn () => $this->soap()->to(EXAMPLE_SOAP_ENDPOINT)->Add(['intA' => 10, 'intB' => 25])->AddResult)
+    ->expect(fn () => $this->soap()->to(EXAMPLE_SOAP_ENDPOINT)->call('Add', ['intA' => 10, 'intB' => 25])->AddResult)
     ->toEqual(35);
 
 it('can use nodes')
