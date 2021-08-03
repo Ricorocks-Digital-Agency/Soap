@@ -19,7 +19,7 @@ it('returns a new response when fake is called with no parameters')
     ->soap()->to(EXAMPLE_SOAP_ENDPOINT)->call('Bob', ['intA' => 10, 'intB' => 20])
     ->test()->assertSent(fn (Request $request, Response $response) => $response->response == []);
 
-it('can fake specific endpoints', function() {
+it('can fake specific endpoints', function () {
     $this->fake([
         'http://foobar.com' => Response::new(['foo' => 'bar']),
         'http://foobar.com/testing' => Response::new(['baz' => 'bam']),
@@ -31,7 +31,7 @@ it('can fake specific endpoints', function() {
         ->assertNotSent(fn (Request $request, Response $response) => $request->getMethod() === 'Trudy');
 });
 
-it('can handle wildcards', function() {
+it('can handle wildcards', function () {
     $this->fake(['http://foobar.*' => Response::new(['foo' => 'bar'])]);
 
     $this->soap()->to('http://foobar.com')->call('Bob', ['intA' => 10, 'intB' => 20]);
@@ -53,7 +53,7 @@ it('can handle wildcards', function() {
         ] && $response->response === ['foo' => 'bar']);
 });
 
-it('can handle multiple wildcards', function() {
+it('can handle multiple wildcards', function () {
     $this->fake([
         'http://foobar.*' => Response::new(['foo' => 'bar']),
         'http://foobar.co.*' => Response::new(['baz' => 'english dear']),

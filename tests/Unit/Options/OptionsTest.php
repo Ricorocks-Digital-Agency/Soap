@@ -33,4 +33,3 @@ it('overrides previous values on conflict')
     ->test()->assertSent(fn (SoapClientRequest $request) => $request->getOptions() == [
         'compression' => SOAP_COMPRESSION_GZIP,
     ]);
-

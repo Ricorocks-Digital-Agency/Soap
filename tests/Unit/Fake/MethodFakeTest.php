@@ -13,9 +13,8 @@ it('can fake specific methods')
 it('can fake multiple methods declared by a pipe operator')
     ->with([['Add'], ['Subtract'], ['Multiply'], ['Divide']])
     ->fake(['http://foobar.com:Add|Subtract|Multiply|Divide' => Response::new(['foo' => 'bar'])])
-    ->tap(fn($method) => $this->soap()->to('http://foobar.com')->call($method, ['intA' => 10, 'intB' => 20]))
-    ->tap(fn($method) => $this->assertSent(fn ($request, $response) =>
-        $request->getMethod() == $method
+    ->tap(fn ($method) => $this->soap()->to('http://foobar.com')->call($method, ['intA' => 10, 'intB' => 20]))
+    ->tap(fn ($method) => $this->assertSent(fn ($request, $response) => $request->getMethod() == $method
         && $response->response == ['foo' => 'bar'])
     );
 

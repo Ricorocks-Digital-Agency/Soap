@@ -27,4 +27,3 @@ it('can use digest auth')
                 'password' => 'world',
             ];
     });
-
