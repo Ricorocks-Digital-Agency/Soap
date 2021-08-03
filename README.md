@@ -40,6 +40,8 @@ You can install the package via composer
 composer require ricorocks-digital-agency/soap
 ```
 
+> Note: As of v1.5.0 Soap requires PHP ^7.4
+
 ## Using Soap
 
 Soap can be accessed through the provided Facade
