@@ -30,12 +30,12 @@ final class DecoratedClient implements Client
         return $this->client->__getFunctions();
     }
 
-    public function lastRequest(): ?string
+    public function lastRequestAsXml(): ?string
     {
         return $this->client->__getLastRequest();
     }
 
-    public function lastResponse(): ?string
+    public function lastResponseAsXml(): ?string
     {
         return $this->client->__getLastResponse();
     }

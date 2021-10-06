@@ -19,8 +19,8 @@ final class Trace
         $trace = new static();
 
         $trace->client = $client;
-        $trace->xmlRequest = $client->lastRequest();
-        $trace->xmlResponse = $client->lastResponse();
+        $trace->xmlRequest = $client->lastRequestAsXml();
+        $trace->xmlResponse = $client->lastResponseAsXml();
         $trace->requestHeaders = $client->lastRequestHeaders();
         $trace->responseHeaders = $client->lastResponseHeaders();
 

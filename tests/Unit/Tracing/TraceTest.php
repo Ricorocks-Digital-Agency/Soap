@@ -7,8 +7,8 @@ it('has a static client method', function () {
     $trace = Trace::client($client = new DecoratedClient(new SoapClient(EXAMPLE_SOAP_ENDPOINT)));
 
     expect($client)
-        ->lastRequest()->toBe($trace->xmlRequest)
-        ->lastResponse()->toBe($trace->xmlResponse)
+        ->lastRequestAsXml()->toBe($trace->xmlRequest)
+        ->lastResponseAsXml()->toBe($trace->xmlResponse)
         ->lastRequestHeaders()->toBe($trace->requestHeaders)
         ->lastResponseHeaders()->toBe($trace->responseHeaders);
 })->group('integration');

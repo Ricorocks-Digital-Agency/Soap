@@ -35,7 +35,7 @@ class MockSoapClient implements Client
         ];
     }
 
-    public function lastRequest(): ?string
+    public function lastRequestAsXml(): ?string
     {
         if (!$this->shouldTrace) {
             return null;
@@ -44,7 +44,7 @@ class MockSoapClient implements Client
         return '<?xml version="1.0" encoding="UTF-8"?><FooBar><Hello>World</Hello></FooBar>';
     }
 
-    public function lastResponse(): ?string
+    public function lastResponseAsXml(): ?string
     {
         if (!$this->shouldTrace) {
             return null;

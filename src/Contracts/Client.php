@@ -12,9 +12,9 @@ interface Client
 
     public function getFunctions(): array;
 
-    public function lastRequest(): ?string;
+    public function lastRequestAsXml(): ?string;
 
-    public function lastResponse(): ?string;
+    public function lastResponseAsXml(): ?string;
 
     public function lastRequestHeaders(): ?string;
 
