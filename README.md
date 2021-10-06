@@ -9,21 +9,28 @@ A Laravel SOAP client that provides a clean interface for handling requests and 
 - [Installation](#installation)
 - [Using Soap](#using-soap)
 - [Features/API](#features/api)
+    * [Headers](#headers)
+        * [Global Headers](#global-headers)
     * [To](#to)
     * [Functions](#functions)
     * [Call](#call)
         * [Parameters](#parameters)
             * [Nodes](#nodes)
-- [Options](#options)
-  * [Tracing](#tracing)
-  * [Authentication](#authentication)
-  * [Global Options](#global-options)
+    * [Options](#options)
+        * [Tracing](#tracing)
+        * [Authentication](#authentication)
+        * [Global Options](#global-options)
 - [Hooks](#hooks)
 - [Faking](#faking)
 - [Configuration](#configuration)
     * [Include](#include)
 - [Ray Support](#ray-support)
 
+
+## Requirements
+
+- PHP 7.4 or greater
+- Laravel 8.16 or greater
 
 ## Installation
 
@@ -32,6 +39,8 @@ You can install the package via composer
 ```bash
 composer require ricorocks-digital-agency/soap
 ```
+
+> Note: As of v1.5.0 Soap requires PHP ^7.4
 
 ## Using Soap
 
@@ -45,6 +54,62 @@ Soap::to()
 
 ## Features/API
 
+### Headers
+
+You can set the headers for each soap request that will be passed to the Soap Client using the `withHeaders` method.
+
+```php
+Soap::to('...')->withHeaders(...$headers)->call('...');
+```
+
+Each header should be a `Header` instance, which provides a fluent interface for constructing a new [PHP Soap Header](https://www.php.net/manual/en/soapheader.construct.php) and can be composed as follows:
+```php
+$header = Soap::header()
+            ->name('Authentication')
+            ->namespace('test.com')
+            ->data([
+                'user' => '...',
+                'password' => '...'
+            ])
+            ->mustUnderstand()
+            ->actor('foo.co.uk')
+```
+This can also be expressed as:
+```php
+$header = Soap::header('Authentication', 'test.com', [
+                'user' => '...',
+                'password' => '...'
+            ])
+            ->mustUnderstand()
+            ->actor('foo.co.uk')
+```
+Plus, the `soap_header` helper method can be used:
+```php
+$header = soap_header('Authentication', 'test.com')
+            ->data([
+                'user' => '...',
+                'password' => '...'
+            ])
+```
+> The `data` for the header can either be an array or a `SoapVar`, as per the `SoapHeader` constructor
+#### Global Headers
+Soap allows you to set headers that should be included for every request:
+```php
+Soap::headers(...$headers)
+```
+Again, each header should be an instance of `Header`.
+
+You may also want to include headers on every request, but only for a certain endpoint or action:
+
+```php
+// Only requests to this endpoint will include these headers
+Soap::headers(soap_header('Auth', 'test.com'))->for('https://api.example.com');
+
+// Only requests to this endpoint and the method Customers will include these headers
+Soap::headers(soap_header('Brand', 'test.com'))->for('https://api.example.com', 'Customers');
+```
+
+These calls are usually placed in the `boot` method of one of your application's Service Providers.
 ### To
 
 The endpoint to be accessed
@@ -151,7 +216,7 @@ Now, just by adding or removing a body to the `soap_node()` the outputted array 
 
 A node can be made with either the Facade `Soap::node()` or the helper method `soap_node()`.
 
-## Options
+### Options
 
 You can set custom options for each soap request that will be passed to the Soap Client using the `withOptions` method.
 
@@ -159,13 +224,13 @@ You can set custom options for each soap request that will be passed to the Soap
 Soap::to('...')->withOptions(['soap_version' => SOAP_1_2])->call('...');
 ```
 
-See [https://www.php.net/manual/en/soapclient.construct.php](https://www.php.net/manual/en/soapclient.construct.php)
+> See [https://www.php.net/manual/en/soapclient.construct.php](https://www.php.net/manual/en/soapclient.construct.php)
 for more details and available options.
 
 Soap also provides a number of methods that add syntactical sugar to the most commonly used options, which are detailed
 below.
 
-### Tracing
+#### Tracing
 Soap allows you to easily trace your interactions with the SOAP endpoint being accessed.
 
 To trace all requests, set the following in the register method of your `ServiceProvider`:
@@ -173,7 +238,11 @@ To trace all requests, set the following in the register method of your `Service
 ```php
 Soap::trace()
 ```
-Now, all `Response` objects returned will have a `Trace` object attached, accessible via `$response->getTrace()`. This has two properties `xmlRequest` and `xmlResponse` - storing the raw XML values for each.
+Now, all `Response` objects returned will have a `Trace` object attached, accessible via `$response->getTrace()`. This has four properties which are wrappers for the respective methods found on the `SoapClient`:
+- `xmlRequest` (`__getLastRequest`)
+- `xmlResponse` (`__getLastResponse`)
+- `requestHeaders` (`__getLastRequestHeaders`)
+- `responseHeaders` (`__getLastResponseHeaders`)
 
 Tracing can also be declared locally:
 ```php
@@ -183,7 +252,7 @@ Now, just this `Response` will have a valid `Trace`.
 
 Tracing is null safe. If `$response->getTrace()` is called when a `Trace` hasn't been set, a new `Trace` is returned. This `Trace`'s properties will all return `null`.
 
-### Authentication
+#### Authentication
 
 You can authenticate using Basic or Digest by calling `withBasicAuth` and `withDigestAuth` respectively.
 
@@ -192,7 +261,7 @@ Soap::to('...')->withBasicAuth('username', 'password')->call('...');
 Soap::to('...')->withDigestAuth('username', 'password')->call('...');
 ```
 
-### Global Options
+#### Global Options
 
 Sometimes, you may wish to include the same set of options on every SOAP request. You can do that using the `options`
 method on the `Soap` facade:

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace RicorocksDigitalAgency\Soap\Tests\Mocks;
-
 
 class MockSoapClient
 {
@@ -31,7 +29,7 @@ class MockSoapClient
     public function __getFunctions()
     {
         return [
-            "The mock client does not actually have functions!"
+            'The mock client does not actually have functions!',
         ];
     }
 
@@ -46,6 +44,11 @@ class MockSoapClient
 
     public function __getLastRequestHeaders()
     {
+        if (!$this->shouldTrace) {
+            return null;
+        }
+
+        return 'Hello World';
     }
 
     public function __getLastResponse()
@@ -59,6 +62,11 @@ class MockSoapClient
 
     public function __getLastResponseHeaders()
     {
+        if (!$this->shouldTrace) {
+            return null;
+        }
+
+        return 'Foo Bar';
     }
 
     public function __getTypes()
@@ -90,5 +98,4 @@ class MockSoapClient
     {
         return new static($wsdl, $options);
     }
-
 }

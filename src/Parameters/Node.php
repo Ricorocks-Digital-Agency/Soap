@@ -19,13 +19,14 @@ class Node implements Arrayable, Soapable
     public function body($content)
     {
         $this->body = $content;
+
         return $this;
     }
 
     public function toArray()
     {
         return empty($this->body)
-            ? array_merge(["_" => ""], $this->attributes)
+            ? array_merge(['_' => ''], $this->attributes)
             : array_merge($this->body, $this->attributes);
     }
 

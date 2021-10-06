@@ -22,12 +22,14 @@ class Fakery
         $this->shouldRecord = true;
 
         if (is_null($callback)) {
-            $this->stubs->new('*', fn() => Response::new());
+            $this->stubs->new('*', fn () => Response::new());
+
             return;
         }
 
         if (is_array($callback)) {
-            collect($callback)->each(fn($callable, $url) => $this->stubs->new($url, $callable));
+            collect($callback)->each(fn ($callable, $url) => $this->stubs->new($url, $callable));
+
             return;
         }
     }
@@ -53,7 +55,7 @@ class Fakery
 
     public function assertNothingSent()
     {
-        PHPUnit::assertEmpty($this->recordedRequests, "Requests were recorded");
+        PHPUnit::assertEmpty($this->recordedRequests, 'Requests were recorded');
     }
 
     public function assertSent(callable $callback)
@@ -76,6 +78,6 @@ class Fakery
             return true;
         };
 
-        return $this->recordedRequests->filter(fn($pair) => $callback(...$pair));
+        return $this->recordedRequests->filter(fn ($pair) => $callback(...$pair));
     }
 }
