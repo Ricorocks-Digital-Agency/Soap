@@ -11,12 +11,13 @@ use RicorocksDigitalAgency\Soap\Inclusion;
 use RicorocksDigitalAgency\Soap\OptionSet;
 use RicorocksDigitalAgency\Soap\Parameters\Node;
 use RicorocksDigitalAgency\Soap\Request\Request;
+use SoapVar;
 
 /**
  * Class Soap.
  *
  * @method static Request to(string $endpoint)
- * @method static Header header(?string $name = null, ?string $namespace = null, $data = null, bool $mustUnderstand = false, ?string $actor = null)
+ * @method static Header header(?string $name = null, ?string $namespace = null, array|SoapVar $data = null, bool $mustUnderstand = false, ?string $actor = null)
  * @method static HeaderSet headers(Header ...$headers)
  * @method static Node node(array $attributes = [])
  * @method static Inclusion include(array $parameters)

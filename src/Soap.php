@@ -11,6 +11,7 @@ use RicorocksDigitalAgency\Soap\Parameters\Node;
 use RicorocksDigitalAgency\Soap\Request\Request;
 use RicorocksDigitalAgency\Soap\Response\Response;
 use RicorocksDigitalAgency\Soap\Support\Fakery\Fakery;
+use SoapVar;
 
 /**
  * @mixin Fakery
@@ -23,6 +24,7 @@ final class Soap
     }
 
     protected Fakery $fakery;
+
     protected Request $request;
 
     /**
@@ -79,9 +81,9 @@ final class Soap
     }
 
     /**
-     * @param array<string, mixed>|null $data
+     * @param array<string, mixed>|SoapVar|null $data
      */
-    public function header(?string $name = null, ?string $namespace = null, array $data = null, bool $mustUnderstand = false, string $actor = null): Header
+    public function header(?string $name = null, ?string $namespace = null, array|SoapVar $data = null, bool $mustUnderstand = false, string $actor = null): Header
     {
         return new Header($name, $namespace, $data, $mustUnderstand, $actor);
     }
