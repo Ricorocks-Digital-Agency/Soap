@@ -50,12 +50,15 @@ final class DecoratedClient implements Client
         return $this->client->__getLastResponseHeaders();
     }
 
-    public function __get(string $name)
+    public function __get(string $name): mixed
     {
         return $this->client->$name;
     }
 
-    public function __call(string $name, array $arguments)
+    /**
+     * @param array<mixed> $arguments
+     */
+    public function __call(string $name, array $arguments): mixed
     {
         return $this->client->$name(...$arguments);
     }

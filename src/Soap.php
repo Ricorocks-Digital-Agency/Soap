@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace RicorocksDigitalAgency\Soap;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Support\Traits\Macroable;
 use RicorocksDigitalAgency\Soap\Parameters\Node;
 use RicorocksDigitalAgency\Soap\Request\Request;
+use RicorocksDigitalAgency\Soap\Response\Response;
 use RicorocksDigitalAgency\Soap\Support\Fakery\Fakery;
 
 /**
@@ -23,15 +25,35 @@ final class Soap
     protected Fakery $fakery;
     protected Request $request;
 
-    protected $headerSets = [];
-    protected $inclusions = [];
-    protected $optionsSets = [];
-    protected $globalHooks = [];
+    /**
+     * @var array<int, HeaderSet>
+     */
+    protected array $headerSets = [];
+
+    /**
+     * @var array<int, Inclusion>
+     */
+    protected array $inclusions = [];
+
+    /**
+     * @var array<int, OptionSet>
+     */
+    protected array $optionsSets = [];
+
+    /**
+     * @var array{beforeRequesting: Collection<int, callable(Request): mixed>, afterRequesting: Collection<int, callable(Request, Response): mixed>}
+     */
+    protected array $globalHooks;
 
     public function __construct(Fakery $fakery, Request $request)
     {
         $this->fakery = $fakery;
         $this->request = $request;
+
+        $this->globalHooks = [
+            'beforeRequesting' => collect(),
+            'afterRequesting' => collect(),
+        ];
 
         $this->beforeRequesting(fn ($requestInstance) => $requestInstance->fakeUsing($this->fakery->mockResponseIfAvailable($requestInstance)))
             ->beforeRequesting(fn ($requestInstance) => $this->mergeHeadersFor($requestInstance))
@@ -40,7 +62,7 @@ final class Soap
             ->afterRequesting(fn ($requestInstance, $response) => $this->record($requestInstance, $response));
     }
 
-    public function to(string $endpoint)
+    public function to(string $endpoint): Request
     {
         return (clone $this->request)
             ->beforeRequesting(...$this->globalHooks['beforeRequesting'])
@@ -48,17 +70,26 @@ final class Soap
             ->to($endpoint);
     }
 
-    public function node($attributes = []): Node
+    /**
+     * @param array<string, mixed> $attributes
+     */
+    public function node(array $attributes = []): Node
     {
         return new Node($attributes);
     }
 
-    public function header(?string $name = null, ?string $namespace = null, $data = null, bool $mustUnderstand = false, $actor = null): Header
+    /**
+     * @param array<string, mixed>|null $data
+     */
+    public function header(?string $name = null, ?string $namespace = null, array $data = null, bool $mustUnderstand = false, string $actor = null): Header
     {
         return new Header($name, $namespace, $data, $mustUnderstand, $actor);
     }
 
-    public function include($parameters)
+    /**
+     * @param array<string, mixed> $parameters
+     */
+    public function include(array $parameters): Inclusion
     {
         $inclusion = new Inclusion($parameters);
         $this->inclusions[] = $inclusion;
@@ -66,7 +97,10 @@ final class Soap
         return $inclusion;
     }
 
-    public function options(array $options)
+    /**
+     * @param array<string, mixed> $options
+     */
+    public function options(array $options): OptionSet
     {
         $options = new OptionSet($options);
         $this->optionsSets[] = $options;
@@ -74,7 +108,7 @@ final class Soap
         return $options;
     }
 
-    public function headers(Header ...$headers)
+    public function headers(Header ...$headers): HeaderSet
     {
         $headers = new HeaderSet(...$headers);
         $this->headerSets[] = $headers;
@@ -82,58 +116,55 @@ final class Soap
         return $headers;
     }
 
-    protected function mergeHeadersFor(Request $request)
+    protected function mergeHeadersFor(Request $request): void
     {
         collect($this->headerSets)
-            ->filter
-            ->matches($request->getEndpoint(), $request->getMethod())
-            ->flatMap
-            ->getHeaders()
-            ->pipe(fn ($headers) => $request->withHeaders(...$headers));
+            ->filter(fn (HeaderSet $set) => $set->matches($request->getEndpoint(), $request->getMethod()))
+            ->flatMap(fn (HeaderSet $set) => $set->getHeaders())
+            ->pipe(fn (Collection $headers) => $request->withHeaders(...$headers));
     }
 
-    protected function mergeInclusionsFor(Request $request)
+    protected function mergeInclusionsFor(Request $request): void
     {
         collect($this->inclusions)
-            ->filter
-            ->matches($request->getEndpoint(), $request->getMethod())
-            ->flatMap
-            ->getParameters()
-            ->each(fn ($value, $key) => $request->set($key, $value));
+            ->filter(fn (Inclusion $inclusion) => $inclusion->matches($request->getEndpoint(), $request->getMethod()))
+            ->flatMap(fn (Inclusion $inclusion) => $inclusion->getParameters())
+            ->each(fn (mixed $value, string $key) => $request->set($key, $value));
     }
 
-    protected function mergeOptionsFor(Request $request)
+    protected function mergeOptionsFor(Request $request): void
     {
         collect($this->optionsSets)
-            ->filter
-            ->matches($request->getEndpoint(), $request->getMethod())
-            ->map
-            ->getOptions()
-            ->each(fn ($options) => $request->withOptions($options));
+            ->filter(fn (OptionSet $set) => $set->matches($request->getEndpoint(), $request->getMethod()))
+            ->map(fn (OptionSet $set) => $set->getOptions())
+            ->each(fn (array $options) => $request->withOptions($options));
     }
 
-    public function beforeRequesting(callable $hook)
+    public function beforeRequesting(callable $hook): self
     {
-        ($this->globalHooks['beforeRequesting'] ??= collect())->push($hook);
+        $this->globalHooks['beforeRequesting']->push($hook);
 
         return $this;
     }
 
-    public function afterRequesting(callable $hook)
+    public function afterRequesting(callable $hook): self
     {
-        ($this->globalHooks['afterRequesting'] ??= collect())->push($hook);
+        $this->globalHooks['afterRequesting']->push($hook);
 
         return $this;
     }
 
-    public function trace($shouldTrace = true)
+    public function trace(bool $shouldTrace = true): self
     {
         $this->beforeRequesting(fn ($request) => $request->trace($shouldTrace));
 
         return $this;
     }
 
-    public function __call($method, $parameters)
+    /**
+     * @param array<int, mixed> $parameters
+     */
+    public function __call(string $method, array $parameters): mixed
     {
         if (static::hasMacro($method)) {
             return $this->__macroableCall($method, $parameters);
