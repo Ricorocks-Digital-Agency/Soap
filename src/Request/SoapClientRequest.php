@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace RicorocksDigitalAgency\Soap\Request;
 
 use Closure;
-use Illuminate\Support\Collection;
 use RicorocksDigitalAgency\Soap\Contracts\Builder;
 use RicorocksDigitalAgency\Soap\Contracts\Client;
 use RicorocksDigitalAgency\Soap\Contracts\Request;
