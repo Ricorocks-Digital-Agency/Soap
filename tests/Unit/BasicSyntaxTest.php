@@ -1,7 +1,7 @@
 <?php
 
 use Mockery as m;
-use RicorocksDigitalAgency\Soap\Request\Request;
+use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Response\Response;
 
 it('can obtain a WSDL', function () {

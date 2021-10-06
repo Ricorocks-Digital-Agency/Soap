@@ -6,7 +6,7 @@ namespace RicorocksDigitalAgency\Soap\Support\Fakery;
 
 use Closure;
 use Illuminate\Support\Collection;
-use RicorocksDigitalAgency\Soap\Request\Request;
+use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Response\Response;
 
 final class Stubs

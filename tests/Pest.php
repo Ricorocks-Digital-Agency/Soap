@@ -14,7 +14,7 @@ const EXAMPLE_SOAP_ENDPOINT = 'http://www.dneonline.com/calculator.asmx?WSDL';
 uses(Tests\Unit\TestCase::class)->in('Unit');
 uses(Tests\Feature\TestCase::class)->in('Feature');
 
-function soap(?Fakery $fakery = null, ?RicorocksDigitalAgency\Soap\Request\Request $request = null)
+function soap(?Fakery $fakery = null, ?\RicorocksDigitalAgency\Soap\Contracts\Request $request = null)
 {
     return new Soap(
         $fakery ?? new Fakery(new Stubs()),

@@ -6,9 +6,9 @@ namespace RicorocksDigitalAgency\Soap\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use RicorocksDigitalAgency\Soap\Contracts\Builder;
+use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Parameters\IntelligentBuilder;
 use RicorocksDigitalAgency\Soap\Ray\SoapWatcher;
-use RicorocksDigitalAgency\Soap\Request\Request;
 use RicorocksDigitalAgency\Soap\Request\SoapClientRequest;
 use RicorocksDigitalAgency\Soap\Soap;
 

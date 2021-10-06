@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace RicorocksDigitalAgency\Soap\Request;
 
 use Closure;
+use Illuminate\Support\Collection;
 use RicorocksDigitalAgency\Soap\Contracts\Builder;
 use RicorocksDigitalAgency\Soap\Contracts\Client;
+use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Header;
 use RicorocksDigitalAgency\Soap\Response\Response;
 use RicorocksDigitalAgency\Soap\Support\DecoratedClient;
@@ -19,7 +21,7 @@ final class SoapClientRequest implements Request
     private Builder $builder;
 
     /**
-     * @var Closure(string, array<string, mixed> $options): Client
+     * @var Closure(string, array<string, mixed>): Client
      */
     private Closure $clientResolver;
 
@@ -27,37 +29,62 @@ final class SoapClientRequest implements Request
 
     private string $endpoint;
     private string $method;
-    private $body = [];
-    private Response $response;
-    private $hooks = [];
-    private $options = [];
-    private $headers = [];
 
     /**
-     * @param Closure(string $endpoint, array<string, mixed> $options): Client|null $client
+     * @var array<string, mixed>
+     */
+    private $body = [];
+
+    private Response $response;
+
+    /**
+     * @var array{beforeRequesting: Collection<int, callable(Request): mixed>, afterRequesting: Collection<int, callable(Request, Response): mixed>}
+     */
+    private array $hooks;
+
+    /**
+     * @var array<string, mixed>
+     */
+    private array $options = [];
+
+    /**
+     * @var array<int, Header>
+     */
+    private array $headers = [];
+
+    /**
+     * @param Closure(string $endpoint, array<string, mixed> $options): Client|null $clientResolver
      */
     public function __construct(Builder $builder, Closure $clientResolver = null)
     {
         $this->builder = $builder;
         $this->clientResolver = $clientResolver ?? fn (string $endpoint, array $options) => new DecoratedClient(new SoapClient($endpoint, $options));
+
+        $this->hooks = [
+            'beforeRequesting' => collect(),
+            'afterRequesting' => collect(),
+        ];
     }
 
-    public function to(string $endpoint): Request
+    public function to(string $endpoint): self
     {
         $this->endpoint = $endpoint;
 
         return $this;
     }
 
-    public function __call($name, $parameters)
+    /**
+     * @param array<mixed> $parameters
+     */
+    public function __call(string $name, array $parameters): mixed
     {
         return $this->call($name, $parameters[0] ?? []);
     }
 
-    public function call($method, $parameters = [])
+    public function call(string $method, array $body = []): Response
     {
         $this->method = $method;
-        $this->body = $parameters;
+        $this->body = $body;
 
         $this->hooks['beforeRequesting']->each(fn ($callback) => $callback($this));
         $this->body = $this->builder->handle($this->body);
@@ -68,12 +95,12 @@ final class SoapClientRequest implements Request
         return $response;
     }
 
-    private function getResponse()
+    private function getResponse(): Response
     {
         return $this->response ??= $this->getRealResponse();
     }
 
-    private function getRealResponse()
+    private function getRealResponse(): Response
     {
         return tap(
             Response::new($this->makeRequest()),
@@ -83,7 +110,10 @@ final class SoapClientRequest implements Request
         );
     }
 
-    private function makeRequest()
+    /**
+     * @return array<string, mixed>
+     */
+    private function makeRequest(): array
     {
         return $this->client()->call($this->getMethod(), $this->getBody());
     }
@@ -94,7 +124,7 @@ final class SoapClientRequest implements Request
     }
 
     /**
-     * @return array<string, SoapHeader>
+     * @return array<int, SoapHeader>
      */
     private function constructHeaders(): array
     {
@@ -102,53 +132,65 @@ final class SoapClientRequest implements Request
             return [];
         }
 
-        return array_map(
-            fn ($header) => resolve(SoapHeader::class, [
-                'namespace' => $header->namespace,
-                'name' => $header->name,
-                'data' => $header->data,
-                'mustunderstand' => $header->mustUnderstand,
-                'actor' => $header->actor ?? SOAP_ACTOR_NONE,
-            ]),
-            $this->headers
-        );
+        return array_map(fn ($header) => new SoapHeader(
+            $header->namespace,
+            $header->name,
+            $header->data,
+            $header->mustUnderstand,
+            $header->actor ?? SOAP_ACTOR_NONE
+        ), $this->headers);
     }
 
-    public function getMethod()
+    public function getMethod(): string
     {
         return $this->method;
     }
 
-    public function getBody()
+    /**
+     * @return array<string, mixed>
+     */
+    public function getBody(): array
     {
         return $this->body;
     }
 
+    /**
+     * @return array<int, string>
+     */
     public function functions(): array
     {
         return $this->client()->getFunctions();
     }
 
-    public function beforeRequesting(...$closures): Request
+    /**
+     * @param callable(Request): mixed ...$closures
+     */
+    public function beforeRequesting(callable ...$closures): self
     {
-        ($this->hooks['beforeRequesting'] ??= collect())->push(...$closures);
+        $this->hooks['beforeRequesting']->push(...$closures);
 
         return $this;
     }
 
-    public function afterRequesting(...$closures): Request
+    /**
+     * @param callable(Request, Response): mixed ...$closures
+     */
+    public function afterRequesting(callable ...$closures): self
     {
-        ($this->hooks['afterRequesting'] ??= collect())->push(...$closures);
+        $this->hooks['afterRequesting']->push(...$closures);
 
         return $this;
     }
 
-    public function getEndpoint()
+    public function getEndpoint(): string
     {
         return $this->endpoint;
     }
 
-    public function fakeUsing($response): Request
+    /**
+     * @param callable(Request): Response|Response|null $response
+     */
+    public function fakeUsing(Response|callable|null $response): self
     {
         if (empty($response)) {
             return $this;
@@ -159,21 +201,21 @@ final class SoapClientRequest implements Request
         return $this;
     }
 
-    public function set($key, $value): Request
+    public function set(string $key, mixed $value): self
     {
         data_set($this->body, $key, $value);
 
         return $this;
     }
 
-    public function trace($shouldTrace = true): Request
+    public function trace(bool $shouldTrace = true): self
     {
         $this->options['trace'] = $shouldTrace;
 
         return $this;
     }
 
-    public function withBasicAuth($login, $password): Request
+    public function withBasicAuth(string $login, string $password): self
     {
         $this->options['authentication'] = SOAP_AUTHENTICATION_BASIC;
         $this->options['login'] = $login;
@@ -182,7 +224,7 @@ final class SoapClientRequest implements Request
         return $this;
     }
 
-    public function withDigestAuth($login, $password): Request
+    public function withDigestAuth(string $login, string $password): Request
     {
         $this->options['authentication'] = SOAP_AUTHENTICATION_DIGEST;
         $this->options['login'] = $login;
@@ -191,11 +233,17 @@ final class SoapClientRequest implements Request
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getOptions(): array
     {
         return $this->options;
     }
 
+    /**
+     * @param array<string, mixed> $options
+     */
     public function withOptions(array $options): Request
     {
         $this->options = array_merge($this->getOptions(), $options);
@@ -210,6 +258,9 @@ final class SoapClientRequest implements Request
         return $this;
     }
 
+    /**
+     * @return array<int, Header>
+     */
     public function getHeaders(): array
     {
         return $this->headers;

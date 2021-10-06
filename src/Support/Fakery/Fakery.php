@@ -7,7 +7,7 @@ namespace RicorocksDigitalAgency\Soap\Support\Fakery;
 use Closure;
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\Assert as PHPUnit;
-use RicorocksDigitalAgency\Soap\Request\Request;
+use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Response\Response;
 
 final class Fakery

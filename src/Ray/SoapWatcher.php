@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace RicorocksDigitalAgency\Soap\Ray;
 
+use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Facades\Soap;
-use RicorocksDigitalAgency\Soap\Request\Request;
 use RicorocksDigitalAgency\Soap\Response\Response;
 use Spatie\LaravelRay\Ray;
 use Spatie\LaravelRay\Watchers\Watcher;
