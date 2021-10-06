@@ -6,16 +6,16 @@ namespace RicorocksDigitalAgency\Soap\Support;
 
 abstract class Scoped
 {
-    protected $endpoint;
-    protected $method = null;
+    protected string $endpoint;
+    protected ?string $method = null;
 
-    public function for($endpoint, $method = null)
+    public function for(string $endpoint, string $method = null): void
     {
         $this->endpoint = $endpoint;
         $this->method = $method;
     }
 
-    public function matches(string $endpoint, $method = null)
+    public function matches(string $endpoint, string $method = null): bool
     {
         if (empty($this->endpoint)) {
             return true;
