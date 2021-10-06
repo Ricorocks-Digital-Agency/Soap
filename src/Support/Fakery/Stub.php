@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap\Support\Fakery;
 
 use Closure;
 use Illuminate\Support\Str;
 use RicorocksDigitalAgency\Soap\Request\Request;
 
-class Stub
+final class Stub
 {
     public const REGEX_PATTERN = "/:([\w\d|]+$)/";
 
@@ -33,7 +35,7 @@ class Stub
             : $this->callback;
     }
 
-    protected function register($endpoint)
+    private function register($endpoint)
     {
         $this->endpoint = Str::of($endpoint)->replaceMatches(self::REGEX_PATTERN, '')->start('*')->__toString();
         $this->methods = Str::of($endpoint)->afterLast('.')->match(self::REGEX_PATTERN)->start('*')->__toString();

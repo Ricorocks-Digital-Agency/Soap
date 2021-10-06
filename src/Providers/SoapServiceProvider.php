@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use RicorocksDigitalAgency\Soap\Parameters\Builder;
+use RicorocksDigitalAgency\Soap\Contracts\Builder;
 use RicorocksDigitalAgency\Soap\Parameters\IntelligentBuilder;
 use RicorocksDigitalAgency\Soap\Ray\SoapWatcher;
 use RicorocksDigitalAgency\Soap\Request\Request;
 use RicorocksDigitalAgency\Soap\Request\SoapClientRequest;
 use RicorocksDigitalAgency\Soap\Soap;
 
-class SoapServiceProvider extends ServiceProvider
+final class SoapServiceProvider extends ServiceProvider
 {
     public function register()
     {

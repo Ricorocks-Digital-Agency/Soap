@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap\Facades;
 
 use Illuminate\Support\Facades\Facade;
@@ -27,7 +29,7 @@ use RicorocksDigitalAgency\Soap\Request\Request;
  * @method static void assertSent(callable $callback)
  * @method static void assertNotSent(callable $callback)
  */
-class Soap extends Facade
+final class Soap extends Facade
 {
     protected static function getFacadeAccessor()
     {

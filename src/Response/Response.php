@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap\Response;
 
 use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
 
-class Response
+final class Response
 {
     public $response;
-    protected Trace $trace;
+    private Trace $trace;
 
     public static function new($response = []): self
     {

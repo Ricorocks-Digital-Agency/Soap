@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap;
 
 use RicorocksDigitalAgency\Soap\Support\Scoped;
 
-class HeaderSet extends Scoped
+final class HeaderSet extends Scoped
 {
     protected $headers;
 

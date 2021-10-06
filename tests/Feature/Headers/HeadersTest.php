@@ -24,7 +24,7 @@ it('will pass a provided actor to the php soap header', function () {
         ->withHeaders(soap_header('Brand', 'test.com', ['hi'], false, 'test.com'))
         ->withHeaders(soap_header('Service', 'bar.com')->actor('test.com'))
         ->call('Add', ['intA' => 10, 'intB' => 25]);
-})->skip('This makes a real API call to assert the correct header construction');
+})->group('integration');
 
 it('will send the SOAP_ACTOR_NONE constant if no actor is provided', function () {
     app()->afterResolving(SoapHeader::class, function ($header) {
@@ -36,4 +36,4 @@ it('will send the SOAP_ACTOR_NONE constant if no actor is provided', function ()
         ->withHeaders(soap_header('Brand', 'test.com', null, false, null))
         ->withHeaders(soap_header('Service', 'bar.com'))
         ->call('Add', ['intA' => 10, 'intB' => 25]);
-})->skip('This makes a real API call to assert the correct header construction');
+})->group('integration');

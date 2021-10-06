@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap;
 
 use Illuminate\Contracts\Support\Arrayable;
 
-class Header implements Arrayable
+final class Header implements Arrayable
 {
     public $name;
     public $namespace;

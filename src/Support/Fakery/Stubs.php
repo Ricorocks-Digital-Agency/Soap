@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap\Support\Fakery;
 
 use RicorocksDigitalAgency\Soap\Request\Request;
 
-class Stubs
+final class Stubs
 {
-    protected $stubs;
+    private $stubs;
 
     public function __construct()
     {
@@ -28,28 +30,28 @@ class Stubs
                 ->first();
     }
 
-    protected function filterAndSortStubs($stubs, Request $request)
+    private function filterAndSortStubs($stubs, Request $request)
     {
         return $stubs
                 ->filter(fn (Stub $stub) => $stub->isForEndpoint($request->getEndpoint()))
                 ->pipe(fn ($stubs) => $this->retrieveCorrectStubsForMethod($stubs, $request));
     }
 
-    protected function retrieveCorrectStubsForMethod($stubs, Request $request)
+    private function retrieveCorrectStubsForMethod($stubs, Request $request)
     {
         return $request->getMethod()
                 ? $this->getStubsForMethod($stubs, $request)
                 : $stubs->sortByDesc('endpoint');
     }
 
-    protected function getStubsForMethod($stubs, $request)
+    private function getStubsForMethod($stubs, $request)
     {
         return $stubs
                 ->filter(fn (Stub $stub) => $stub->isForMethod($request->getMethod()))
                 ->pipe(fn ($stubs) => $this->sortMethodStubs($stubs));
     }
 
-    protected function sortMethodStubs($stubs)
+    private function sortMethodStubs($stubs)
     {
         return $stubs->every->hasWildcardMethods()
                 ? $stubs->sortByDesc('endpoint')

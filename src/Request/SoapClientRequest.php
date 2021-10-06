@@ -1,30 +1,45 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap\Request;
 
+use Closure;
+use RicorocksDigitalAgency\Soap\Contracts\Builder;
+use RicorocksDigitalAgency\Soap\Contracts\Client;
 use RicorocksDigitalAgency\Soap\Header;
-use RicorocksDigitalAgency\Soap\Parameters\Builder;
 use RicorocksDigitalAgency\Soap\Response\Response;
+use RicorocksDigitalAgency\Soap\Support\DecoratedClient;
 use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
 use SoapClient;
 use SoapHeader;
 
-class SoapClientRequest implements Request
+final class SoapClientRequest implements Request
 {
-    protected Builder $builder;
-    protected $client = null;
-    protected string $endpoint;
-    protected string $method;
-    protected $body = [];
-    protected Response $response;
-    protected $hooks = [];
-    protected $options = [];
-    protected $headers = [];
+    private Builder $builder;
 
-    public function __construct(Builder $builder, $client = null)
+    /**
+     * @var Closure(string, array<string, mixed> $options): Client
+     */
+    private Closure $clientResolver;
+
+    private Client $client;
+
+    private string $endpoint;
+    private string $method;
+    private $body = [];
+    private Response $response;
+    private $hooks = [];
+    private $options = [];
+    private $headers = [];
+
+    /**
+     * @param Closure(string $endpoint, array<string, mixed> $options): Client|null $client
+     */
+    public function __construct(Builder $builder, Closure $clientResolver = null)
     {
         $this->builder = $builder;
-        $this->client = $client;
+        $this->clientResolver = $clientResolver ?? fn (string $endpoint, array $options) => new DecoratedClient(new SoapClient($endpoint, $options));
     }
 
     public function to(string $endpoint): Request
@@ -53,12 +68,12 @@ class SoapClientRequest implements Request
         return $response;
     }
 
-    protected function getResponse()
+    private function getResponse()
     {
         return $this->response ??= $this->getRealResponse();
     }
 
-    protected function getRealResponse()
+    private function getRealResponse()
     {
         return tap(
             Response::new($this->makeRequest()),
@@ -68,30 +83,23 @@ class SoapClientRequest implements Request
         );
     }
 
-    protected function makeRequest()
+    private function makeRequest()
     {
-        return $this->client()->{$this->getMethod()}($this->getBody());
+        return $this->client()->call($this->getMethod(), $this->getBody());
     }
 
-    protected function client()
+    private function client(): Client
     {
-        return $this->client ??= $this->constructClient();
+        return $this->client ??= call_user_func($this->clientResolver, $this->endpoint, $this->options)->setHeaders($this->constructHeaders());
     }
 
-    protected function constructClient()
-    {
-        $this->client ??= resolve(SoapClient::class, [
-            'wsdl' => $this->endpoint,
-            'options' => $this->options,
-        ]);
-
-        return tap($this->client, fn ($client) => $client->__setSoapHeaders($this->constructHeaders()));
-    }
-
-    protected function constructHeaders()
+    /**
+     * @return array<string, SoapHeader>
+     */
+    private function constructHeaders(): array
     {
         if (empty($this->headers)) {
-            return;
+            return [];
         }
 
         return array_map(
@@ -118,7 +126,7 @@ class SoapClientRequest implements Request
 
     public function functions(): array
     {
-        return $this->client()->__getFunctions();
+        return $this->client()->getFunctions();
     }
 
     public function beforeRequesting(...$closures): Request

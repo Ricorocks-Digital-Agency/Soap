@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RicorocksDigitalAgency\Soap\Contracts;
 
-interface Soapable
+interface Builder
 {
-    public function toSoap();
+    public function handle($parameters);
 }

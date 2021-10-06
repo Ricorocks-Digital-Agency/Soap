@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap;
 
 use RicorocksDigitalAgency\Soap\Support\Scoped;
 
-class Inclusion extends Scoped
+final class Inclusion extends Scoped
 {
     protected $parameters;
 

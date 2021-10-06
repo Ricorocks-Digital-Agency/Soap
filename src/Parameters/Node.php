@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap\Parameters;
 
 use Illuminate\Contracts\Support\Arrayable;
 use RicorocksDigitalAgency\Soap\Contracts\Soapable;
 
-class Node implements Arrayable, Soapable
+final class Node implements Arrayable, Soapable
 {
-    protected $name;
-    protected $attributes = [];
-    protected $body = [];
+    private $name;
+    private $attributes = [];
+    private $body = [];
 
     public function __construct($attributes)
     {

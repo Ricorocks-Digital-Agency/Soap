@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap\Ray;
 
 use RicorocksDigitalAgency\Soap\Facades\Soap;
@@ -9,7 +11,7 @@ use Spatie\LaravelRay\Ray;
 use Spatie\LaravelRay\Watchers\Watcher;
 use Spatie\Ray\Ray as SpatieRay;
 
-class SoapWatcher extends Watcher
+final class SoapWatcher extends Watcher
 {
     public function register(): void
     {

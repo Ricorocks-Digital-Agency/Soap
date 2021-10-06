@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap\Request;
 
 use RicorocksDigitalAgency\Soap\Header;

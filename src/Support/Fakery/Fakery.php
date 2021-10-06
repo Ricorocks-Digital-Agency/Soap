@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap\Support\Fakery;
 
 use PHPUnit\Framework\Assert as PHPUnit;
 use RicorocksDigitalAgency\Soap\Request\Request;
 use RicorocksDigitalAgency\Soap\Response\Response;
 
-class Fakery
+final class Fakery
 {
-    protected $shouldRecord = false;
-    protected $recordedRequests;
-    protected Stubs $stubs;
+    private $shouldRecord = false;
+    private $recordedRequests;
+    private Stubs $stubs;
 
     public function __construct(Stubs $stubs)
     {
@@ -68,7 +70,7 @@ class Fakery
         PHPUnit::assertTrue($this->recorded($callback)->isEmpty());
     }
 
-    protected function recorded($callback)
+    private function recorded($callback)
     {
         if ($this->recordedRequests->isEmpty()) {
             return collect();

@@ -1,7 +1,7 @@
 <?php
 
 use Mockery as m;
-use RicorocksDigitalAgency\Soap\Parameters\Builder;
+use RicorocksDigitalAgency\Soap\Contracts\Builder;
 use RicorocksDigitalAgency\Soap\Request\SoapClientRequest;
 
 it('can include an array at the root without using for', function () {

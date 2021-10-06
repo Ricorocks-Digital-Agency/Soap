@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap;
 
 use Illuminate\Support\Traits\ForwardsCalls;
@@ -11,7 +13,7 @@ use RicorocksDigitalAgency\Soap\Support\Fakery\Fakery;
 /**
  * @mixin Fakery
  */
-class Soap
+final class Soap
 {
     use ForwardsCalls;
     use Macroable {

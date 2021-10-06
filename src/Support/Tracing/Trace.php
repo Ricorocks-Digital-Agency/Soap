@@ -1,23 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap\Support\Tracing;
 
-class Trace
-{
-    public $client;
-    public $xmlRequest;
-    public $xmlResponse;
-    public $requestHeaders;
-    public $responseHeaders;
+use RicorocksDigitalAgency\Soap\Contracts\Client;
 
-    public static function client($client): self
+final class Trace
+{
+    public Client $client;
+    public ?string $xmlRequest;
+    public ?string $xmlResponse;
+    public ?string $requestHeaders;
+    public ?string $responseHeaders;
+
+    public static function client(Client $client): self
     {
         $trace = new static();
+
         $trace->client = $client;
-        $trace->xmlRequest = $client->__getLastRequest();
-        $trace->xmlResponse = $client->__getLastResponse();
-        $trace->requestHeaders = $client->__getLastRequestHeaders();
-        $trace->responseHeaders = $client->__getLastResponseHeaders();
+        $trace->xmlRequest = $client->lastRequest();
+        $trace->xmlResponse = $client->lastResponse();
+        $trace->requestHeaders = $client->lastRequestHeaders();
+        $trace->responseHeaders = $client->lastResponseHeaders();
 
         return $trace;
     }

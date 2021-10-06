@@ -28,7 +28,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     {
         return soap(null, new SoapClientRequest(
                 new IntelligentBuilder(),
-                new MockSoapClient(EXAMPLE_SOAP_ENDPOINT, ['trace' => true]))
+                fn() => new MockSoapClient(EXAMPLE_SOAP_ENDPOINT, ['trace' => true]))
         );
     }
 
