@@ -43,19 +43,17 @@ final class Soap
     protected array $optionsSets = [];
 
     /**
-     * @var array{beforeRequesting: Collection<int, callable(Request): mixed>, afterRequesting: Collection<int, callable(Request, Response): mixed>}
+     * @var array{beforeRequesting: array<int, callable(Request): mixed>, afterRequesting: array<int, callable(Request, Response): mixed>}
      */
-    protected array $globalHooks;
+    protected array $globalHooks = [
+        'beforeRequesting' => [],
+        'afterRequesting' => [],
+    ];
 
     public function __construct(Fakery $fakery, Request $request)
     {
         $this->fakery = $fakery;
         $this->request = $request;
-
-        $this->globalHooks = [
-            'beforeRequesting' => collect(),
-            'afterRequesting' => collect(),
-        ];
 
         $this->beforeRequesting(fn ($requestInstance) => $requestInstance->fakeUsing($this->fakery->mockResponseIfAvailable($requestInstance)))
             ->beforeRequesting(fn ($requestInstance) => $this->mergeHeadersFor($requestInstance))
@@ -144,14 +142,14 @@ final class Soap
 
     public function beforeRequesting(callable $hook): self
     {
-        $this->globalHooks['beforeRequesting']->push($hook);
+        $this->globalHooks['beforeRequesting'][] = $hook;
 
         return $this;
     }
 
     public function afterRequesting(callable $hook): self
     {
-        $this->globalHooks['afterRequesting']->push($hook);
+        $this->globalHooks['afterRequesting'][] = $hook;
 
         return $this;
     }

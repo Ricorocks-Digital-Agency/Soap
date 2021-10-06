@@ -24,9 +24,9 @@ interface Request
     public function functions(): array;
 
     /**
-     * @param array<string, mixed> $body
+     * @param array<string, mixed>|Soapable $body
      */
-    public function call(string $method, array $body = []): Response;
+    public function call(string $method, array|Soapable $body = []): Response;
 
     /**
      * @param callable(Request): mixed ...$closures
@@ -48,9 +48,9 @@ interface Request
     public function getMethod(): string;
 
     /**
-     * @return array<string, mixed>
+     * @return array<string, mixed>|Soapable
      */
-    public function getBody(): array;
+    public function getBody(): array|Soapable;
 
     /**
      * @return array<string, mixed>

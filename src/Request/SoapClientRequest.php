@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 use RicorocksDigitalAgency\Soap\Contracts\Builder;
 use RicorocksDigitalAgency\Soap\Contracts\Client;
 use RicorocksDigitalAgency\Soap\Contracts\Request;
+use RicorocksDigitalAgency\Soap\Contracts\Soapable;
 use RicorocksDigitalAgency\Soap\Header;
 use RicorocksDigitalAgency\Soap\Response\Response;
 use RicorocksDigitalAgency\Soap\Support\DecoratedClient;
@@ -31,16 +32,19 @@ final class SoapClientRequest implements Request
     private string $method;
 
     /**
-     * @var array<string, mixed>
+     * @var array<string, mixed>|Soapable
      */
     private $body = [];
 
     private Response $response;
 
     /**
-     * @var array{beforeRequesting: Collection<int, callable(Request): mixed>, afterRequesting: Collection<int, callable(Request, Response): mixed>}
+     * @var array{beforeRequesting: array<int, callable(Request): mixed>, afterRequesting: array<int, callable(Request, Response): mixed>}
      */
-    private array $hooks;
+    private array $hooks = [
+        'beforeRequesting' => [],
+        'afterRequesting' => [],
+    ];
 
     /**
      * @var array<string, mixed>
@@ -59,11 +63,6 @@ final class SoapClientRequest implements Request
     {
         $this->builder = $builder;
         $this->clientResolver = $clientResolver ?? fn (string $endpoint, array $options) => new DecoratedClient(new SoapClient($endpoint, $options));
-
-        $this->hooks = [
-            'beforeRequesting' => collect(),
-            'afterRequesting' => collect(),
-        ];
     }
 
     public function to(string $endpoint): self
@@ -81,16 +80,19 @@ final class SoapClientRequest implements Request
         return $this->call($name, $parameters[0] ?? []);
     }
 
-    public function call(string $method, array $body = []): Response
+    /**
+     * @param array<string, mixed>|Soapable $body
+     */
+    public function call(string $method, array|Soapable $body = []): Response
     {
         $this->method = $method;
         $this->body = $body;
 
-        $this->hooks['beforeRequesting']->each(fn ($callback) => $callback($this));
+        collect($this->hooks['beforeRequesting'])->each(fn ($callback) => $callback($this));
         $this->body = $this->builder->handle($this->body);
 
         $response = $this->getResponse();
-        $this->hooks['afterRequesting']->each(fn ($callback) => $callback($this, $response));
+        collect($this->hooks['afterRequesting'])->each(fn ($callback) => $callback($this, $response));
 
         return $response;
     }
@@ -147,9 +149,9 @@ final class SoapClientRequest implements Request
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<string, mixed>|Soapable
      */
-    public function getBody(): array
+    public function getBody(): array|Soapable
     {
         return $this->body;
     }
@@ -167,7 +169,7 @@ final class SoapClientRequest implements Request
      */
     public function beforeRequesting(callable ...$closures): self
     {
-        $this->hooks['beforeRequesting']->push(...$closures);
+        $this->hooks['beforeRequesting'] = array_merge($this->hooks['beforeRequesting'], $closures);
 
         return $this;
     }
@@ -177,7 +179,7 @@ final class SoapClientRequest implements Request
      */
     public function afterRequesting(callable ...$closures): self
     {
-        $this->hooks['afterRequesting']->push(...$closures);
+        $this->hooks['afterRequesting'] = array_merge($this->hooks['afterRequesting'], $closures);
 
         return $this;
     }
