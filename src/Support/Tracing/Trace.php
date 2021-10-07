@@ -6,6 +6,9 @@ namespace RicorocksDigitalAgency\Soap\Support\Tracing;
 
 use RicorocksDigitalAgency\Soap\Contracts\PhpSoap\Client;
 
+/**
+ * @internal
+ */
 final class Trace
 {
     public Client $client;

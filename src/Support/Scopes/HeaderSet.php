@@ -6,6 +6,9 @@ namespace RicorocksDigitalAgency\Soap\Support\Scopes;
 
 use RicorocksDigitalAgency\Soap\Support\Header;
 
+/**
+ * @internal
+ */
 final class HeaderSet
 {
     use IsScoped;

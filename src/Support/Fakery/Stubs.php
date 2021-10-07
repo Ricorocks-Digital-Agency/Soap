@@ -9,6 +9,9 @@ use Illuminate\Support\Collection;
 use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Response\Response;
 
+/**
+ * @internal
+ */
 final class Stubs
 {
     /**

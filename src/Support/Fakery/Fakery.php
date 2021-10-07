@@ -10,6 +10,9 @@ use PHPUnit\Framework\Assert as PHPUnit;
 use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Response\Response;
 
+/**
+ * @internal
+ */
 final class Fakery
 {
     private bool $shouldRecord = false;

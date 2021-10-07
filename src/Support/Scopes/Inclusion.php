@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace RicorocksDigitalAgency\Soap\Support\Scopes;
 
+/**
+ * @internal
+ */
 final class Inclusion
 {
     use IsScoped;

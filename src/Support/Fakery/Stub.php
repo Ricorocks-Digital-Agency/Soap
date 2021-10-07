@@ -9,6 +9,9 @@ use Illuminate\Support\Str;
 use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Response\Response;
 
+/**
+ * @internal
+ */
 final class Stub
 {
     public const REGEX_PATTERN = "/:([\w\d|]+$)/";

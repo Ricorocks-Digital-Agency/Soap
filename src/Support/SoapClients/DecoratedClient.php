@@ -8,6 +8,9 @@ use RicorocksDigitalAgency\Soap\Contracts\PhpSoap\Client;
 use SoapClient;
 use SoapHeader;
 
+/**
+ * @internal
+ */
 final class DecoratedClient implements Client
 {
     private SoapClient $client;

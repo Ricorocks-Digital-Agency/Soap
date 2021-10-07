@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace RicorocksDigitalAgency\Soap\Support\Scopes;
 
+/**
+ * @internal
+ */
 trait IsScoped
 {
     protected string $endpoint;
