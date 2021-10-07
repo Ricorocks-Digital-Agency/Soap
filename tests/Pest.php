@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use RicorocksDigitalAgency\Soap\Contracts\Builder;
+use RicorocksDigitalAgency\Soap\Contracts\PhpSoap\Client;
 use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Contracts\Soapable;
 use RicorocksDigitalAgency\Soap\Parameters\IntelligentBuilder;
@@ -28,11 +29,11 @@ function soap(?Fakery $fakery = null, ?Request $request = null)
     );
 }
 
-function soapRequest(Builder $builder = null, Closure $clientResolver = null): SoapPhpClientRequest
+function soapRequest(Builder $builder = null, Client $client = null): SoapPhpClientRequest
 {
     return new SoapPhpClientRequest(
         $builder ?? new IntelligentBuilder(),
-        $clientResolver ?? fn (string $endpoint, array $options) => new DecoratedClient(new SoapClient($endpoint, $options)),
+        $client ?? new DecoratedClient(),
     );
 }
 

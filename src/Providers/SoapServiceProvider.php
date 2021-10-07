@@ -12,7 +12,6 @@ use RicorocksDigitalAgency\Soap\Parameters\IntelligentBuilder;
 use RicorocksDigitalAgency\Soap\Request\SoapPhpClientRequest;
 use RicorocksDigitalAgency\Soap\Soap;
 use RicorocksDigitalAgency\Soap\Support\DecoratedClient;
-use SoapClient;
 
 final class SoapServiceProvider extends ServiceProvider
 {
@@ -22,7 +21,7 @@ final class SoapServiceProvider extends ServiceProvider
         $this->app->bind(Builder::class, IntelligentBuilder::class);
         $this->app->bind(Request::class, fn (Application $app) => new SoapPhpClientRequest(
             $app->make(Builder::class),
-            fn (string $endpoint, array $options) => new DecoratedClient(new SoapClient($endpoint, $options))
+            new DecoratedClient()
         ));
     }
 

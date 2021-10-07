@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RicorocksDigitalAgency\Soap\Request;
 
-use Closure;
 use RicorocksDigitalAgency\Soap\Contracts\Builder;
 use RicorocksDigitalAgency\Soap\Contracts\PhpSoap\Client;
 use RicorocksDigitalAgency\Soap\Contracts\Request;
@@ -17,11 +16,6 @@ use SoapHeader;
 final class SoapPhpClientRequest implements Request
 {
     private Builder $builder;
-
-    /**
-     * @var Closure(string, array<string, mixed>): Client
-     */
-    private Closure $clientResolver;
 
     private Client $client;
 
@@ -54,13 +48,10 @@ final class SoapPhpClientRequest implements Request
      */
     private array $headers = [];
 
-    /**
-     * @param Closure(string $endpoint, array<string, mixed> $options): Client $clientResolver
-     */
-    public function __construct(Builder $builder, Closure $clientResolver)
+    public function __construct(Builder $builder, Client $client)
     {
         $this->builder = $builder;
-        $this->clientResolver = $clientResolver;
+        $this->client = $client;
     }
 
     public function to(string $endpoint): self
@@ -117,7 +108,10 @@ final class SoapPhpClientRequest implements Request
 
     private function client(): Client
     {
-        return $this->client ??= call_user_func($this->clientResolver, $this->endpoint, $this->options)->setHeaders($this->constructHeaders());
+        return $this->client
+            ->setEndpoint($this->endpoint)
+            ->setOptions($this->options)
+            ->setHeaders($this->constructHeaders());
     }
 
     /**

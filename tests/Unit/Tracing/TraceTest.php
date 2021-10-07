@@ -6,7 +6,7 @@ use RicorocksDigitalAgency\Soap\Support\DecoratedClient;
 use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
 
 it('has a static client method', function () {
-    $trace = Trace::client($client = new DecoratedClient(new SoapClient(EXAMPLE_SOAP_ENDPOINT)));
+    $trace = Trace::client($client = (new DecoratedClient())->setEndpoint(EXAMPLE_SOAP_ENDPOINT));
 
     expect($client)
         ->__getLastRequest()->toBe($trace->xmlRequest)

@@ -9,10 +9,26 @@ use RicorocksDigitalAgency\Soap\Contracts\PhpSoap\Client;
 final class MockSoapClient implements Client
 {
     public array $headers = [];
+    public string $endpoint = '';
+    public array $options = [];
 
     public function setHeaders(array $headers): static
     {
         $this->headers = $headers;
+
+        return $this;
+    }
+
+    public function setEndpoint(string $endpoint): static
+    {
+        $this->endpoint = $endpoint;
+
+        return $this;
+    }
+
+    public function setOptions(array $options): static
+    {
+        $this->options = $options;
 
         return $this;
     }

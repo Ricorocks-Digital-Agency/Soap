@@ -26,7 +26,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
     public function traceableSoap()
     {
-        return soap(null, soapRequest(null, fn () => new MockSoapClient()));
+        return soap(null, soapRequest(null, new MockSoapClient()));
     }
 
     public function fake($callback = null)

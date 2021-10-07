@@ -8,7 +8,7 @@ use RicorocksDigitalAgency\Soap\Tests\Mocks\MockSoapClient;
 
 beforeEach(function () {
     $this->client = new MockSoapClient();
-    $this->instance(Request::class, soapRequest(null, fn () => $this->client));
+    $this->instance(Request::class, soapRequest(null, $this->client));
 });
 
 it('can create a header with the helper method', function () {
