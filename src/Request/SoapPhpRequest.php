@@ -13,7 +13,7 @@ use RicorocksDigitalAgency\Soap\Response\Response;
 use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
 use SoapHeader;
 
-final class SoapPhpClientRequest implements Request
+final class SoapPhpRequest implements Request
 {
     private Builder $builder;
 

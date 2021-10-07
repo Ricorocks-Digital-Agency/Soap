@@ -9,7 +9,7 @@ use Illuminate\Support\ServiceProvider;
 use RicorocksDigitalAgency\Soap\Contracts\Builder;
 use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Parameters\IntelligentBuilder;
-use RicorocksDigitalAgency\Soap\Request\SoapPhpClientRequest;
+use RicorocksDigitalAgency\Soap\Request\SoapPhpRequest;
 use RicorocksDigitalAgency\Soap\Soap;
 use RicorocksDigitalAgency\Soap\Support\DecoratedClient;
 
@@ -17,9 +17,9 @@ final class SoapServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton('soap', fn () => app(Soap::class));
+        $this->app->singleton('soap', fn (Application $app) => $app->make(Soap::class));
         $this->app->bind(Builder::class, IntelligentBuilder::class);
-        $this->app->bind(Request::class, fn (Application $app) => new SoapPhpClientRequest(
+        $this->app->bind(Request::class, fn (Application $app) => new SoapPhpRequest(
             $app->make(Builder::class),
             new DecoratedClient()
         ));
