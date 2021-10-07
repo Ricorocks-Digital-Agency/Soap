@@ -183,7 +183,7 @@ final class SoapPhpRequest implements Request
      */
     public function fakeUsing(Response|callable|null $response): self
     {
-        if (empty($response)) {
+        if (is_null($response)) {
             return $this;
         }
 

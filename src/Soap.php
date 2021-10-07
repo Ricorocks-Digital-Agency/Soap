@@ -114,7 +114,7 @@ final class Soap
      */
     public function headers(Header ...$headers): HeaderSet
     {
-        if (count($headers) < 1) {
+        if (empty($headers)) {
             throw new InvalidArgumentException('You must pass at least one header to the headers method.');
         }
 

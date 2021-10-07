@@ -11,8 +11,8 @@ it('can set headers')
         ->call('Add', ['intA' => 10, 'intB' => 25])
     )
     ->assertSent(fn (SoapPhpRequest $request) => $request->getHeaders() == [
-        $this->soap()->header('Auth', 'test.com')->data(['foo' => 'bar']),
-    ]);
+            $this->soap()->header('Auth', 'test.com')->data(['foo' => 'bar']),
+        ]);
 
 it('can define multiple headers in the same method')
     ->fake()
@@ -24,9 +24,9 @@ it('can define multiple headers in the same method')
         ->call('Add', ['intA' => 10, 'intB' => 25])
     )
     ->assertSent(fn (SoapPhpRequest $request) => $request->getHeaders() == [
-        $this->soap()->header('Auth', 'test.com')->data(['foo' => 'bar']),
-        $this->soap()->header('Brand', 'test.com')->data(['hello' => 'world']),
-    ]);
+            $this->soap()->header('Auth', 'test.com')->data(['foo' => 'bar']),
+            $this->soap()->header('Brand', 'test.com')->data(['hello' => 'world']),
+        ]);
 
 it('can define multiple headers with an array in the same method')
     ->fake()
@@ -38,9 +38,9 @@ it('can define multiple headers with an array in the same method')
         ->call('Add', ['intA' => 10, 'intB' => 25])
     )
     ->assertSent(fn (SoapPhpRequest $request) => $request->getHeaders() == [
-        $this->soap()->header('Auth', 'test.com')->data(['foo' => 'bar']),
-        $this->soap()->header('Brand', 'test.com')->data(['hello' => 'world']),
-    ]);
+            $this->soap()->header('Auth', 'test.com')->data(['foo' => 'bar']),
+            $this->soap()->header('Brand', 'test.com')->data(['hello' => 'world']),
+        ]);
 
 it('can define multiple headers using a collection in the same method')
     ->fake()
@@ -52,9 +52,9 @@ it('can define multiple headers using a collection in the same method')
         ->call('Add', ['intA' => 10, 'intB' => 25])
     )
     ->assertSent(fn (SoapPhpRequest $request) => $request->getHeaders() == [
-        $this->soap()->header('Auth', 'test.com')->data(['foo' => 'bar']),
-        $this->soap()->header('Brand', 'test.com')->data(['hello' => 'world']),
-    ]);
+            $this->soap()->header('Auth', 'test.com')->data(['foo' => 'bar']),
+            $this->soap()->header('Brand', 'test.com')->data(['hello' => 'world']),
+        ]);
 
 it('can define multiple headers in multiple methods')
     ->fake()
@@ -64,9 +64,9 @@ it('can define multiple headers in multiple methods')
         ->call('Add', ['intA' => 10, 'intB' => 25])
     )
     ->assertSent(fn (SoapPhpRequest $request) => $request->getHeaders() == [
-        $this->soap()->header('Auth', 'test.com')->data(['foo' => 'bar']),
-        $this->soap()->header('Brand', 'test.com')->data(['hello' => 'world']),
-    ]);
+            $this->soap()->header('Auth', 'test.com')->data(['foo' => 'bar']),
+            $this->soap()->header('Brand', 'test.com')->data(['hello' => 'world']),
+        ]);
 
 it('can create a header without any parameters and be composed fluently')
     ->fake()
@@ -77,12 +77,12 @@ it('can create a header without any parameters and be composed fluently')
             ->data(['foo' => 'bar'])
             ->mustUnderstand()
             ->actor('this.test')
-        )
+    )
         ->call('Add', ['intA' => 10, 'intB' => 25])
     )
     ->assertSent(fn (SoapPhpRequest $request) => $request->getHeaders() == [
-        $this->soap()->header('Auth', 'test.com')->data(['foo' => 'bar'])->mustUnderstand()->actor('this.test'),
-    ]);
+            $this->soap()->header('Auth', 'test.com')->data(['foo' => 'bar'])->mustUnderstand()->actor('this.test'),
+        ]);
 
 it('can set up a header using a SoapVar')
     ->fake()
@@ -91,8 +91,8 @@ it('can set up a header using a SoapVar')
         ->call('Add', ['intA' => 10, 'intB' => 25])
     )
     ->assertSent(fn (SoapPhpRequest $request) => $request->getHeaders() == [
-        $this->soap()->header('Auth', 'test.com')->data(new SoapVar(['foo' => 'bar'], null)),
-    ]);
+            $this->soap()->header('Auth', 'test.com')->data(new SoapVar(['foo' => 'bar'], null)),
+        ]);
 
 it('does not require the data parameter')
     ->fake()
@@ -102,6 +102,23 @@ it('does not require the data parameter')
         ->call('Add', ['intA' => 10, 'intB' => 25])
     )
     ->assertSent(fn (SoapPhpRequest $request) => $request->getHeaders() == [
-        $this->soap()->header('Auth', 'test.com', null),
-        $this->soap()->header('Brand', 'test.com', null),
+            $this->soap()->header('Auth', 'test.com', null),
+            $this->soap()->header('Brand', 'test.com', null),
+        ]);
+
+it('can be converted to an array')
+    ->expect(soap()
+        ->header()
+        ->name('Auth')
+        ->namespace('test.com')
+        ->data(['foo' => 'bar'])
+        ->mustUnderstand()
+        ->actor('this.test')
+        ->toArray()
+    )->toBe([
+        'name' => 'Auth',
+        'namespace' => 'test.com',
+        'data' => ['foo' => 'bar'],
+        'mustUnderstand' => true,
+        'actor' => 'this.test',
     ]);
