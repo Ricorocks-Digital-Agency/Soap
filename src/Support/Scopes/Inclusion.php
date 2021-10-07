@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace RicorocksDigitalAgency\Soap\Support\Scopes;
 
-final class Inclusion extends Scoped
+final class Inclusion
 {
+    use IsScoped;
+
     /**
      * @var non-empty-array<string, mixed>
      */

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace RicorocksDigitalAgency\Soap\Support\Scopes;
 
-final class OptionSet extends Scoped
+final class OptionSet
 {
+    use IsScoped;
+
     /**
      * @var array<string, mixed>
      */

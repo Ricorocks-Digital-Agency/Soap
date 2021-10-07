@@ -6,8 +6,10 @@ namespace RicorocksDigitalAgency\Soap\Support\Scopes;
 
 use RicorocksDigitalAgency\Soap\Support\Header;
 
-final class HeaderSet extends Scoped
+final class HeaderSet
 {
+    use IsScoped;
+
     /**
      * @var non-empty-array<int, Header>
      */

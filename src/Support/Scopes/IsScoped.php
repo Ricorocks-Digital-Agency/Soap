@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RicorocksDigitalAgency\Soap\Support\Scopes;
 
-abstract class Scoped
+trait IsScoped
 {
     protected string $endpoint;
     protected ?string $method = null;
