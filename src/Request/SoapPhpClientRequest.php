@@ -26,6 +26,7 @@ final class SoapPhpClientRequest implements Request
     private Client $client;
 
     private string $endpoint;
+
     private string $method;
 
     /**

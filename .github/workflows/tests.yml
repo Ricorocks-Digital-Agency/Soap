@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: ['7.4', '8.0']
+        php: ['8.0']
 
     name: PHP ${{ matrix.php }}
 
@@ -32,5 +32,5 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
 
-      - name: Run Pest
-        run: php vendor/bin/pest
+      - name: Run tests
+        run: composer test
