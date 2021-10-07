@@ -43,11 +43,15 @@
         "test:unit": "./vendor/bin/pest --exclude=integration",
         "test:integration": "./vendor/bin/pest --group=integration",
         "test:types": "./vendor/bin/phpstan analyse",
-        "test": [
+        "test:ci": [
             "@test:lint",
             "@test:unit",
             "@test:integration",
             "@test:types"
+        ],
+        "test": [
+            "@lint",
+            "@test:ci"
         ]
     },
     "extra": {
