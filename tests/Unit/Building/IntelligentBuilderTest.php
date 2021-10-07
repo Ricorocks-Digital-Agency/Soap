@@ -32,3 +32,7 @@ it('can handle a Soapable')
         'foo' => ['bar' => ['hello' => 'world'], 'email' => 'hi@me.com'],
         'bar' => ['baz', 'bang'],
     ]);
+
+it('can handle an object')
+    ->expect((new IntelligentBuilder())->handle((object)['foo' => 'bar', 'baz' => 'huh?']))
+    ->toEqual((object) ['foo' => 'bar', 'baz' => 'huh?']);
