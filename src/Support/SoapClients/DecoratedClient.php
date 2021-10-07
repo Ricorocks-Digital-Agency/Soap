@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RicorocksDigitalAgency\Soap\Support;
+namespace RicorocksDigitalAgency\Soap\Support\SoapClients;
 
 use RicorocksDigitalAgency\Soap\Contracts\PhpSoap\Client;
 use SoapClient;

@@ -11,7 +11,7 @@ use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Parameters\IntelligentBuilder;
 use RicorocksDigitalAgency\Soap\Request\SoapPhpRequest;
 use RicorocksDigitalAgency\Soap\Soap;
-use RicorocksDigitalAgency\Soap\Support\DecoratedClient;
+use RicorocksDigitalAgency\Soap\Support\SoapClients\DecoratedClient;
 
 final class SoapServiceProvider extends ServiceProvider
 {

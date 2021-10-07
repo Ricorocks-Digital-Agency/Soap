@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use RicorocksDigitalAgency\Soap\Facades\Soap;
-use RicorocksDigitalAgency\Soap\Header;
 use RicorocksDigitalAgency\Soap\Parameters\Node;
+use RicorocksDigitalAgency\Soap\Support\Header;
 
 if (!function_exists('soap_node')) {
     /**

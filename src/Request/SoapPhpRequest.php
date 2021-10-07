@@ -8,8 +8,8 @@ use RicorocksDigitalAgency\Soap\Contracts\Builder;
 use RicorocksDigitalAgency\Soap\Contracts\PhpSoap\Client;
 use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Contracts\Soapable;
-use RicorocksDigitalAgency\Soap\Header;
 use RicorocksDigitalAgency\Soap\Response\Response;
+use RicorocksDigitalAgency\Soap\Support\Header;
 use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
 use SoapHeader;
 

@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RicorocksDigitalAgency\Soap;
-
-use RicorocksDigitalAgency\Soap\Support\Scoped;
+namespace RicorocksDigitalAgency\Soap\Support\Scopes;
 
 final class Inclusion extends Scoped
 {

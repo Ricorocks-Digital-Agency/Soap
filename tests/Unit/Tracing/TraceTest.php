@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use RicorocksDigitalAgency\Soap\Support\DecoratedClient;
+use RicorocksDigitalAgency\Soap\Support\SoapClients\DecoratedClient;
 use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
 
 it('has a static client method', function () {

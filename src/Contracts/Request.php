@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace RicorocksDigitalAgency\Soap\Contracts;
 
-use RicorocksDigitalAgency\Soap\Header;
 use RicorocksDigitalAgency\Soap\Response\Response;
+use RicorocksDigitalAgency\Soap\Support\Header;
 
 interface Request
 {

@@ -6,8 +6,8 @@ namespace RicorocksDigitalAgency\Soap\Ray;
 
 use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Facades\Soap;
-use RicorocksDigitalAgency\Soap\Header;
 use RicorocksDigitalAgency\Soap\Response\Response;
+use RicorocksDigitalAgency\Soap\Support\Header;
 use Spatie\LaravelRay\Ray;
 use Spatie\LaravelRay\Watchers\Watcher;
 use Spatie\Ray\Ray as SpatieRay;

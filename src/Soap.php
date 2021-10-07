@@ -12,6 +12,10 @@ use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Parameters\Node;
 use RicorocksDigitalAgency\Soap\Response\Response;
 use RicorocksDigitalAgency\Soap\Support\Fakery\Fakery;
+use RicorocksDigitalAgency\Soap\Support\Header;
+use RicorocksDigitalAgency\Soap\Support\Scopes\HeaderSet;
+use RicorocksDigitalAgency\Soap\Support\Scopes\Inclusion;
+use RicorocksDigitalAgency\Soap\Support\Scopes\OptionSet;
 use SoapVar;
 
 /**

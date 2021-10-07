@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace RicorocksDigitalAgency\Soap;
+namespace RicorocksDigitalAgency\Soap\Support\Scopes;
 
-use RicorocksDigitalAgency\Soap\Support\Scoped;
+use RicorocksDigitalAgency\Soap\Support\Header;
 
 final class HeaderSet extends Scoped
 {

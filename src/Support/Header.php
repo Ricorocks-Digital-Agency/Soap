@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace RicorocksDigitalAgency\Soap;
+namespace RicorocksDigitalAgency\Soap\Support;
 
 use Illuminate\Contracts\Support\Arrayable;
 use SoapVar;
+use function tap;
 
 final class Header implements Arrayable
 {

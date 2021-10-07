@@ -9,9 +9,9 @@ use RicorocksDigitalAgency\Soap\Contracts\Soapable;
 use RicorocksDigitalAgency\Soap\Parameters\IntelligentBuilder;
 use RicorocksDigitalAgency\Soap\Request\SoapPhpRequest;
 use RicorocksDigitalAgency\Soap\Soap;
-use RicorocksDigitalAgency\Soap\Support\DecoratedClient;
 use RicorocksDigitalAgency\Soap\Support\Fakery\Fakery;
 use RicorocksDigitalAgency\Soap\Support\Fakery\Stubs;
+use RicorocksDigitalAgency\Soap\Support\SoapClients\DecoratedClient;
 use RicorocksDigitalAgency\Soap\Tests;
 
 include __DIR__ . '/../src/helpers.php';
