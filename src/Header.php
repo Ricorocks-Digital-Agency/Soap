@@ -9,29 +9,16 @@ use SoapVar;
 
 final class Header implements Arrayable
 {
-    public string $name;
-
-    public string $namespace;
-
-    /**
-     * @var SoapVar|array<string, mixed>|null
-     */
-    public SoapVar|array|null $data;
-
-    public ?string $actor;
-
-    public bool $mustUnderstand;
-
     /**
      * @param SoapVar|array<string, mixed>|null $data
      */
-    public function __construct(string $name = '', string $namespace = '', SoapVar|array $data = null, bool $mustUnderstand = false, string $actor = null)
-    {
-        $this->name = $name;
-        $this->namespace = $namespace;
-        $this->data = $data;
-        $this->mustUnderstand = $mustUnderstand;
-        $this->actor = $actor;
+    public function __construct(
+        public string $name = '',
+        public string $namespace = '',
+        public SoapVar|array|null $data = null,
+        public bool $mustUnderstand = false,
+        public string|int|null $actor = null
+    ) {
     }
 
     public function name(string $name): self

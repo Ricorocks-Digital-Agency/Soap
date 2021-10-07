@@ -82,7 +82,7 @@ final class Soap
     /**
      * @param array<string, mixed>|SoapVar|null $data
      */
-    public function header(string $name = '', string $namespace = '', array|SoapVar $data = null, bool $mustUnderstand = false, string $actor = null): Header
+    public function header(string $name = '', string $namespace = '', array|SoapVar $data = null, bool $mustUnderstand = false, string|int $actor = null): Header
     {
         return new Header($name, $namespace, $data, $mustUnderstand, $actor);
     }
