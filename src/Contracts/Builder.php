@@ -6,5 +6,10 @@ namespace RicorocksDigitalAgency\Soap\Contracts;
 
 interface Builder
 {
-    public function handle($parameters);
+    /**
+     * @param array<array<mixed>|Soapable>|Soapable $parameters
+     *
+     * @return array<string, mixed>
+     */
+    public function handle(array|Soapable $parameters): array;
 }

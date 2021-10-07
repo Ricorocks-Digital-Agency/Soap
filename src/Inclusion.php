@@ -8,14 +8,23 @@ use RicorocksDigitalAgency\Soap\Support\Scoped;
 
 final class Inclusion extends Scoped
 {
-    protected $parameters;
+    /**
+     * @var non-empty-array<string, mixed>
+     */
+    protected array $parameters;
 
-    public function __construct($parameters)
+    /**
+     * @param non-empty-array<string, mixed> $parameters
+     */
+    public function __construct(array $parameters)
     {
         $this->parameters = $parameters;
     }
 
-    public function getParameters()
+    /**
+     * @return non-empty-array<string, mixed>
+     */
+    public function getParameters(): array
     {
         return $this->parameters;
     }

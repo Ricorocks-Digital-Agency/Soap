@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace RicorocksDigitalAgency\Soap\Support;
 
 use RicorocksDigitalAgency\Soap\Contracts\Client;
+use RicorocksDigitalAgency\Soap\Contracts\Traceable;
 use SoapClient;
 
-final class DecoratedClient implements Client
+final class DecoratedClient implements Client, Traceable
 {
     public function __construct(private SoapClient $client)
     {
@@ -30,26 +31,6 @@ final class DecoratedClient implements Client
         return $this->client->__getFunctions();
     }
 
-    public function lastRequestAsXml(): ?string
-    {
-        return $this->client->__getLastRequest();
-    }
-
-    public function lastResponseAsXml(): ?string
-    {
-        return $this->client->__getLastResponse();
-    }
-
-    public function lastRequestHeaders(): ?string
-    {
-        return $this->client->__getLastRequestHeaders();
-    }
-
-    public function lastResponseHeaders(): ?string
-    {
-        return $this->client->__getLastResponseHeaders();
-    }
-
     public function __get(string $name): mixed
     {
         return $this->client->$name;
@@ -61,5 +42,25 @@ final class DecoratedClient implements Client
     public function __call(string $name, array $arguments): mixed
     {
         return $this->client->$name(...$arguments);
+    }
+
+    public function __getLastRequest(): ?string
+    {
+        return $this->client->__getLastRequest();
+    }
+
+    public function __getLastResponse(): ?string
+    {
+        return $this->client->__getLastResponse();
+    }
+
+    public function __getLastRequestHeaders(): ?string
+    {
+        return $this->client->__getLastRequestHeaders();
+    }
+
+    public function __getLastResponseHeaders(): ?string
+    {
+        return $this->client->__getLastResponseHeaders();
     }
 }

@@ -1,25 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap\Tests\Mocks;
 
 use RicorocksDigitalAgency\Soap\Contracts\Client;
+use RicorocksDigitalAgency\Soap\Contracts\Traceable;
 
-class MockSoapClient implements Client
+final class MockSoapClient implements Client, Traceable
 {
-    protected $shouldTrace = false;
-
-    /**
-     * @param array<string, mixed> $options
-     */
-    public function __construct(string $endpoint, array $options)
-    {
-        if ($options['trace'] ?? false) {
-            $this->shouldTrace = true;
-        }
-    }
+    public array $headers = [];
 
     public function setHeaders(array $headers): static
     {
+        $this->headers = $headers;
+
         return $this;
     }
 
@@ -35,39 +30,23 @@ class MockSoapClient implements Client
         ];
     }
 
-    public function lastRequestAsXml(): ?string
+    public function __getLastRequest(): ?string
     {
-        if (!$this->shouldTrace) {
-            return null;
-        }
-
         return '<?xml version="1.0" encoding="UTF-8"?><FooBar><Hello>World</Hello></FooBar>';
     }
 
-    public function lastResponseAsXml(): ?string
+    public function __getLastResponse(): ?string
     {
-        if (!$this->shouldTrace) {
-            return null;
-        }
-
         return '<?xml version="1.0" encoding="UTF-8"?><Status>Success!</Status>';
     }
 
-    public function lastRequestHeaders(): ?string
+    public function __getLastRequestHeaders(): ?string
     {
-        if (!$this->shouldTrace) {
-            return null;
-        }
-
         return 'Hello World';
     }
 
-    public function lastResponseHeaders(): ?string
+    public function __getLastResponseHeaders(): ?string
     {
-        if (!$this->shouldTrace) {
-            return null;
-        }
-
         return 'Foo Bar';
     }
 }

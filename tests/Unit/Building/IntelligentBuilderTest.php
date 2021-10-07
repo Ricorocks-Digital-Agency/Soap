@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use RicorocksDigitalAgency\Soap\Parameters\IntelligentBuilder;
 
 it('can handle an array')

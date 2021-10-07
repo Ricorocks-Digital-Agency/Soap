@@ -6,5 +6,5 @@ namespace RicorocksDigitalAgency\Soap\Contracts;
 
 interface Soapable
 {
-    public function toSoap();
+    public function toSoap(): mixed;
 }

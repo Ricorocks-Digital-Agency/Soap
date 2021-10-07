@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 $finder = PhpCsFixer\Finder::create()
     ->in('src')
+    ->in('tests')
     ->append(['.php-cs-fixer.dist.php']);
 
 $rules = [

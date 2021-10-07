@@ -24,24 +24,4 @@ interface Client
      * @return array<int, string>
      */
     public function getFunctions(): array;
-
-    /**
-     * Get the last performed request as an XML string.
-     */
-    public function lastRequestAsXml(): ?string;
-
-    /**
-     * Get the last performed response as an XML string.
-     */
-    public function lastResponseAsXml(): ?string;
-
-    /**
-     * Get the last performed request headers.
-     */
-    public function lastRequestHeaders(): ?string;
-
-    /**
-     * Get the last performed response headers.
-     */
-    public function lastResponseHeaders(): ?string;
 }

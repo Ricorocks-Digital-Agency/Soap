@@ -5,20 +5,21 @@ declare(strict_types=1);
 namespace RicorocksDigitalAgency\Soap\Response;
 
 use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
+use stdClass;
 
 final class Response
 {
     /**
-     * @var array<string, mixed>
+     * @var array<string, mixed>|stdClass
      */
-    public array $response;
+    public array|stdClass $response;
 
     private Trace $trace;
 
     /**
-     * @param array<string, mixed> $response
+     * @param array<string, mixed>|stdClass $response
      */
-    public static function new(array $response = []): self
+    public static function new(array|stdClass $response = []): self
     {
         return tap(new self(), fn (Response $instance) => $instance->response = $response);
     }

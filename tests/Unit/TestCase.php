@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap\Tests\Unit;
 
 use Closure;
 use Mockery as m;
 use Pest\PendingObjects\TestCall;
-use RicorocksDigitalAgency\Soap\Parameters\IntelligentBuilder;
 use RicorocksDigitalAgency\Soap\Contracts\Request;
-use RicorocksDigitalAgency\Soap\Request\SoapClientRequest;
 use RicorocksDigitalAgency\Soap\Soap;
 use RicorocksDigitalAgency\Soap\Support\Fakery\Fakery;
 use RicorocksDigitalAgency\Soap\Tests\Mocks\MockSoapClient;
@@ -15,7 +15,7 @@ use RicorocksDigitalAgency\Soap\Tests\Mocks\MockSoapClient;
 /**
  * @mixin TestCall
  */
-class TestCase extends \PHPUnit\Framework\TestCase
+abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
     protected ?Soap $soap;
 
@@ -26,10 +26,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
     public function traceableSoap()
     {
-        return soap(null, new SoapClientRequest(
-                new IntelligentBuilder(),
-                fn() => new MockSoapClient(EXAMPLE_SOAP_ENDPOINT, ['trace' => true]))
-        );
+        return soap(null, soapRequest(null, fn () => new MockSoapClient()));
     }
 
     public function fake($callback = null)

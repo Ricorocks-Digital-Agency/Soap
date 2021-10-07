@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use RicorocksDigitalAgency\Soap\Support\DecoratedClient;
 use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
 
@@ -7,10 +9,10 @@ it('has a static client method', function () {
     $trace = Trace::client($client = new DecoratedClient(new SoapClient(EXAMPLE_SOAP_ENDPOINT)));
 
     expect($client)
-        ->lastRequestAsXml()->toBe($trace->xmlRequest)
-        ->lastResponseAsXml()->toBe($trace->xmlResponse)
-        ->lastRequestHeaders()->toBe($trace->requestHeaders)
-        ->lastResponseHeaders()->toBe($trace->responseHeaders);
+        ->__getLastRequest()->toBe($trace->xmlRequest)
+        ->__getLastResponse()->toBe($trace->xmlResponse)
+        ->__getLastRequestHeaders()->toBe($trace->requestHeaders)
+        ->__getLastResponseHeaders()->toBe($trace->responseHeaders);
 })->group('integration');
 
 it('returns gracefully')

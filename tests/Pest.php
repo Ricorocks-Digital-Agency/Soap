@@ -1,8 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+use RicorocksDigitalAgency\Soap\Contracts\Builder;
+use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Contracts\Soapable;
 use RicorocksDigitalAgency\Soap\Parameters\IntelligentBuilder;
+use RicorocksDigitalAgency\Soap\Request\SoapClientRequest;
 use RicorocksDigitalAgency\Soap\Soap;
+use RicorocksDigitalAgency\Soap\Support\DecoratedClient;
 use RicorocksDigitalAgency\Soap\Support\Fakery\Fakery;
 use RicorocksDigitalAgency\Soap\Support\Fakery\Stubs;
 use RicorocksDigitalAgency\Soap\Tests;
@@ -14,17 +20,25 @@ const EXAMPLE_SOAP_ENDPOINT = 'http://www.dneonline.com/calculator.asmx?WSDL';
 uses(Tests\Unit\TestCase::class)->in('Unit');
 uses(Tests\Feature\TestCase::class)->in('Feature');
 
-function soap(?Fakery $fakery = null, ?\RicorocksDigitalAgency\Soap\Contracts\Request $request = null)
+function soap(?Fakery $fakery = null, ?Request $request = null)
 {
     return new Soap(
         $fakery ?? new Fakery(new Stubs()),
-        $request ?? new RicorocksDigitalAgency\Soap\Request\SoapClientRequest(new IntelligentBuilder())
+        $request ?? soapRequest(),
     );
 }
 
-class ExampleSoapable implements Soapable
+function soapRequest(Builder $builder = null, Closure $clientResolver = null): SoapClientRequest
 {
-    public function toSoap()
+    return new SoapClientRequest(
+        $builder ?? new IntelligentBuilder(),
+        $clientResolver ?? fn (string $endpoint, array $options) => new DecoratedClient(new SoapClient($endpoint, $options)),
+    );
+}
+
+final class ExampleSoapable implements Soapable
+{
+    public function toSoap(): mixed
     {
         return [
             'intA' => 10,

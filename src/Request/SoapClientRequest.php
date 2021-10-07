@@ -11,9 +11,7 @@ use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Contracts\Soapable;
 use RicorocksDigitalAgency\Soap\Header;
 use RicorocksDigitalAgency\Soap\Response\Response;
-use RicorocksDigitalAgency\Soap\Support\DecoratedClient;
 use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
-use SoapClient;
 use SoapHeader;
 
 final class SoapClientRequest implements Request
@@ -56,12 +54,12 @@ final class SoapClientRequest implements Request
     private array $headers = [];
 
     /**
-     * @param Closure(string $endpoint, array<string, mixed> $options): Client|null $clientResolver
+     * @param Closure(string $endpoint, array<string, mixed> $options): Client $clientResolver
      */
-    public function __construct(Builder $builder, Closure $clientResolver = null)
+    public function __construct(Builder $builder, Closure $clientResolver)
     {
         $this->builder = $builder;
-        $this->clientResolver = $clientResolver ?? fn (string $endpoint, array $options) => new DecoratedClient(new SoapClient($endpoint, $options));
+        $this->clientResolver = $clientResolver;
     }
 
     public function to(string $endpoint): self
@@ -111,10 +109,7 @@ final class SoapClientRequest implements Request
         );
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    private function makeRequest(): array
+    private function makeRequest(): mixed
     {
         return $this->client()->call($this->getMethod(), $this->getBody());
     }

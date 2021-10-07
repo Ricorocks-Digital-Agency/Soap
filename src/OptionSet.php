@@ -8,14 +8,23 @@ use RicorocksDigitalAgency\Soap\Support\Scoped;
 
 final class OptionSet extends Scoped
 {
-    protected $options = [];
+    /**
+     * @var array<string, mixed>
+     */
+    protected array $options = [];
 
+    /**
+     * @param array<string, mixed> $options
+     */
     public function __construct(array $options)
     {
         $this->options = $options;
     }
 
-    public function getOptions()
+    /**
+     * @return array<string, mixed>
+     */
+    public function getOptions(): array
     {
         return $this->options;
     }

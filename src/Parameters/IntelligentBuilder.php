@@ -9,12 +9,17 @@ use RicorocksDigitalAgency\Soap\Contracts\Soapable;
 
 final class IntelligentBuilder implements Builder
 {
-    public function handle($parameters)
+    /**
+     * @param array<array<mixed>|Soapable>|Soapable $parameters
+     *
+     * @return array<string, mixed>
+     */
+    public function handle(array|Soapable $parameters): array
     {
         return $this->handleParameter($parameters);
     }
 
-    private function handleParameter($parameter)
+    private function handleParameter(mixed $parameter): mixed
     {
         if ($parameter instanceof Soapable) {
             $parameter = $parameter->toSoap();
@@ -27,7 +32,12 @@ final class IntelligentBuilder implements Builder
         return $parameter;
     }
 
-    private function walk($parameters)
+    /**
+     * @param array<mixed> $parameters
+     *
+     * @return array<mixed>
+     */
+    private function walk(array $parameters): array
     {
         return collect($parameters)
             ->map(fn ($parameter) => $this->handleParameter($parameter))

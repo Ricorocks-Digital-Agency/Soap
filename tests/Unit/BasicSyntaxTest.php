@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Mockery as m;
 use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Response\Response;

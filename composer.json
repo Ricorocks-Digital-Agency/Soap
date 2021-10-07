@@ -53,7 +53,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "RicorocksDigitalAgency\\Soap\\Providers\\SoapServiceProvider"
+                "RicorocksDigitalAgency\\Soap\\Providers\\SoapServiceProvider",
+                "RicorocksDigitalAgency\\Soap\\Providers\\SoapRayServiceProvider"
             ],
             "aliases": [
                 "RicorocksDigitalAgency\\Soap\\Facades\\Soap"

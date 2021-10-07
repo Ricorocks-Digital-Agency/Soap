@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 it('can include global headers for every request')
     ->fake()
     ->tap(fn () => $this->soap()->headers($this->soap()->header('Auth', 'test.com', ['foo' => 'bar'])))

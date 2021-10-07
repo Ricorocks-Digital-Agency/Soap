@@ -7,6 +7,7 @@ namespace RicorocksDigitalAgency\Soap;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Support\Traits\Macroable;
+use InvalidArgumentException;
 use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Parameters\Node;
 use RicorocksDigitalAgency\Soap\Response\Response;
@@ -55,11 +56,11 @@ final class Soap
         $this->fakery = $fakery;
         $this->request = $request;
 
-        $this->beforeRequesting(fn ($requestInstance) => $requestInstance->fakeUsing($this->fakery->mockResponseIfAvailable($requestInstance)))
-            ->beforeRequesting(fn ($requestInstance) => $this->mergeHeadersFor($requestInstance))
-            ->beforeRequesting(fn ($requestInstance) => $this->mergeInclusionsFor($requestInstance))
-            ->beforeRequesting(fn ($requestInstance) => $this->mergeOptionsFor($requestInstance))
-            ->afterRequesting(fn ($requestInstance, $response) => $this->record($requestInstance, $response));
+        $this->beforeRequesting(fn (Request $requestInstance) => $requestInstance->fakeUsing($this->fakery->mockResponseIfAvailable($requestInstance)))
+            ->beforeRequesting(fn (Request $requestInstance) => $this->mergeHeadersFor($requestInstance))
+            ->beforeRequesting(fn (Request $requestInstance) => $this->mergeInclusionsFor($requestInstance))
+            ->beforeRequesting(fn (Request $requestInstance) => $this->mergeOptionsFor($requestInstance))
+            ->afterRequesting(fn (Request $requestInstance, Response $response) => $this->record($requestInstance, $response));
     }
 
     public function to(string $endpoint): Request
@@ -81,13 +82,13 @@ final class Soap
     /**
      * @param array<string, mixed>|SoapVar|null $data
      */
-    public function header(?string $name = null, ?string $namespace = null, array|SoapVar $data = null, bool $mustUnderstand = false, string $actor = null): Header
+    public function header(string $name = '', string $namespace = '', array|SoapVar $data = null, bool $mustUnderstand = false, string $actor = null): Header
     {
         return new Header($name, $namespace, $data, $mustUnderstand, $actor);
     }
 
     /**
-     * @param array<string, mixed> $parameters
+     * @param non-empty-array<string, mixed> $parameters
      */
     public function include(array $parameters): Inclusion
     {
@@ -108,9 +109,16 @@ final class Soap
         return $options;
     }
 
+    /**
+     * @throws InvalidArgumentException when you have not provided any headers
+     */
     public function headers(Header ...$headers): HeaderSet
     {
-        $headers = new HeaderSet(...$headers);
+        if (count($headers) < 1) {
+            throw new InvalidArgumentException('You must pass at least one header to the headers method.');
+        }
+
+        $headers = new HeaderSet($headers);
         $this->headerSets[] = $headers;
 
         return $headers;

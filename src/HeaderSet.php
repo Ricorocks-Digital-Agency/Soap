@@ -8,14 +8,23 @@ use RicorocksDigitalAgency\Soap\Support\Scoped;
 
 final class HeaderSet extends Scoped
 {
-    protected $headers;
+    /**
+     * @var non-empty-array<int, Header>
+     */
+    protected array $headers;
 
-    public function __construct(Header ...$headers)
+    /**
+     * @param non-empty-array<int, Header> $headers
+     */
+    public function __construct(array $headers)
     {
         $this->headers = $headers;
     }
 
-    public function getHeaders()
+    /**
+     * @return non-empty-array<int, Header>
+     */
+    public function getHeaders(): array
     {
         return $this->headers;
     }
