@@ -16,6 +16,7 @@ final class SoapRayServiceProvider extends ServiceProvider
         }
 
         $this->app->singleton(SoapWatcher::class);
-        app(SoapWatcher::class)->register();
+
+        resolve(SoapWatcher::class)->register();
     }
 }
