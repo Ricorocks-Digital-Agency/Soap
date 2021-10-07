@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RicorocksDigitalAgency\Soap\Contracts;
+namespace RicorocksDigitalAgency\Soap\Contracts\PhpSoap;
 
 interface Client
 {
@@ -24,4 +24,12 @@ interface Client
      * @return array<int, string>
      */
     public function getFunctions(): array;
+
+    public function __getLastRequest(): ?string;
+
+    public function __getLastResponse(): ?string;
+
+    public function __getLastRequestHeaders(): ?string;
+
+    public function __getLastResponseHeaders(): ?string;
 }

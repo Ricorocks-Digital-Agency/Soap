@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use RicorocksDigitalAgency\Soap\Request\SoapClientRequest;
+use RicorocksDigitalAgency\Soap\Request\SoapPhpClientRequest;
 
 it('can set options')
     ->fake()
     ->soap()->to(EXAMPLE_SOAP_ENDPOINT)
     ->withOptions(['compression' => SOAP_COMPRESSION_GZIP])
     ->call('Add', ['intA' => 10, 'intB' => 25])
-    ->test()->assertSent(fn (SoapClientRequest $request) => $request->getOptions() == [
+    ->test()->assertSent(fn (SoapPhpClientRequest $request) => $request->getOptions() == [
         'compression' => SOAP_COMPRESSION_GZIP,
     ]);
 
@@ -19,7 +19,7 @@ it('merges with other options')
     ->withBasicAuth('foo', 'bar')
     ->withOptions(['compression' => SOAP_COMPRESSION_GZIP])
     ->call('Add', ['intA' => 10, 'intB' => 25])
-    ->test()->assertSent(fn (SoapClientRequest $request) => $request->getOptions() == [
+    ->test()->assertSent(fn (SoapPhpClientRequest $request) => $request->getOptions() == [
         'authentication' => SOAP_AUTHENTICATION_BASIC,
         'login' => 'foo',
         'password' => 'bar',
@@ -32,6 +32,6 @@ it('overrides previous values on conflict')
     ->withOptions(['compression' => SOAP_COMPRESSION_ACCEPT])
     ->withOptions(['compression' => SOAP_COMPRESSION_GZIP])
     ->call('Add', ['intA' => 10, 'intB' => 25])
-    ->test()->assertSent(fn (SoapClientRequest $request) => $request->getOptions() == [
+    ->test()->assertSent(fn (SoapPhpClientRequest $request) => $request->getOptions() == [
         'compression' => SOAP_COMPRESSION_GZIP,
     ]);

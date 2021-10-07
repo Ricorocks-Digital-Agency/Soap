@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace RicorocksDigitalAgency\Soap\Support;
 
-use RicorocksDigitalAgency\Soap\Contracts\Client;
-use RicorocksDigitalAgency\Soap\Contracts\Traceable;
+use RicorocksDigitalAgency\Soap\Contracts\PhpSoap\Client;
 use SoapClient;
 
-final class DecoratedClient implements Client, Traceable
+final class DecoratedClient implements Client
 {
     public function __construct(private SoapClient $client)
     {

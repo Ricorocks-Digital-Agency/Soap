@@ -6,7 +6,7 @@ use RicorocksDigitalAgency\Soap\Contracts\Builder;
 use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Contracts\Soapable;
 use RicorocksDigitalAgency\Soap\Parameters\IntelligentBuilder;
-use RicorocksDigitalAgency\Soap\Request\SoapClientRequest;
+use RicorocksDigitalAgency\Soap\Request\SoapPhpClientRequest;
 use RicorocksDigitalAgency\Soap\Soap;
 use RicorocksDigitalAgency\Soap\Support\DecoratedClient;
 use RicorocksDigitalAgency\Soap\Support\Fakery\Fakery;
@@ -28,9 +28,9 @@ function soap(?Fakery $fakery = null, ?Request $request = null)
     );
 }
 
-function soapRequest(Builder $builder = null, Closure $clientResolver = null): SoapClientRequest
+function soapRequest(Builder $builder = null, Closure $clientResolver = null): SoapPhpClientRequest
 {
-    return new SoapClientRequest(
+    return new SoapPhpClientRequest(
         $builder ?? new IntelligentBuilder(),
         $clientResolver ?? fn (string $endpoint, array $options) => new DecoratedClient(new SoapClient($endpoint, $options)),
     );

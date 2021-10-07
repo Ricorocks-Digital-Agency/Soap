@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace RicorocksDigitalAgency\Soap\Tests\Mocks;
 
-use RicorocksDigitalAgency\Soap\Contracts\Client;
-use RicorocksDigitalAgency\Soap\Contracts\Traceable;
+use RicorocksDigitalAgency\Soap\Contracts\PhpSoap\Client;
 
-final class MockSoapClient implements Client, Traceable
+final class MockSoapClient implements Client
 {
     public array $headers = [];
 

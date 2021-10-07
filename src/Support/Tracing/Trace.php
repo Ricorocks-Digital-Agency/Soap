@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace RicorocksDigitalAgency\Soap\Support\Tracing;
 
-use InvalidArgumentException;
-use RicorocksDigitalAgency\Soap\Contracts\Client;
-use RicorocksDigitalAgency\Soap\Contracts\Traceable;
+use RicorocksDigitalAgency\Soap\Contracts\PhpSoap\Client;
 
 final class Trace
 {
@@ -16,15 +14,8 @@ final class Trace
     public ?string $requestHeaders;
     public ?string $responseHeaders;
 
-    /**
-     * @throws InvalidArgumentException when the provided client does not implement the Traceable contract
-     */
     public static function client(Client $client): self
     {
-        if (!$client instanceof Traceable) {
-            throw new InvalidArgumentException('A client must implement the Traceable contract before being traced.');
-        }
-
         $trace = new static();
 
         $trace->client = $client;
