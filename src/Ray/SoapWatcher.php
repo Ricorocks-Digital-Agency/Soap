@@ -12,6 +12,9 @@ use Spatie\LaravelRay\Ray;
 use Spatie\LaravelRay\Watchers\Watcher;
 use Spatie\Ray\Ray as SpatieRay;
 
+/**
+ * @internal
+ */
 final class SoapWatcher extends Watcher
 {
     public function register(): void

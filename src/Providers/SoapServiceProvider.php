@@ -13,6 +13,9 @@ use RicorocksDigitalAgency\Soap\Request\SoapPhpRequest;
 use RicorocksDigitalAgency\Soap\Soap;
 use RicorocksDigitalAgency\Soap\Support\SoapClients\DecoratedClient;
 
+/**
+ * @internal
+ */
 final class SoapServiceProvider extends ServiceProvider
 {
     public function register(): void

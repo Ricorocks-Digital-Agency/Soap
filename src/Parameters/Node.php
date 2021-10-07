@@ -7,6 +7,9 @@ namespace RicorocksDigitalAgency\Soap\Parameters;
 use Illuminate\Contracts\Support\Arrayable;
 use RicorocksDigitalAgency\Soap\Contracts\Soapable;
 
+/**
+ * @internal
+ */
 final class Node implements Arrayable, Soapable
 {
     /**

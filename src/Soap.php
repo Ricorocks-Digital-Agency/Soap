@@ -17,6 +17,7 @@ use RicorocksDigitalAgency\Soap\Support\Scopes\HeaderSet;
 use RicorocksDigitalAgency\Soap\Support\Scopes\Inclusion;
 use RicorocksDigitalAgency\Soap\Support\Scopes\OptionSet;
 use SoapVar;
+use stdClass;
 
 /**
  * @mixin Fakery
@@ -171,6 +172,14 @@ final class Soap
         $this->beforeRequesting(fn ($request) => $request->trace($shouldTrace));
 
         return $this;
+    }
+
+    /**
+     * @param array<string, mixed>|stdClass $response
+     */
+    public function response(array|stdClass $response): Response
+    {
+        return Response::new($response);
     }
 
     /**

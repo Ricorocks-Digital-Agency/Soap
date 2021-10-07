@@ -13,11 +13,16 @@ use RicorocksDigitalAgency\Soap\Support\Header;
 use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
 use SoapHeader;
 
+/**
+ * @internal
+ */
 final class SoapPhpRequest implements Request
 {
     private Builder $builder;
 
     private Client $client;
+
+    private Response $response;
 
     private string $endpoint;
 
@@ -27,8 +32,6 @@ final class SoapPhpRequest implements Request
      * @var array<string, mixed>|Soapable
      */
     private $body = [];
-
-    private Response $response;
 
     /**
      * @var array{beforeRequesting: array<int, callable(Request): mixed>, afterRequesting: array<int, callable(Request, Response): mixed>}

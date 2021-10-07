@@ -7,6 +7,7 @@ namespace RicorocksDigitalAgency\Soap\Facades;
 use Illuminate\Support\Facades\Facade;
 use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Parameters\Node;
+use RicorocksDigitalAgency\Soap\Response\Response;
 use RicorocksDigitalAgency\Soap\Support\Header;
 use RicorocksDigitalAgency\Soap\Support\Scopes\HeaderSet;
 use RicorocksDigitalAgency\Soap\Support\Scopes\Inclusion;
@@ -29,6 +30,7 @@ use SoapVar;
  * @method static void assertNothingSent()
  * @method static void assertSent(callable $callback)
  * @method static void assertNotSent(callable $callback)
+ * @method static Response response(array|stdClass $response)                                                                                                  Create a new SOAP response to be returned when faking requests.
  */
 final class Soap extends Facade
 {

@@ -7,6 +7,9 @@ namespace RicorocksDigitalAgency\Soap\Providers;
 use Illuminate\Support\ServiceProvider;
 use RicorocksDigitalAgency\Soap\Ray\SoapWatcher;
 
+/**
+ * @internal
+ */
 final class SoapRayServiceProvider extends ServiceProvider
 {
     public function register(): void

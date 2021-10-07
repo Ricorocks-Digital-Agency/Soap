@@ -7,6 +7,9 @@ namespace RicorocksDigitalAgency\Soap\Parameters;
 use RicorocksDigitalAgency\Soap\Contracts\Builder;
 use RicorocksDigitalAgency\Soap\Contracts\Soapable;
 
+/**
+ * @internal
+ */
 final class IntelligentBuilder implements Builder
 {
     /**
