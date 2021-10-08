@@ -9,7 +9,7 @@ namespace RicorocksDigitalAgency\Soap\Support\Scopes;
  */
 final class OptionSet
 {
-    use IsScoped;
+    use Scopeable;
 
     /**
      * @var array<string, mixed>

@@ -9,7 +9,7 @@ namespace RicorocksDigitalAgency\Soap\Support\Scopes;
  */
 final class Inclusion
 {
-    use IsScoped;
+    use Scopeable;
 
     /**
      * @var non-empty-array<string, mixed>

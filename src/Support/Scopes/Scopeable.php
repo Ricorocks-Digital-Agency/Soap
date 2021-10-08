@@ -7,7 +7,7 @@ namespace RicorocksDigitalAgency\Soap\Support\Scopes;
 /**
  * @internal
  */
-trait IsScoped
+trait Scopeable
 {
     protected string $endpoint;
     protected ?string $method = null;

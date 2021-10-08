@@ -11,7 +11,7 @@ use RicorocksDigitalAgency\Soap\Support\Header;
  */
 final class HeaderSet
 {
-    use IsScoped;
+    use Scopeable;
 
     /**
      * @var non-empty-array<int, Header>
