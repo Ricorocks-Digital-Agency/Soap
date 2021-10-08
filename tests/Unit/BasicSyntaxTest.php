@@ -30,6 +30,11 @@ it('can use nodes')
     ->expect(fn () => $this->soap()->to(EXAMPLE_SOAP_ENDPOINT)->call('Add', soap()->node()->body(['intA' => 10, 'intB' => 25]))->AddResult)
     ->toEqual(35);
 
+it('can use objects')
+    ->fake(['*' => Response::new(['AddResult' => 35])])
+    ->expect(fn () => $this->soap()->to(EXAMPLE_SOAP_ENDPOINT)->call('Add', new class { public $intA = 10; public $intB = 25; })->AddResult)
+    ->toEqual(35);
+
 it('can forward method calls')
     ->fake(['*' => Response::new(['AddResult' => 35])])
     ->expect(fn () => $this->soap()->to(EXAMPLE_SOAP_ENDPOINT)->Add(['intA' => 10, 'intB' => 25])->AddResult)

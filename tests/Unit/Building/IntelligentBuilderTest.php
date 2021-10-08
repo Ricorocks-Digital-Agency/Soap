@@ -34,5 +34,5 @@ it('can handle a Soapable')
     ]);
 
 it('can handle an object')
-    ->expect((new IntelligentBuilder())->handle((object)['foo' => 'bar', 'baz' => 'huh?']))
-    ->toEqual((object) ['foo' => 'bar', 'baz' => 'huh?']);
+    ->expect((new IntelligentBuilder())->handle($class = new class { public $foo = 'bar'; public $baz = 'huh?'; }))
+    ->toEqual($class);
