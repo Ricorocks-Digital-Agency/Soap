@@ -1,24 +1,25 @@
 <?php
 
-namespace RicorocksDigitalAgency\Soap;
+declare(strict_types=1);
+
+namespace RicorocksDigitalAgency\Soap\Support;
 
 use Illuminate\Contracts\Support\Arrayable;
+use SoapVar;
+use function tap;
 
-class Header implements Arrayable
+final class Header implements Arrayable
 {
-    public $name;
-    public $namespace;
-    public $data;
-    public $actor;
-    public $mustUnderstand;
-
-    public function __construct(?string $name = null, ?string $namespace = null, $data = null, bool $mustUnderstand = false, $actor = null)
-    {
-        $this->name = $name;
-        $this->namespace = $namespace;
-        $this->data = $data;
-        $this->mustUnderstand = $mustUnderstand;
-        $this->actor = $actor;
+    /**
+     * @param SoapVar|array<string, mixed>|null $data
+     */
+    public function __construct(
+        public string $name = '',
+        public string $namespace = '',
+        public SoapVar|array|null $data = null,
+        public bool $mustUnderstand = false,
+        public string|int|null $actor = null
+    ) {
     }
 
     public function name(string $name): self
@@ -31,12 +32,15 @@ class Header implements Arrayable
         return tap($this, fn () => $this->namespace = $namespace);
     }
 
-    public function data($data = null): self
+    /**
+     * @param SoapVar|array<string, mixed>|null $data
+     */
+    public function data(SoapVar|array $data = null): self
     {
         return tap($this, fn () => $this->data = $data);
     }
 
-    public function actor($actor = null): self
+    public function actor(string $actor = null): self
     {
         return tap($this, fn () => $this->actor = $actor);
     }
@@ -46,7 +50,10 @@ class Header implements Arrayable
         return tap($this, fn () => $this->mustUnderstand = $mustUnderstand);
     }
 
-    public function toArray()
+    /**
+     * @return array<string, mixed>
+     */
+    public function toArray(): array
     {
         return [
             'name' => $this->name,

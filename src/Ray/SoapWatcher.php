@@ -1,15 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap\Ray;
 
+use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Facades\Soap;
-use RicorocksDigitalAgency\Soap\Request\Request;
 use RicorocksDigitalAgency\Soap\Response\Response;
+use RicorocksDigitalAgency\Soap\Support\Header;
 use Spatie\LaravelRay\Ray;
 use Spatie\LaravelRay\Watchers\Watcher;
 use Spatie\Ray\Ray as SpatieRay;
 
-class SoapWatcher extends Watcher
+/**
+ * @internal
+ */
+final class SoapWatcher extends Watcher
 {
     public function register(): void
     {
@@ -27,7 +33,7 @@ class SoapWatcher extends Watcher
         );
     }
 
-    protected function handleRequest(Request $request, Response $response)
+    protected function handleRequest(Request $request, Response $response): void
     {
         app(Ray::class)->table(
             [
@@ -41,10 +47,11 @@ class SoapWatcher extends Watcher
         );
     }
 
-    protected function headers(Request $request)
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    protected function headers(Request $request): array
     {
-        return $request->getHeaders()
-            ? collect($request->getHeaders())->map->toArray()->toArray()
-            : [];
+        return collect($request->getHeaders())->map(fn (Header $header) => $header->toArray())->toArray();
     }
 }

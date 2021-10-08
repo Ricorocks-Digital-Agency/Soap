@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use RicorocksDigitalAgency\Soap\Response\Response;
 
 it('can fake specific methods')

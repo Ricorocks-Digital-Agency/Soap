@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 use Mockery as m;
-use RicorocksDigitalAgency\Soap\Parameters\Builder;
-use RicorocksDigitalAgency\Soap\Request\SoapClientRequest;
+use RicorocksDigitalAgency\Soap\Contracts\Builder;
 
 it('can include an array at the root without using for', function () {
     $mock = m::mock(Builder::class);
@@ -10,7 +11,7 @@ it('can include an array at the root without using for', function () {
         ->once()
         ->withArgs(fn ($parameters) => $parameters == ['intA' => 10, 'intB' => 25]);
 
-    $this->soap(null, new SoapClientRequest($mock))->fake();
+    $this->soap(null, soapRequest($mock))->fake();
 
     $this->soap()->include(['intA' => 10]);
     $this->soap()->to(EXAMPLE_SOAP_ENDPOINT)->call('Add', (['intB' => 25]));
@@ -22,14 +23,14 @@ it('can include an array at the root when specified using the include method', f
         ->once()
         ->withArgs(fn ($parameters) => $parameters == ['intA' => 10, 'intB' => 25]);
 
-    $this->soap(null, new SoapClientRequest($mock))->fake();
+    $this->soap(null, soapRequest($mock))->fake();
 
     $this->soap()->include(['intA' => 10])->for(EXAMPLE_SOAP_ENDPOINT);
     $this->soap()->to(EXAMPLE_SOAP_ENDPOINT)->call('Add', (['intB' => 25]));
 });
 
 it('can include a node at the root when specified using the include method', function () {
-    $this->soap(null, new SoapClientRequest($mock = m::mock(Builder::class)));
+    $this->soap(null, soapRequest($mock = m::mock(Builder::class)));
 
     $mock->shouldReceive('handle')
         ->once()
@@ -56,7 +57,7 @@ it('only includes the inclusion if the method name matches', function () {
             'intB' => 25,
         ]);
 
-    $this->soap(null, new SoapClientRequest($mock))->fake();
+    $this->soap(null, soapRequest($mock))->fake();
 
     $this->soap()->include(['foo' => $this->soap()->node(['foo' => 'bar'])])->for(EXAMPLE_SOAP_ENDPOINT, 'Bar');
     $this->soap()->to(EXAMPLE_SOAP_ENDPOINT)->call('Add', (['intA' => 10, 'intB' => 25]));

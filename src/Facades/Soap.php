@@ -1,20 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use RicorocksDigitalAgency\Soap\Header;
-use RicorocksDigitalAgency\Soap\HeaderSet;
-use RicorocksDigitalAgency\Soap\Inclusion;
-use RicorocksDigitalAgency\Soap\OptionSet;
+use RicorocksDigitalAgency\Soap\Contracts\Request;
 use RicorocksDigitalAgency\Soap\Parameters\Node;
-use RicorocksDigitalAgency\Soap\Request\Request;
+use RicorocksDigitalAgency\Soap\Response\Response;
+use RicorocksDigitalAgency\Soap\Support\Header;
+use RicorocksDigitalAgency\Soap\Support\Scopes\HeaderSet;
+use RicorocksDigitalAgency\Soap\Support\Scopes\Inclusion;
+use RicorocksDigitalAgency\Soap\Support\Scopes\OptionSet;
+use SoapVar;
 
 /**
  * Class Soap.
  *
  * @method static Request to(string $endpoint)
- * @method static Header header(?string $name = null, ?string $namespace = null, $data = null, bool $mustUnderstand = false, ?string $actor = null)
+ * @method static Header header(string $name = '', string $namespace = '', array|SoapVar $data = null, bool $mustUnderstand = false, string|int $actor = null)
  * @method static HeaderSet headers(Header ...$headers)
  * @method static Node node(array $attributes = [])
  * @method static Inclusion include(array $parameters)
@@ -26,8 +30,9 @@ use RicorocksDigitalAgency\Soap\Request\Request;
  * @method static void assertNothingSent()
  * @method static void assertSent(callable $callback)
  * @method static void assertNotSent(callable $callback)
+ * @method static Response response(array|stdClass $response)                                                                                                  Create a new SOAP response to be returned when faking requests.
  */
-class Soap extends Facade
+final class Soap extends Facade
 {
     protected static function getFacadeAccessor()
     {

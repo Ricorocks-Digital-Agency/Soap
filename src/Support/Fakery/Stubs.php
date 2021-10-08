@@ -1,24 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap\Support\Fakery;
 
-use RicorocksDigitalAgency\Soap\Request\Request;
+use Closure;
+use Illuminate\Support\Collection;
+use RicorocksDigitalAgency\Soap\Contracts\Request;
+use RicorocksDigitalAgency\Soap\Response\Response;
 
-class Stubs
+/**
+ * @internal
+ */
+final class Stubs
 {
-    protected $stubs;
+    /**
+     * @var Collection<int, Stub>
+     */
+    private Collection $stubs;
 
     public function __construct()
     {
         $this->stubs = collect();
     }
 
-    public function new($url, $callback)
+    /**
+     * @param Closure(Request): Response|Response $callback
+     */
+    public function new(string $url, Closure|Response $callback): void
     {
         $this->stubs->push(Stub::for($url)->respondWith($callback));
     }
 
-    public function getForRequest(Request $request)
+    public function getForRequest(Request $request): ?Response
     {
         return $this->stubs
                 ->pipe(fn ($stubs) => $this->filterAndSortStubs($stubs, $request))
@@ -28,30 +42,50 @@ class Stubs
                 ->first();
     }
 
-    protected function filterAndSortStubs($stubs, Request $request)
+    /**
+     * @param Collection<int, Stub> $stubs
+     *
+     * @return Collection<int, Stub>
+     */
+    private function filterAndSortStubs(Collection $stubs, Request $request): Collection
     {
         return $stubs
                 ->filter(fn (Stub $stub) => $stub->isForEndpoint($request->getEndpoint()))
                 ->pipe(fn ($stubs) => $this->retrieveCorrectStubsForMethod($stubs, $request));
     }
 
-    protected function retrieveCorrectStubsForMethod($stubs, Request $request)
+    /**
+     * @param Collection<int, Stub> $stubs
+     *
+     * @return Collection<int, Stub>
+     */
+    private function retrieveCorrectStubsForMethod(Collection $stubs, Request $request): Collection
     {
         return $request->getMethod()
                 ? $this->getStubsForMethod($stubs, $request)
                 : $stubs->sortByDesc('endpoint');
     }
 
-    protected function getStubsForMethod($stubs, $request)
+    /**
+     * @param Collection<int, Stub> $stubs
+     *
+     * @return Collection<int, Stub>
+     */
+    private function getStubsForMethod(Collection $stubs, Request $request): Collection
     {
         return $stubs
                 ->filter(fn (Stub $stub) => $stub->isForMethod($request->getMethod()))
                 ->pipe(fn ($stubs) => $this->sortMethodStubs($stubs));
     }
 
-    protected function sortMethodStubs($stubs)
+    /**
+     * @param Collection<int, Stub> $stubs
+     *
+     * @return Collection<int, Stub>
+     */
+    private function sortMethodStubs(Collection $stubs): Collection
     {
-        return $stubs->every->hasWildcardMethods()
+        return $stubs->every(fn (Stub $stub) => $stub->hasWildcardMethods())
                 ? $stubs->sortByDesc('endpoint')
                 : $stubs->sortByDesc('methods');
     }
