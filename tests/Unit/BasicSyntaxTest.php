@@ -39,3 +39,8 @@ it('works with a soapable')
     ->fake(['*' => Response::new(['AddResult' => 35])])
     ->expect(fn () => $this->soap()->to(EXAMPLE_SOAP_ENDPOINT)->Add(new ExampleSoapable())->AddResult)
     ->toEqual(35);
+
+it('can use objects')
+    ->fake(['*' => Response::new(['AddResult' => 35])])
+    ->expect(fn () => $this->soap()->to(EXAMPLE_SOAP_ENDPOINT)->call('Add', new class { public $intA = 10; public $intB = 25; })->AddResult)
+    ->toEqual(35);
