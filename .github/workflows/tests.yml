@@ -12,8 +12,15 @@ jobs:
     strategy:
       matrix:
         php: ['7.4', '8.0', '8.1']
+        laravel: [ '8.*', '9.*' ]
+        stability: [ prefer-lowest, prefer-stable ]
+        include:
+          - laravel: '9.*'
+            testbench: '7.*'
+          - laravel: '8.*'
+            testbench: '^6.5'
 
-    name: PHP ${{ matrix.php }}
+    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.stability }}
 
     steps:
       - name: Checkout
@@ -30,7 +37,9 @@ jobs:
         run: composer validate
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: |
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: Run Pest
         run: php vendor/bin/pest
