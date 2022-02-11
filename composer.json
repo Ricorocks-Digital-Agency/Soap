@@ -21,7 +21,7 @@
     "require-dev": {
         "ext-soap": "*",
         "mockery/mockery": "^1.4",
-        "orchestra/testbench": "^6.24",
+        "orchestra/testbench": "^6.24|^7.0",
         "pestphp/pest": "^1.11",
         "phpoption/phpoption": "^1.8.1",
         "phpunit/phpunit": "^9.4",
