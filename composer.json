@@ -42,9 +42,9 @@
             "providers": [
                 "RicorocksDigitalAgency\\Soap\\Providers\\SoapServiceProvider"
             ],
-            "aliases": [
-                "RicorocksDigitalAgency\\Soap\\Facades\\Soap"
-            ]
+            "aliases": {
+                "Soap": "RicorocksDigitalAgency\\Soap\\Facades\\Soap"
+            }
         }
     }
 }
