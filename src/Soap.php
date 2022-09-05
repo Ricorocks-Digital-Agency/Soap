@@ -43,6 +43,7 @@ class Soap
         return (clone $this->request)
             ->beforeRequesting(...$this->globalHooks['beforeRequesting'])
             ->afterRequesting(...$this->globalHooks['afterRequesting'])
+            ->afterErroring(...$this->globalHooks['afterErroring'])
             ->to($endpoint);
     }
 
@@ -120,6 +121,13 @@ class Soap
     public function afterRequesting(callable $hook)
     {
         ($this->globalHooks['afterRequesting'] ??= collect())->push($hook);
+
+        return $this;
+    }
+
+    public function afterErroring(callable $hook)
+    {
+        ($this->globalHooks['afterErroring'] ??= collect())->push($hook);
 
         return $this;
     }
