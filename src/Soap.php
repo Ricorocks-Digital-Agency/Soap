@@ -35,7 +35,8 @@ class Soap
             ->beforeRequesting(fn ($requestInstance) => $this->mergeHeadersFor($requestInstance))
             ->beforeRequesting(fn ($requestInstance) => $this->mergeInclusionsFor($requestInstance))
             ->beforeRequesting(fn ($requestInstance) => $this->mergeOptionsFor($requestInstance))
-            ->afterRequesting(fn ($requestInstance, $response) => $this->record($requestInstance, $response));
+            ->afterRequesting(fn ($requestInstance, $response) => $this->record($requestInstance, $response))
+            ->afterErroring(fn ($requestInstance, $response) => null);
     }
 
     public function to(string $endpoint)
