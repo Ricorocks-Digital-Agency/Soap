@@ -14,16 +14,16 @@
         }
     },
     "require": {
-        "php": "^7.4|^8.0|^8.1",
-        "illuminate/support": "^8.16|^9.0"
+        "php": "^7.4|~8.0|~8.1|~8.2",
+        "illuminate/support": "^8.16|^9.0|^10.0"
     },
     "require-dev": {
         "ext-soap": "*",
         "mockery/mockery": "^1.4",
-        "orchestra/testbench": "^6.24|^7.0",
+        "orchestra/testbench": "^6.24|^7.0|^8.0",
         "pestphp/pest": "^1.11",
         "phpoption/phpoption": "^1.8.1",
-        "phpunit/phpunit": "^9.4",
+        "phpunit/phpunit": "^9.5",
         "spatie/ray": "^1.17"
     },
     "prefer-stable": true,
@@ -45,6 +45,11 @@
             "aliases": {
                 "Soap": "RicorocksDigitalAgency\\Soap\\Facades\\Soap"
             }
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
         }
     }
 }
