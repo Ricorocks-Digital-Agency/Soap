@@ -329,7 +329,7 @@ specific, so you can pass the `fake` method an array of endpoints as keys
 and response objects as values:
 
 ```php
-Soap::fake(['http://endpoint.com' => Response(['foo' => 'bar'])]);
+Soap::fake(['http://endpoint.com' => Response::new(['foo' => 'bar'])]);
 ```
 
 In the above example, any SOAP request made to `http://endpoint.com` will
@@ -339,13 +339,13 @@ be returned instead.
 What if you want to specify the SOAP action too? Easy! Just add `:{ActionName}` after your endpoint, like so:
 
 ```php
-Soap::fake(['http://endpoint.com:Details' => Response(['foo' => 'bar'])]);
+Soap::fake(['http://endpoint.com:Details' => Response::new(['foo' => 'bar'])]);
 ```
 Now, only SOAP requests to the `Details` actions will be mocked.
 
 You can also specify multiple actions with the `|` operator:
 ```php
-Soap::fake(['http://endpoint.com:Details|Information|Overview' => Response(['foo' => 'bar'])]);
+Soap::fake(['http://endpoint.com:Details|Information|Overview' => Response::new(['foo' => 'bar'])]);
 ```
 Now, only SOAP requests to the `Details`, `Information` and `Overview` actions will be mocked.
 
