@@ -29,6 +29,10 @@
     "prefer-stable": true,
     "authors": [
         {
+            "name": "Alex",
+            "email": "alessandro@rizzardini.eu"
+        },
+        {
             "name": "Luke Downing",
             "email": "luke@ricorocks.agency"
         },
