@@ -15,8 +15,8 @@ class SoapServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('soap', function (Application $app) {
-    return new $app(Soap::class));
-    });
+        return new $app(Soap::class);
+        });
         $this->app->bind(Request::class, SoapClientRequest::class);
         $this->app->bind(Builder::class, IntelligentBuilder::class);
 
