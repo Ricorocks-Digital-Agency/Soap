@@ -1,5 +1,5 @@
 {
-    "name": "ricorocks-digital-agency/soap",
+    "name": "morpholetto/soap",
     "description": "A SOAP client that provides a clean interface for handling requests and responses.",
     "type": "library",
     "license": "MIT",
