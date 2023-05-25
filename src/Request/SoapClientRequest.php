@@ -44,27 +44,36 @@ class SoapClientRequest implements Request
         $this->method = $method;
         $this->body = $parameters;
 
-        $this->hooks['beforeRequesting']->each(fn ($callback) => $callback($this));
+        $this->hooks['beforeRequesting']->each(function($callback) {
+            return $callback($this);
+        });
         $this->body = $this->builder->handle($this->body);
 
         $response = $this->getResponse();
-        $this->hooks['afterRequesting']->each(fn ($callback) => $callback($this, $response));
+        $this->hooks['afterRequesting']->each(function($callback) use ($response){
+            return $callback($this, $response);
+        });
 
         return $response;
     }
 
     protected function getResponse()
     {
-        return $this->response ??= $this->getRealResponse();
+        if(is_null($this->response))
+            return $this->getRealResponse();
+        else
+            return $this->response;
     }
 
     protected function getRealResponse()
     {
         return tap(
             Response::new($this->makeRequest()),
-            fn ($response) => data_get($this->options, 'trace')
-                ? $response->setTrace(Trace::client($this->client()))
-                : $response
+            function ($response){
+                return data_get($this->options, 'trace')
+                    ? $response->setTrace(Trace::client($this->client()))
+                    : $response;
+            }
         );
     }
 
@@ -75,17 +84,26 @@ class SoapClientRequest implements Request
 
     protected function client()
     {
-        return $this->client ??= $this->constructClient();
+        if(is_null($this->client)) {
+            return $this->constructClient();
+        }
+        else {
+            return $this->client;
+        }
     }
 
     protected function constructClient()
     {
-        $this->client ??= resolve(SoapClient::class, [
-            'wsdl' => $this->endpoint,
-            'options' => $this->options,
-        ]);
+        if(is_null($this->client)) {
+            $this->client = resolve(SoapClient::class, [
+                'wsdl' => $this->endpoint,
+                'options' => $this->options,
+            ]);
+        }
 
-        return tap($this->client, fn ($client) => $client->__setSoapHeaders($this->constructHeaders()));
+        return tap($this->client, function($client) {
+            return $client->__setSoapHeaders($this->constructHeaders());
+        });
     }
 
     protected function constructHeaders()
@@ -95,13 +113,15 @@ class SoapClientRequest implements Request
         }
 
         return array_map(
-            fn ($header) => resolve(SoapHeader::class, [
-                'namespace' => $header->namespace,
-                'name' => $header->name,
-                'data' => $header->data,
-                'mustunderstand' => $header->mustUnderstand,
-                'actor' => $header->actor ?? SOAP_ACTOR_NONE,
-            ]),
+            function($header) {
+                return resolve(SoapHeader::class, [
+                    'namespace' => $header->namespace,
+                    'name' => $header->name,
+                    'data' => $header->data,
+                    'mustunderstand' => $header->mustUnderstand,
+                    'actor' => $header->actor ?? SOAP_ACTOR_NONE,
+                ]);
+            },
             $this->headers
         );
     }
@@ -123,14 +143,21 @@ class SoapClientRequest implements Request
 
     public function beforeRequesting(...$closures): Request
     {
-        ($this->hooks['beforeRequesting'] ??= collect())->push(...$closures);
-
+        if(is_null($this->hooks['beforeRequesting']))
+            ($this->hooks['beforeRequesting'] = collect())->push(...$closures);
+        else {
+            ($this->hooks['beforeRequesting'])->push(...$closures);
+        }
         return $this;
     }
 
     public function afterRequesting(...$closures): Request
     {
-        ($this->hooks['afterRequesting'] ??= collect())->push(...$closures);
+        if(is_null($this->hooks['afterRequesting']))
+            ($this->hooks['afterRequesting'] = collect())->push(...$closures);
+        else {
+            ($this->hooks['afterRequesting'])->push(...$closures);
+        }
 
         return $this;
     }

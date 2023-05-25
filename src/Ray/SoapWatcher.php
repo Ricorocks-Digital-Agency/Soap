@@ -13,8 +13,13 @@ class SoapWatcher extends Watcher
 {
     public function register(): void
     {
-        SpatieRay::macro('showSoapRequests', fn () => app(SoapWatcher::class)->enable());
-        SpatieRay::macro('stopShowingSoapRequests', fn () => app(SoapWatcher::class)->disable());
+        SpatieRay::macro('showSoapRequests', function() {
+            return app(SoapWatcher::class)->enable();
+        });
+
+        SpatieRay::macro('stopShowingSoapRequests', function () {
+            return app(SoapWatcher::class)->disable();
+        });
 
         Soap::afterRequesting(
             function ($request, $response) {

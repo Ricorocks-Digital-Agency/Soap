@@ -31,11 +31,11 @@ class Soap
         $this->fakery = $fakery;
         $this->request = $request;
 
-        $this->beforeRequesting(fn ($requestInstance) => $requestInstance->fakeUsing($this->fakery->mockResponseIfAvailable($requestInstance)))
-            ->beforeRequesting(fn ($requestInstance) => $this->mergeHeadersFor($requestInstance))
-            ->beforeRequesting(fn ($requestInstance) => $this->mergeInclusionsFor($requestInstance))
-            ->beforeRequesting(fn ($requestInstance) => $this->mergeOptionsFor($requestInstance))
-            ->afterRequesting(fn ($requestInstance, $response) => $this->record($requestInstance, $response));
+        $this->beforeRequesting(function($requestInstance){return $requestInstance->fakeUsing($this->fakery->mockResponseIfAvailable($requestInstance));})
+            ->beforeRequesting(function($requestInstance){return $this->mergeHeadersFor($requestInstance);})
+            ->beforeRequesting(function($requestInstance){return $this->mergeInclusionsFor($requestInstance);})
+            ->beforeRequesting(function($requestInstance){return $this->mergeOptionsFor($requestInstance);})
+            ->afterRequesting(function($requestInstance,$response){return $this->record($requestInstance, $response);});
     }
 
     public function to(string $endpoint)
@@ -87,7 +87,9 @@ class Soap
             ->matches($request->getEndpoint(), $request->getMethod())
             ->flatMap
             ->getHeaders()
-            ->pipe(fn ($headers) => $request->withHeaders(...$headers));
+            ->pipe(function($headers) use ($request){
+                return $request->withHeaders(...$headers);
+            });
     }
 
     protected function mergeInclusionsFor(Request $request)
@@ -97,7 +99,9 @@ class Soap
             ->matches($request->getEndpoint(), $request->getMethod())
             ->flatMap
             ->getParameters()
-            ->each(fn ($value, $key) => $request->set($key, $value));
+            ->each(function($value, $key) use ($request) {
+                return $request->set($key, $value);
+            });
     }
 
     protected function mergeOptionsFor(Request $request)
@@ -107,26 +111,36 @@ class Soap
             ->matches($request->getEndpoint(), $request->getMethod())
             ->map
             ->getOptions()
-            ->each(fn ($options) => $request->withOptions($options));
+            ->each(function($options) use ($request) {
+                return $request->withOptions($options);
+            });
     }
 
     public function beforeRequesting(callable $hook)
     {
-        ($this->globalHooks['beforeRequesting'] ??= collect())->push($hook);
+        if(is_null($this->globalHooks['beforeRequesting']))
+            (collect())->push($hook);
+        else
+        ($this->globalHooks['beforeRequesting'])->push($hook);
 
         return $this;
     }
 
     public function afterRequesting(callable $hook)
     {
-        ($this->globalHooks['afterRequesting'] ??= collect())->push($hook);
+        if(is_null($this->globalHooks['afterRequesting']))
+            (collect())->push($hook);
+        else
+            ($this->globalHooks['afterRequesting'])->push($hook);
 
         return $this;
     }
 
     public function trace($shouldTrace = true)
     {
-        $this->beforeRequesting(fn ($request) => $request->trace($shouldTrace));
+        $this->beforeRequesting(function($request) use ($shouldTrace) {
+            return $request->trace($shouldTrace);
+        });
 
         return $this;
     }

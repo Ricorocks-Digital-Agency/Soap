@@ -16,7 +16,9 @@ class Stub
 
     public static function for($endpoint): self
     {
-        return tap(new static(), fn ($instance) => $instance->register($endpoint));
+        return tap(new static(), function($instance) use($endpoint) {
+            return $instance->register($endpoint);
+        });
     }
 
     public function respondWith($callback): self
@@ -48,8 +50,12 @@ class Stub
     {
         return Str::of($this->methods)
                 ->explode('|')
-                ->map(fn ($availableMethod) => Str::start($availableMethod, '*'))
-                ->contains(fn ($availableMethod) => Str::is($availableMethod, $method));
+                ->map( function ($availableMethod) {
+                    return Str::start($availableMethod, '*');
+                })
+                ->contains(function ($availableMethod) use($method) {
+                    return Str::is($availableMethod, $method);
+                });
     }
 
     public function hasWildcardMethods()

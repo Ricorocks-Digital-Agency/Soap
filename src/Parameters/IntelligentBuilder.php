@@ -27,7 +27,9 @@ class IntelligentBuilder implements Builder
     protected function walk($parameters)
     {
         return collect($parameters)
-            ->map(fn ($parameter) => $this->handleParameter($parameter))
+            ->map(function($parameter) {
+                return $this->handleParameter($parameter);
+            })
             ->toArray();
     }
 }

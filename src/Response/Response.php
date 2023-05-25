@@ -11,7 +11,9 @@ class Response
 
     public static function new($response = []): self
     {
-        return tap(new static(), fn ($instance) => $instance->response = $response);
+        return tap(new static(), function($instance) use ($response) {
+            return $instance->response = $response;
+        });
     }
 
     public function __get($name)
@@ -28,7 +30,10 @@ class Response
 
     public function trace()
     {
-        return $this->trace ??= app(Trace::class);
+        if(is_null($this->trace))
+            return app(Trace::class);
+        else
+            return $this->trace;
     }
 
     public function set($key, $value): self
