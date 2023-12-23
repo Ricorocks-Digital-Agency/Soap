@@ -70,7 +70,11 @@ class SoapClientRequest implements Request
 
     protected function makeRequest()
     {
-        return $this->client()->{$this->getMethod()}($this->getBody());
+        $body = $this->getBody();
+
+        return is_object(reset($body))
+            ? $this->client()->{$this->getMethod()}(...$body)
+            : $this->client()->{$this->getMethod()}($body);
     }
 
     protected function client()
