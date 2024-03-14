@@ -47,7 +47,14 @@ class SoapClientRequest implements Request
         $this->hooks['beforeRequesting']->each(fn ($callback) => $callback($this));
         $this->body = $this->builder->handle($this->body);
 
-        $response = $this->getResponse();
+        try {
+            $response = $this->getResponse();
+        } catch (\Exception $e) {
+            $this->hooks['afterErroring']->each(fn ($callback) => $callback($this, Response::new($e)));
+
+            throw $e;
+        }
+
         $this->hooks['afterRequesting']->each(fn ($callback) => $callback($this, $response));
 
         return $response;
@@ -131,6 +138,13 @@ class SoapClientRequest implements Request
     public function afterRequesting(...$closures): Request
     {
         ($this->hooks['afterRequesting'] ??= collect())->push(...$closures);
+
+        return $this;
+    }
+
+    public function afterErroring(...$closures): Request
+    {
+        ($this->hooks['afterErroring'] ??= collect())->push(...$closures);
 
         return $this;
     }

@@ -14,16 +14,16 @@
         }
     },
     "require": {
-        "php": "^7.4|~8.0|~8.1|~8.2",
-        "illuminate/support": "^8.16|^9.0|^10.0"
+        "php": ">=7.4",
+        "illuminate/support": "^8.16|^9.0|^10.0|^11.0"
     },
     "require-dev": {
         "ext-soap": "*",
         "mockery/mockery": "^1.4",
-        "orchestra/testbench": "^6.24|^7.0|^8.0",
-        "pestphp/pest": "^1.11",
+        "orchestra/testbench": "^6.24|^7.0|^8.0|^9.0",
+        "pestphp/pest": "^1.11|^2.34",
         "phpoption/phpoption": "^1.8.1",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^9.5|^10.5",
         "spatie/ray": "^1.17"
     },
     "prefer-stable": true,

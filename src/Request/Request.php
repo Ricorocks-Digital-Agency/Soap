@@ -22,6 +22,8 @@ interface Request
 
     public function afterRequesting(...$closures): self;
 
+    public function afterErroring(...$closures): self;
+
     /**
      * @param callable|Response|null $response
      */

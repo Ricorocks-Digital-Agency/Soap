@@ -6,7 +6,7 @@ use RicorocksDigitalAgency\Soap\Response\Response;
 
 it('can obtain a WSDL', function () {
     $mock = m::mock(Request::class);
-    $mock->shouldReceive('beforeRequesting', 'afterRequesting', 'to')->andReturnSelf()
+    $mock->shouldReceive('beforeRequesting', 'afterRequesting', 'afterErroring', 'to')->andReturnSelf()
         ->shouldReceive('functions')->andReturn(
             [
                 'AddResponse Add(Add $parameters)',
