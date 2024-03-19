@@ -75,7 +75,7 @@ it('can create a header without any parameters and be composed fluently')
             ->data(['foo' => 'bar'])
             ->mustUnderstand()
             ->actor('this.test')
-        )
+    )
         ->call('Add', ['intA' => 10, 'intB' => 25])
     )
     ->assertSent(fn (SoapClientRequest $request) => $request->getHeaders() == [
