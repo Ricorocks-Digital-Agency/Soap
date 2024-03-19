@@ -11,8 +11,8 @@ it('can request a trace at the time of request')
 
 it('can request traces globally')
     ->expect(fn () => with(
-            $this->traceableSoap()->trace(),
-            fn ($soap) => $soap->to(EXAMPLE_SOAP_ENDPOINT)->call('Add', ['intA' => 10, 'intB' => 25])->trace())
+        $this->traceableSoap()->trace(),
+        fn ($soap) => $soap->to(EXAMPLE_SOAP_ENDPOINT)->call('Add', ['intA' => 10, 'intB' => 25])->trace())
     )
     ->xmlRequest->toEqual('<?xml version="1.0" encoding="UTF-8"?><FooBar><Hello>World</Hello></FooBar>')
     ->xmlResponse->toEqual('<?xml version="1.0" encoding="UTF-8"?><Status>Success!</Status>')

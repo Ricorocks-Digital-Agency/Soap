@@ -35,11 +35,11 @@ final class Stubs
     public function getForRequest(Request $request): ?Response
     {
         return $this->stubs
-                ->pipe(fn ($stubs) => $this->filterAndSortStubs($stubs, $request))
-                ->map
-                ->getResponse($request)
-                ->filter()
-                ->first();
+            ->pipe(fn ($stubs) => $this->filterAndSortStubs($stubs, $request))
+            ->map
+            ->getResponse($request)
+            ->filter()
+            ->first();
     }
 
     /**
@@ -50,8 +50,8 @@ final class Stubs
     private function filterAndSortStubs(Collection $stubs, Request $request): Collection
     {
         return $stubs
-                ->filter(fn (Stub $stub) => $stub->isForEndpoint($request->getEndpoint()))
-                ->pipe(fn ($stubs) => $this->retrieveCorrectStubsForMethod($stubs, $request));
+            ->filter(fn (Stub $stub) => $stub->isForEndpoint($request->getEndpoint()))
+            ->pipe(fn ($stubs) => $this->retrieveCorrectStubsForMethod($stubs, $request));
     }
 
     /**
@@ -74,8 +74,8 @@ final class Stubs
     private function getStubsForMethod(Collection $stubs, Request $request): Collection
     {
         return $stubs
-                ->filter(fn (Stub $stub) => $stub->isForMethod($request->getMethod()))
-                ->pipe(fn ($stubs) => $this->sortMethodStubs($stubs));
+            ->filter(fn (Stub $stub) => $stub->isForMethod($request->getMethod()))
+            ->pipe(fn ($stubs) => $this->sortMethodStubs($stubs));
     }
 
     /**

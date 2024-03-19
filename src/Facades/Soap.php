@@ -17,12 +17,12 @@ use SoapVar;
 /**
  * Class Soap.
  *
- * @method static Request to(string $endpoint)
- * @method static Header header(string $name = '', string $namespace = '', array|SoapVar $data = null, bool $mustUnderstand = false, string|int $actor = null)
- * @method static HeaderSet headers(Header ...$headers)
- * @method static Node node(array $attributes = [])
- * @method static Inclusion include(array $parameters)
- * @method static OptionSet options(array $options)
+ * @method static Request                           to(string $endpoint)
+ * @method static Header                            header(string $name = '', string $namespace = '', array|SoapVar $data = null, bool $mustUnderstand = false, string|int|null $actor = null)
+ * @method static HeaderSet                         headers(Header ...$headers)
+ * @method static Node                              node(array $attributes = [])
+ * @method static Inclusion                         include(array $parameters)
+ * @method static OptionSet                         options(array $options)
  * @method static \RicorocksDigitalAgency\Soap\Soap beforeRequesting(callable $hook)
  * @method static \RicorocksDigitalAgency\Soap\Soap afterRequesting(callable $hook)
  * @method static void fake(array|Closure $callable = null)
@@ -30,7 +30,7 @@ use SoapVar;
  * @method static void assertNothingSent()
  * @method static void assertSent(callable $callback)
  * @method static void assertNotSent(callable $callback)
- * @method static Response response(array|stdClass $response)                                                                                                  Create a new SOAP response to be returned when faking requests.
+ * @method static Response response(array|stdClass $response)
  */
 final class Soap extends Facade
 {

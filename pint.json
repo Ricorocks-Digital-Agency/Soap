@@ -1,0 +1,42 @@
+{
+    "preset": "symfony",
+    "rules": {
+        "phpdoc_no_alias_tag": false,
+        "nullable_type_declaration_for_default_null_value": true,
+        "no_null_property_initialization": false,
+        "yoda_style": {
+            "equal": false,
+            "identical": false,
+            "less_and_greater": false
+        },
+        "concat_space": {
+            "spacing": "one"
+        },
+        "not_operator_with_space": false,
+        "increment_style": {
+            "style": "post"
+        },
+        "php_unit_method_casing": {
+            "case": "snake_case"
+        },
+        "global_namespace_import": {
+            "import_constants": true,
+            "import_functions": true
+        },
+        "method_chaining_indentation": true,
+        "phpdoc_align": {
+            "align": "vertical",
+            "tags": [
+                "param",
+                "property",
+                "property-read",
+                "property-write",
+                "return",
+                "throws",
+                "type",
+                "var",
+                "method"
+            ]
+        }
+    }
+}

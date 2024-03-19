@@ -64,4 +64,34 @@ final class MockSoapClient implements Client
     {
         return 'Foo Bar';
     }
+
+    public function __getTypes()
+    {
+    }
+
+    public function __setCookie(string $name, ?string $value = null)
+    {
+    }
+
+    public function __setLocation(?string $new_location = null)
+    {
+    }
+
+    public function __setSoapHeaders($soapheaders)
+    {
+    }
+
+    public function __soapCall(
+        string $function_name,
+        array $arguments,
+        array $options = [],
+        $input_headers = [],
+        &$output_headers = []
+    ) {
+    }
+
+    public function SoapClient(mixed $wsdl, array $options = [])
+    {
+        return new static($wsdl, $options);
+    }
 }
