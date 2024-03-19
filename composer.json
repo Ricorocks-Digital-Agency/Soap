@@ -23,7 +23,20 @@
         "orchestra/testbench": "^9.0",
         "pestphp/pest": "^2.0",
         "phpoption/phpoption": "^1.8.1",
-        "spatie/ray": "^1.17"
+        "spatie/ray": "^1.17",
+        "laravel/pint": "^1.14"
+    },
+    "scripts": {
+        "lint": "./vendor/bin/pint",
+        "test:lint": "./vendor/bin/pint --test",
+        "test:parallel": "./vendor/bin/pest --parallel",
+        "test": [
+            "@lint",
+            "\n\n",
+            "@test:lint",
+            "\n\n",
+            "@test:parallel"
+        ]
     },
     "prefer-stable": true,
     "authors": [
