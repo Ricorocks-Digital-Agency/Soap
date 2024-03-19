@@ -25,7 +25,7 @@
         "phpoption/phpoption": "^1.8.1",
         "spatie/ray": "^1.17",
         "laravel/pint": "^1.14",
-        "phpstan/phpstan": "^0.12.99"
+        "larastan/larastan": "^2.0"
     },
     "scripts": {
         "lint": "./vendor/bin/pint",
