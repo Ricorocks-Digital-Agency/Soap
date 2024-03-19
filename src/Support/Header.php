@@ -6,6 +6,7 @@ namespace RicorocksDigitalAgency\Soap\Support;
 
 use Illuminate\Contracts\Support\Arrayable;
 use SoapVar;
+
 use function tap;
 
 final class Header implements Arrayable
@@ -35,12 +36,12 @@ final class Header implements Arrayable
     /**
      * @param SoapVar|array<string, mixed>|null $data
      */
-    public function data(SoapVar|array $data = null): self
+    public function data(SoapVar|array|null $data = null): self
     {
         return tap($this, fn () => $this->data = $data);
     }
 
-    public function actor(string $actor = null): self
+    public function actor(?string $actor = null): self
     {
         return tap($this, fn () => $this->actor = $actor);
     }

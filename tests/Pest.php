@@ -29,7 +29,7 @@ function soap(?Fakery $fakery = null, ?Request $request = null)
     );
 }
 
-function soapRequest(Builder $builder = null, Client $client = null): SoapPhpRequest
+function soapRequest(?Builder $builder = null, ?Client $client = null): SoapPhpRequest
 {
     return new SoapPhpRequest(
         $builder ?? new IntelligentBuilder(),

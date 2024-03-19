@@ -13,8 +13,6 @@ interface Request
 
     /**
      * @param array<mixed> $parameters
-     *
-     * @return mixed
      */
     public function __call(string $name, array $parameters);
 

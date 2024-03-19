@@ -12,13 +12,13 @@ trait Scopeable
     protected string $endpoint;
     protected ?string $method = null;
 
-    public function for(string $endpoint, string $method = null): void
+    public function for(string $endpoint, ?string $method = null): void
     {
         $this->endpoint = $endpoint;
         $this->method = $method;
     }
 
-    public function matches(string $endpoint, string $method = null): bool
+    public function matches(string $endpoint, ?string $method = null): bool
     {
         if (empty($this->endpoint)) {
             return true;

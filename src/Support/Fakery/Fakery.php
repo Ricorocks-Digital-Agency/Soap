@@ -33,7 +33,7 @@ final class Fakery
     /**
      * @param array<string, Closure(Request): Response|Response>|null $callback
      */
-    public function fake(array $callback = null): void
+    public function fake(?array $callback = null): void
     {
         $this->shouldRecord = true;
 

@@ -25,12 +25,12 @@ use SoapVar;
  * @method static OptionSet                         options(array $options)
  * @method static \RicorocksDigitalAgency\Soap\Soap beforeRequesting(callable $hook)
  * @method static \RicorocksDigitalAgency\Soap\Soap afterRequesting(callable $hook)
- * @method static void fake(array|Closure $callable = null)
- * @method static void assertSentCount($count)
- * @method static void assertNothingSent()
- * @method static void assertSent(callable $callback)
- * @method static void assertNotSent(callable $callback)
- * @method static Response response(array|stdClass $response)
+ * @method static void                              fake(array|Closure $callable = null)
+ * @method static void                              assertSentCount($count)
+ * @method static void                              assertNothingSent()
+ * @method static void                              assertSent(callable $callback)
+ * @method static void                              assertNotSent(callable $callback)
+ * @method static Response                          response(array|stdClass $response)
  */
 final class Soap extends Facade
 {
