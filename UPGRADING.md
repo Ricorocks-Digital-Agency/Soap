@@ -4,6 +4,7 @@ All major releases will document the needed steps to upgrade here. Upgrades shou
 
 ## [Unreleased]
 
+## [2.0.0] - 2024-03-26
 ### Laravel
 SOAP now supports Laravel ^10. Support for Laravel 8 and 9 has been removed.
 
