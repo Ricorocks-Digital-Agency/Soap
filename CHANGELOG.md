@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
+## [2.1.0] - 2025-02-25
+- Added Laravel 12 support [#71](https://github.com/Ricorocks-Digital-Agency/Soap/pull/71)
+- Added PHP 8.4 support [#71](https://github.com/Ricorocks-Digital-Agency/Soap/pull/71)
+
 ## [2.0.0] - 2024-03-26
 ### Added
 - Added Laravel 11 support [#70](https://github.com/Ricorocks-Digital-Agency/Soap/pull/70)
