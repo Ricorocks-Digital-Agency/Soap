@@ -5,8 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 
 ## [2.1.0] - 2025-02-25
-- Added Laravel 12 support [#71](https://github.com/Ricorocks-Digital-Agency/Soap/pull/71)
-- Added PHP 8.4 support [#71](https://github.com/Ricorocks-Digital-Agency/Soap/pull/71)
+- Added Laravel 12 support [#73](https://github.com/Ricorocks-Digital-Agency/Soap/pull/73)
+- Added PHP 8.4 support [#73](https://github.com/Ricorocks-Digital-Agency/Soap/pull/73)
 
 ## [2.0.0] - 2024-03-26
 ### Added
