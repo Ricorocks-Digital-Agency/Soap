@@ -35,7 +35,8 @@ class Soap
             ->beforeRequesting(fn ($requestInstance) => $this->mergeHeadersFor($requestInstance))
             ->beforeRequesting(fn ($requestInstance) => $this->mergeInclusionsFor($requestInstance))
             ->beforeRequesting(fn ($requestInstance) => $this->mergeOptionsFor($requestInstance))
-            ->afterRequesting(fn ($requestInstance, $response) => $this->record($requestInstance, $response));
+            ->afterRequesting(fn ($requestInstance, $response) => $this->record($requestInstance, $response))
+            ->afterErroring(fn ($requestInstance, $exception) => null);
     }
 
     public function to(string $endpoint)
@@ -43,6 +44,7 @@ class Soap
         return (clone $this->request)
             ->beforeRequesting(...$this->globalHooks['beforeRequesting'])
             ->afterRequesting(...$this->globalHooks['afterRequesting'])
+            ->afterErroring(...$this->globalHooks['afterErroring'])
             ->to($endpoint);
     }
 
@@ -120,6 +122,13 @@ class Soap
     public function afterRequesting(callable $hook)
     {
         ($this->globalHooks['afterRequesting'] ??= collect())->push($hook);
+
+        return $this;
+    }
+
+    public function afterErroring(callable $hook)
+    {
+        ($this->globalHooks['afterErroring'] ??= collect())->push($hook);
 
         return $this;
     }

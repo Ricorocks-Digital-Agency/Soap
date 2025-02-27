@@ -14,15 +14,29 @@
         }
     },
     "require": {
-        "php": "^7.4|^8.0",
-        "illuminate/support": "^8.16"
+        "php": "^8.2|^8.3|^8.4",
+        "illuminate/support": "^11.0|^12.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.4",
-        "orchestra/testbench": "^6.5",
-        "spatie/ray": "^1.17",
         "ext-soap": "*",
-        "pestphp/pest": "^1.0"
+        "mockery/mockery": "^1.4",
+        "orchestra/testbench": "^9.0|^10.0",
+        "pestphp/pest": "^3.7.4",
+        "phpoption/phpoption": "^1.8.1",
+        "spatie/ray": "^1.17",
+        "laravel/pint": "^1.14"
+    },
+    "scripts": {
+        "lint": "./vendor/bin/pint",
+        "test:lint": "./vendor/bin/pint --test",
+        "test:parallel": "./vendor/bin/pest --parallel",
+        "test": [
+            "@lint",
+            "\n\n",
+            "@test:lint",
+            "\n\n",
+            "@test:parallel"
+        ]
     },
     "prefer-stable": true,
     "authors": [
@@ -40,9 +54,14 @@
             "providers": [
                 "RicorocksDigitalAgency\\Soap\\Providers\\SoapServiceProvider"
             ],
-            "aliases": [
-                "RicorocksDigitalAgency\\Soap\\Facades\\Soap"
-            ]
+            "aliases": {
+                "Soap": "RicorocksDigitalAgency\\Soap\\Facades\\Soap"
+            }
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
         }
     }
 }
