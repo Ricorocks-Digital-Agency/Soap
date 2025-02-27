@@ -2,6 +2,7 @@
 
 namespace RicorocksDigitalAgency\Soap\Request;
 
+use Exception;
 use RicorocksDigitalAgency\Soap\Header;
 use RicorocksDigitalAgency\Soap\Parameters\Builder;
 use RicorocksDigitalAgency\Soap\Response\Response;
@@ -49,7 +50,7 @@ class SoapClientRequest implements Request
 
         try {
             $response = $this->getResponse();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->hooks['afterErroring']->each(fn ($callback) => $callback($this, Response::new($e)));
 
             throw $e;
