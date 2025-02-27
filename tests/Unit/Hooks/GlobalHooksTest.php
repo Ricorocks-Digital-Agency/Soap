@@ -8,16 +8,16 @@ uses(ProvidesIncrementingCounter::class)->afterEach(function () { $this->increme
 
 it('can perform global beforeRequesting hooks')
     ->fake(['http://endpoint.com' => Response::new(), 'http://foobar.com' => Response::new()])
-    ->tap(fn () => $this->soap()->beforeRequesting(fn () => $this->increment++))
-    ->tap(fn () => $this->soap()->to('http://endpoint.com')->call('method'))
-    ->tap(fn () => $this->soap()->to('http://foobar.com')->call('method'))
+    ->defer(fn () => $this->soap()->beforeRequesting(fn () => $this->increment++))
+    ->defer(fn () => $this->soap()->to('http://endpoint.com')->call('method'))
+    ->defer(fn () => $this->soap()->to('http://foobar.com')->call('method'))
     ->expect(fn () => $this->increment)->toEqual(2);
 
 it('can perform global afterRequesting hooks')
     ->fake(['http://endpoint.com' => Response::new(), 'http://foobar.com' => Response::new()])
-    ->tap(fn () => $this->soap()->afterRequesting(fn () => $this->increment++))
-    ->tap(fn () => $this->soap()->to('http://endpoint.com')->call('method'))
-    ->tap(fn () => $this->soap()->to('http://foobar.com')->call('method'))
+    ->defer(fn () => $this->soap()->afterRequesting(fn () => $this->increment++))
+    ->defer(fn () => $this->soap()->to('http://endpoint.com')->call('method'))
+    ->defer(fn () => $this->soap()->to('http://foobar.com')->call('method'))
     ->expect(fn () => $this->increment)->toEqual(2);
 
 it('can run hooks without having to fake')

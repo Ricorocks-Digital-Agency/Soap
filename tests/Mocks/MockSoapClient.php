@@ -90,7 +90,7 @@ class MockSoapClient
         array $arguments,
         array $options = [],
         $input_headers = [],
-        &$output_headers = []
+        &$output_headers = [],
     ) {
     }
 

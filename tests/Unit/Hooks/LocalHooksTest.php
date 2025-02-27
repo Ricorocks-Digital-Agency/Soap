@@ -5,21 +5,21 @@ use RicorocksDigitalAgency\Soap\Response\Response;
 
 it('can perform local beforeRequesting hooks')
     ->fake(['http://endpoint.com' => Response::new(), 'http://foobar.com' => Response::new()])
-    ->tap(fn () => $this->soap()->to('http://endpoint.com')->beforeRequesting(fn () => $this->data['endpoint'] = 5)->Test())
-    ->tap(fn () => $this->soap()->to('http://foobar.com')->beforeRequesting(fn () => $this->data['foobar'] = 2)->Test())
+    ->defer(fn () => $this->soap()->to('http://endpoint.com')->beforeRequesting(fn () => $this->data['endpoint'] = 5)->Test())
+    ->defer(fn () => $this->soap()->to('http://foobar.com')->beforeRequesting(fn () => $this->data['foobar'] = 2)->Test())
     ->expect(fn () => $this->data['endpoint'])->toBe(5)
     ->and(fn () => $this->data['foobar'])->toBe(2);
 
 it('can perform local afterRequesting hooks')
     ->fake(['http://endpoint.com' => Response::new(), 'http://foobar.com' => Response::new()])
-    ->tap(fn () => $this->soap()->to('http://endpoint.com')->afterRequesting(fn () => $this->data['endpoint'] = 5)->Test())
-    ->tap(fn () => $this->soap()->to('http://foobar.com')->afterRequesting(fn () => $this->data['foobar'] = 2)->Test())
+    ->defer(fn () => $this->soap()->to('http://endpoint.com')->afterRequesting(fn () => $this->data['endpoint'] = 5)->Test())
+    ->defer(fn () => $this->soap()->to('http://foobar.com')->afterRequesting(fn () => $this->data['foobar'] = 2)->Test())
     ->expect(fn () => $this->data['endpoint'])->toBe(5)
     ->and(fn () => $this->data['foobar'])->toBe(2);
 
 it('can chain hooks')
     ->fake(['http://endpoint.com' => Response::new()])
-    ->tap(fn () => $this->soap()->to('http://endpoint.com')
+    ->defer(fn () => $this->soap()->to('http://endpoint.com')
         ->beforeRequesting(fn () => $this->data['before'] = 5)
         ->afterRequesting(fn () => $this->data['after'] = 2)
         ->call('method')
