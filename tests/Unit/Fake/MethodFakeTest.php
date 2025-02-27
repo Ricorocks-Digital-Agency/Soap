@@ -20,10 +20,10 @@ it('can fake multiple methods declared by a pipe operator')
 
 it('will use methods as a precedent over other fakes')
     ->fake([
-           '*' => Response::new(['wild' => 'card']),
-               'http://foobar.com' => Response::new(['baz' => 'boom']),
-               'http://foobar.com:Add' => Response::new(['foo' => 'bar']),
-               'http://foobar.com*' => Response::new(['gee' => 'whizz']),
+        '*' => Response::new(['wild' => 'card']),
+        'http://foobar.com' => Response::new(['baz' => 'boom']),
+        'http://foobar.com:Add' => Response::new(['foo' => 'bar']),
+        'http://foobar.com*' => Response::new(['gee' => 'whizz']),
     ])
     ->soap()->to('http://foobar.com')->call('Add', ['intA' => 10, 'intB' => 20])
     ->test()->assertSent(fn ($request, $response) => $request->getMethod() == 'Add' && $response->response == ['foo' => 'bar']);
