@@ -11,29 +11,20 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: ['7.4', '8.0', '8.1', '8.2']
-        laravel: [ '8.*', '9.*', '10.*' ]
-        stability: [ prefer-lowest, prefer-stable ]
+        php: [ '8.2', '8.3', '8.4' ]
+        laravel: [ '11.*', '12.*' ]
+        stability: [ prefer-stable ]
         include:
-          - laravel: '10.*'
-            testbench: '8.*'
-          - laravel: '9.*'
-            testbench: '7.*'
-          - laravel: '8.*'
-            testbench: '^6.24'
-        exclude:
-          - laravel: 9.*
-            php: 7.4
-          - laravel: 10.*
-            php: 7.4
-          - laravel: 10.*
-            php: 8.0
+          - laravel: '11.*'
+            testbench: '9.*'
+          - laravel: '12.*'
+            testbench: '10.*'
 
     name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.stability }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -50,5 +41,8 @@ jobs:
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
-      - name: Run Pest
-        run: php vendor/bin/pest
+      - name: Check Code Style
+        run: composer test:lint
+
+      - name: Run Tests
+        run: composer test:parallel

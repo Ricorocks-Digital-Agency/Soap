@@ -73,11 +73,11 @@ class MockSoapClient
     {
     }
 
-    public function __setCookie(string $name, string $value = null)
+    public function __setCookie(string $name, ?string $value = null)
     {
     }
 
-    public function __setLocation(string $new_location = null)
+    public function __setLocation(?string $new_location = null)
     {
     }
 
@@ -90,7 +90,7 @@ class MockSoapClient
         array $arguments,
         array $options = [],
         $input_headers = [],
-        &$output_headers = []
+        &$output_headers = [],
     ) {
     }
 

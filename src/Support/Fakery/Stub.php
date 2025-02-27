@@ -47,9 +47,9 @@ class Stub
     public function isForMethod($method)
     {
         return Str::of($this->methods)
-                ->explode('|')
-                ->map(fn ($availableMethod) => Str::start($availableMethod, '*'))
-                ->contains(fn ($availableMethod) => Str::is($availableMethod, $method));
+            ->explode('|')
+            ->map(fn ($availableMethod) => Str::start($availableMethod, '*'))
+            ->contains(fn ($availableMethod) => Str::is($availableMethod, $method));
     }
 
     public function hasWildcardMethods()
