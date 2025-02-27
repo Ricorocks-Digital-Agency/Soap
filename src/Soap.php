@@ -13,12 +13,11 @@ use RicorocksDigitalAgency\Soap\Support\Fakery\Fakery;
  */
 class Soap
 {
-    public const VERSION = '3.0.0';
-
     use ForwardsCalls;
     use Macroable {
         __call as __macroableCall;
     }
+    public const VERSION = '3.0.0';
 
     protected Fakery $fakery;
     protected Request $request;
