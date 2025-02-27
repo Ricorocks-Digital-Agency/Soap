@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - Added Laravel 12 support [#73](https://github.com/Ricorocks-Digital-Agency/Soap/pull/73)
 - Added PHP 8.4 support [#73](https://github.com/Ricorocks-Digital-Agency/Soap/pull/73)
+- Added After Erroring hook [#54](https://github.com/Ricorocks-Digital-Agency/Soap/pull/54)
 - Added accessors for Last Request and Last Response
 
 ### Changed

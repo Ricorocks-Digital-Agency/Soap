@@ -21,6 +21,7 @@ use RicorocksDigitalAgency\Soap\Request\Request;
  * @method static OptionSet                         options(array $options)
  * @method static \RicorocksDigitalAgency\Soap\Soap beforeRequesting(callable $hook)
  * @method static \RicorocksDigitalAgency\Soap\Soap afterRequesting(callable $hook)
+ * @method static \RicorocksDigitalAgency\Soap\Soap afterErroring(callable $hook)
  * @method static void                              fake(array|Closure $callable = null)
  * @method static void                              assertSentCount($count)
  * @method static void                              assertNothingSent()
