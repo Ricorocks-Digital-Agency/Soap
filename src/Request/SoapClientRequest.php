@@ -116,6 +116,16 @@ class SoapClientRequest implements Request
         return $this->body;
     }
 
+    public function getLastResponse()
+    {
+        return $this->client()->__getLastResponse();
+    }
+
+    public function getLastRequest()
+    {
+        return $this->client()->__getLastRequest();
+    }
+
     public function functions(): array
     {
         return $this->client()->__getFunctions();
