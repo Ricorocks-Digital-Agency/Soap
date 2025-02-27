@@ -51,7 +51,7 @@ class SoapClientRequest implements Request
         try {
             $response = $this->getResponse();
         } catch (Exception $e) {
-            $this->hooks['afterErroring']->each(fn ($callback) => $callback($this, Response::new($e)));
+            $this->hooks['afterErroring']->each(fn ($callback) => $callback($this, $e));
 
             throw $e;
         }

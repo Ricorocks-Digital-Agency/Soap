@@ -6,25 +6,42 @@ A Laravel SOAP client that provides a clean interface for handling requests and 
 
 ## Docs
 
-- [Installation](#installation)
-- [Using Soap](#using-soap)
-- [Features/API](#features/api)
-    * [Headers](#headers)
-        * [Global Headers](#global-headers)
-    * [To](#to)
-    * [Functions](#functions)
-    * [Call](#call)
-        * [Parameters](#parameters)
-            * [Nodes](#nodes)
-    * [Options](#options)
-        * [Tracing](#tracing)
-        * [Authentication](#authentication)
-        * [Global Options](#global-options)
-- [Hooks](#hooks)
-- [Faking](#faking)
-- [Configuration](#configuration)
-    * [Include](#include)
-- [Ray Support](#ray-support)
+- [Soap](#soap)
+  - [Docs](#docs)
+  - [Requirements](#requirements)
+  - [Installation](#installation)
+  - [Using Soap](#using-soap)
+  - [Features/API](#featuresapi)
+    - [Headers](#headers)
+      - [Global Headers](#global-headers)
+    - [To](#to)
+    - [Functions](#functions)
+    - [Call](#call)
+      - [Parameters](#parameters)
+        - [Nodes](#nodes)
+    - [Options](#options)
+      - [Tracing](#tracing)
+      - [Authentication](#authentication)
+      - [Global Options](#global-options)
+  - [Hooks](#hooks)
+    - [Local](#local)
+    - [Global](#global)
+  - [Faking](#faking)
+    - [Inspecting requests](#inspecting-requests)
+      - [`Soap::assertSentCount($count)`](#soapassertsentcountcount)
+      - [`Soap::assertSent(callable $callback)`](#soapassertsentcallable-callback)
+      - [`Soap::assertNotSent(callable $callback)`](#soapassertnotsentcallable-callback)
+      - [`Soap::assertNothingSent()`](#soapassertnothingsent)
+  - [Configuration](#configuration)
+    - [Include](#include)
+  - [Ray Support](#ray-support)
+    - [`ray()->showSoapRequests()`](#ray-showsoaprequests)
+    - [`ray()->stopShowingSoapRequests()`](#ray-stopshowingsoaprequests)
+    - [Changelog](#changelog)
+  - [Contributing](#contributing)
+    - [Security](#security)
+  - [Credits](#credits)
+  - [License](#license)
 
 
 ## Requirements
@@ -292,31 +309,33 @@ You can make changes to the `Request` object in `beforeRequesting` hooks if you 
 
 ### Local
 
-To create a local hook, chain `beforeRequesting` or `afterRequesting` to a `Request` object:
+To create a local hook, chain `beforeRequesting`, `afterErroring` or `afterRequesting` to a `Request` object:
 
 ```php
 Soap::to('http://example.com')
 	->beforeRequesting(fn() => Log::info('Request going in!'))
 	->afterRequesting(fn() => Log::info('Request coming out!'))
+	->afterErroring(fn() => Log::error('An error occurred!'))
 	->call('Action', []);
 ```
 
-Any before requesting hooks will receive the request as a parameter
-and after requesting hooks will receive the request and response
-as a parameter.
+Any before requesting hooks will receive the request as a parameter.
+After Erroring hooks will receive the request and exception as parameters.
+After requesting hooks will receive the request and response as parameters.
 
 ### Global
 
-To create a global hook, use the `Soap::beforeRequesting` and `Soap::afterRequesting` methods.
+To create a global hook, use the `Soap::beforeRequesting`, `Soap::afterErroring`, and `Soap::afterRequesting` methods.
 
 ```php
 Soap::beforeRequesting(fn() => Log::info('Request going in!'));
+Soap::afterErroring(fn() => Log::error('An error occurred!'));
 Soap::afterRequesting(fn() => Log::info('Request coming out!'));
 ```
 
-Any before requesting hooks will receive the request as a parameter
-and after requesting hooks will receive the request and response
-as a parameter.
+Any before requesting hooks will receive the request as a parameter.
+After Erroring hooks will receive the request and exception as parameters.
+After requesting hooks will receive the request and response as parameters.
 
 ## Faking
 
