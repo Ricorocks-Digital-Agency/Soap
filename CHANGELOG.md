@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
+## [3.0.0] - 2025-02-27
 ### Added
 - Added Laravel 12 support [#73](https://github.com/Ricorocks-Digital-Agency/Soap/pull/73)
 - Added PHP 8.4 support [#73](https://github.com/Ricorocks-Digital-Agency/Soap/pull/73)
@@ -15,7 +16,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Changed to Pest v3 [#73](https://github.com/Ricorocks-Digital-Agency/Soap/pull/73)
 
 ### Removed
-- Removed support for Laravel < 11, PHP < 8.2 [#73](https://github.com/Ricorocks-Digital-Agency/Soap/pull/73)
+- Removed support for Laravel < 11 [#73](https://github.com/Ricorocks-Digital-Agency/Soap/pull/73)
+- Removed support for PHP < 8.2 [#73](https://github.com/Ricorocks-Digital-Agency/Soap/pull/73)
 
 ## [2.0.0] - 2024-03-26
 ### Added
