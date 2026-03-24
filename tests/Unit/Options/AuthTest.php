@@ -11,10 +11,10 @@ it('can use basic auth')
     ->call('Add', ['intA' => 10, 'intB' => 25])
     ->test()->assertSent(function (SoapPhpRequest $request) {
         return $request->getOptions() == [
-                'authentication' => SOAP_AUTHENTICATION_BASIC,
-                'login' => 'hello',
-                'password' => 'world',
-            ];
+            'authentication' => SOAP_AUTHENTICATION_BASIC,
+            'login' => 'hello',
+            'password' => 'world',
+        ];
     });
 
 it('can use digest auth')
@@ -24,8 +24,8 @@ it('can use digest auth')
     ->call('Add', ['intA' => 10, 'intB' => 25])
     ->test()->assertSent(function (SoapPhpRequest $request) {
         return $request->getOptions() == [
-                'authentication' => SOAP_AUTHENTICATION_DIGEST,
-                'login' => 'hello',
-                'password' => 'world',
-            ];
+            'authentication' => SOAP_AUTHENTICATION_DIGEST,
+            'login' => 'hello',
+            'password' => 'world',
+        ];
     });

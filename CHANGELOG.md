@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
+## [4.0.0] - 2026-03-24
+### Added
+- Added Laravel 13 support [#75](https://github.com/Ricorocks-Digital-Agency/Soap/pull/75)
+
+### Removed
+- Removed support for Laravel 11
+
+## [3.0.0] - 2025-02-27
+### Added
+- Added Laravel 12 support [#73](https://github.com/Ricorocks-Digital-Agency/Soap/pull/73)
+- Added PHP 8.4 support [#73](https://github.com/Ricorocks-Digital-Agency/Soap/pull/73)
+- Added After Erroring hook [#54](https://github.com/Ricorocks-Digital-Agency/Soap/pull/54)
+- Added support for multiple objects [#45](https://github.com/Ricorocks-Digital-Agency/Soap/pull/45)
+- Added accessors for Last Request and Last Response
+
+### Changed
+- Changed to Pest v3 [#73](https://github.com/Ricorocks-Digital-Agency/Soap/pull/73)
+
+### Removed
+- Removed support for Laravel < 11 [#73](https://github.com/Ricorocks-Digital-Agency/Soap/pull/73)
+- Removed support for PHP < 8.2 [#73](https://github.com/Ricorocks-Digital-Agency/Soap/pull/73)
+
+## [2.0.0] - 2024-03-26
 ### Added
 - Added Laravel 11 support [#70](https://github.com/Ricorocks-Digital-Agency/Soap/pull/70)
 - Added PHP 8.3 support [#70](https://github.com/Ricorocks-Digital-Agency/Soap/pull/70)

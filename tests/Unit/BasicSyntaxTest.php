@@ -8,7 +8,7 @@ use RicorocksDigitalAgency\Soap\Response\Response;
 
 it('can obtain a WSDL', function () {
     $mock = m::mock(Request::class);
-    $mock->shouldReceive('beforeRequesting', 'afterRequesting', 'to')->andReturnSelf()
+    $mock->shouldReceive('beforeRequesting', 'afterRequesting', 'afterErroring', 'to')->andReturnSelf()
         ->shouldReceive('functions')->andReturn(
             [
                 'AddResponse Add(Add $parameters)',
@@ -40,4 +40,12 @@ it('can forward method calls')
 it('works with a soapable')
     ->fake(['*' => Response::new(['AddResult' => 35])])
     ->expect(fn () => $this->soap()->to(EXAMPLE_SOAP_ENDPOINT)->Add(new ExampleSoapable())->AddResult)
+    ->toEqual(35);
+
+it('can use objects')
+    ->fake(['*' => Response::new(['AddResult' => 35])])
+    ->expect(fn () => $this->soap()->to(EXAMPLE_SOAP_ENDPOINT)->call('Add', new class {
+        public $intA = 10;
+        public $intB = 25;
+    })->AddResult)
     ->toEqual(35);

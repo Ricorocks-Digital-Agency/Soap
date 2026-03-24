@@ -28,6 +28,7 @@ final class Soap
     use Macroable {
         __call as __macroableCall;
     }
+    public const VERSION = '4.0.0';
 
     protected Fakery $fakery;
 
@@ -65,7 +66,8 @@ final class Soap
             ->beforeRequesting(fn (Request $requestInstance) => $this->mergeHeadersFor($requestInstance))
             ->beforeRequesting(fn (Request $requestInstance) => $this->mergeInclusionsFor($requestInstance))
             ->beforeRequesting(fn (Request $requestInstance) => $this->mergeOptionsFor($requestInstance))
-            ->afterRequesting(fn (Request $requestInstance, Response $response) => $this->record($requestInstance, $response));
+            ->afterRequesting(fn (Request $requestInstance, Response $response) => $this->record($requestInstance, $response))
+            ->afterErroring(fn ($requestInstance, $exception) => null);
     }
 
     public function to(string $endpoint): Request
@@ -73,6 +75,7 @@ final class Soap
         return (clone $this->request)
             ->beforeRequesting(...$this->globalHooks['beforeRequesting'])
             ->afterRequesting(...$this->globalHooks['afterRequesting'])
+            ->afterErroring(...$this->globalHooks['afterErroring'])
             ->to($endpoint);
     }
 
@@ -155,14 +158,21 @@ final class Soap
 
     public function beforeRequesting(callable $hook): self
     {
-        $this->globalHooks['beforeRequesting'][] = $hook;
+        ($this->globalHooks['beforeRequesting'] ??= collect())->push($hook);
 
         return $this;
     }
 
-    public function afterRequesting(callable $hook): self
+    public function afterRequesting(callable $hook)
     {
-        $this->globalHooks['afterRequesting'][] = $hook;
+        ($this->globalHooks['afterRequesting'] ??= collect())->push($hook);
+
+        return $this;
+    }
+
+    public function afterErroring(callable $hook)
+    {
+        ($this->globalHooks['afterErroring'] ??= collect())->push($hook);
 
         return $this;
     }

@@ -106,7 +106,11 @@ final class SoapPhpRequest implements Request
 
     private function makeRequest(): mixed
     {
-        return $this->client()->call($this->getMethod(), $this->getBody());
+        $body = $this->getBody();
+
+        return is_object(reset($body))
+            ? $this->client()->{$this->getMethod()}(...$body)
+            : $this->client()->{$this->getMethod()}($body);
     }
 
     private function client(): Client
@@ -148,6 +152,16 @@ final class SoapPhpRequest implements Request
         return $this->body;
     }
 
+    public function getLastResponse()
+    {
+        return $this->client()->__getLastResponse();
+    }
+
+    public function getLastRequest()
+    {
+        return $this->client()->__getLastRequest();
+    }
+
     /**
      * @return array<int, string>
      */
@@ -172,6 +186,13 @@ final class SoapPhpRequest implements Request
     public function afterRequesting(callable ...$closures): self
     {
         $this->hooks['afterRequesting'] = array_merge($this->hooks['afterRequesting'], $closures);
+
+        return $this;
+    }
+
+    public function afterErroring(...$closures): Request
+    {
+        ($this->hooks['afterErroring'] ??= collect())->push(...$closures);
 
         return $this;
     }

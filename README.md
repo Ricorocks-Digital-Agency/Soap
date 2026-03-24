@@ -46,8 +46,8 @@ A Laravel SOAP client that provides a clean interface for handling requests and 
 
 ## Requirements
 
-- PHP 7.4 or greater
-- Laravel 8.16 or greater
+- PHP 8.2 or greater
+- Laravel 12 or greater
 
 ## Installation
 
@@ -56,8 +56,6 @@ You can install the package via composer
 ```bash
 composer require ricorocks-digital-agency/soap
 ```
-
-> Note: As of v1.5.0 Soap requires PHP ^7.4
 
 ## Using Soap
 
@@ -309,31 +307,33 @@ You can make changes to the `Request` object in `beforeRequesting` hooks if you 
 
 ### Local
 
-To create a local hook, chain `beforeRequesting` or `afterRequesting` to a `Request` object:
+To create a local hook, chain `beforeRequesting`, `afterErroring` or `afterRequesting` to a `Request` object:
 
 ```php
 Soap::to('http://example.com')
 	->beforeRequesting(fn() => Log::info('Request going in!'))
 	->afterRequesting(fn() => Log::info('Request coming out!'))
+	->afterErroring(fn() => Log::error('An error occurred!'))
 	->call('Action', []);
 ```
 
-Any before requesting hooks will receive the request as a parameter
-and after requesting hooks will receive the request and response
-as a parameter.
+Any before requesting hooks will receive the request as a parameter.
+After Erroring hooks will receive the request and exception as parameters.
+After requesting hooks will receive the request and response as parameters.
 
 ### Global
 
-To create a global hook, use the `Soap::beforeRequesting` and `Soap::afterRequesting` methods.
+To create a global hook, use the `Soap::beforeRequesting`, `Soap::afterErroring`, and `Soap::afterRequesting` methods.
 
 ```php
 Soap::beforeRequesting(fn() => Log::info('Request going in!'));
+Soap::afterErroring(fn() => Log::error('An error occurred!'));
 Soap::afterRequesting(fn() => Log::info('Request coming out!'));
 ```
 
-Any before requesting hooks will receive the request as a parameter
-and after requesting hooks will receive the request and response
-as a parameter.
+Any before requesting hooks will receive the request as a parameter.
+After Erroring hooks will receive the request and exception as parameters.
+After requesting hooks will receive the request and response as parameters.
 
 ## Faking
 
@@ -346,7 +346,7 @@ specific, so you can pass the `fake` method an array of endpoints as keys
 and response objects as values:
 
 ```php
-Soap::fake(['http://endpoint.com' => Soap::response(['foo' => 'bar'])]);
+Soap::fake(['http://endpoint.com' => Response::new(['foo' => 'bar'])]);
 ```
 
 In the above example, any SOAP request made to `http://endpoint.com` will
@@ -356,13 +356,13 @@ be returned instead.
 What if you want to specify the SOAP action too? Easy! Just add `:{ActionName}` after your endpoint, like so:
 
 ```php
-Soap::fake(['http://endpoint.com:Details' => Soap::response(['foo' => 'bar'])]);
+Soap::fake(['http://endpoint.com:Details' => Response::new(['foo' => 'bar'])]);
 ```
 Now, only SOAP requests to the `Details` actions will be mocked.
 
 You can also specify multiple actions with the `|` operator:
 ```php
-Soap::fake(['http://endpoint.com:Details|Information|Overview' => Soap::response(['foo' => 'bar'])]);
+Soap::fake(['http://endpoint.com:Details|Information|Overview' => Response::new(['foo' => 'bar'])]);
 ```
 Now, only SOAP requests to the `Details`, `Information` and `Overview` actions will be mocked.
 

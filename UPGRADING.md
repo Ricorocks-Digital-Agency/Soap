@@ -4,6 +4,15 @@ All major releases will document the needed steps to upgrade here. Upgrades shou
 
 ## [Unreleased]
 
+## [4.0.0] - 2026-03-24
+### Requirements
+SOAP now supports Laravel ^13. Support for Laravel 11 has been removed.
+
+## [3.0.0] - 2025-02-27
+### Requirements
+SOAP now supports Laravel ^12. Support for Laravel 10 has been removed. Support for PHP 8.1 has been removed.
+
+## [2.0.0] - 2024-03-26
 ### Laravel
 SOAP now supports Laravel ^10. Support for Laravel 8 and 9 has been removed.
 

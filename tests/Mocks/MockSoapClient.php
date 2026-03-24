@@ -86,7 +86,7 @@ final class MockSoapClient implements Client
         array $arguments,
         array $options = [],
         $input_headers = [],
-        &$output_headers = []
+        &$output_headers = [],
     ) {
     }
 
