@@ -46,8 +46,8 @@ A Laravel SOAP client that provides a clean interface for handling requests and 
 
 ## Requirements
 
-- PHP 7.4 or greater
-- Laravel 8.16 or greater
+- PHP 8.2 or greater
+- Laravel 12 or greater
 
 ## Installation
 
@@ -56,8 +56,6 @@ You can install the package via composer
 ```bash
 composer require ricorocks-digital-agency/soap
 ```
-
-> Note: As of v1.5.0 Soap requires PHP ^7.4
 
 ## Using Soap
 
