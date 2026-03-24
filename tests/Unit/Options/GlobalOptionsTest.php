@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 it('can include global options for every request')
     ->fake()
     ->soap()->options(['login' => 'foo', 'password' => 'bar'])

@@ -1,16 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
+use RicorocksDigitalAgency\Soap\Support\SoapClients\DecoratedClient;
 use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
 
 it('has a static client method', function () {
-    $trace = Trace::client($client = new SoapClient(EXAMPLE_SOAP_ENDPOINT));
+    $trace = Trace::client($client = (new DecoratedClient())->setEndpoint(EXAMPLE_SOAP_ENDPOINT));
 
     expect($client)
         ->__getLastRequest()->toBe($trace->xmlRequest)
         ->__getLastResponse()->toBe($trace->xmlResponse)
         ->__getLastRequestHeaders()->toBe($trace->requestHeaders)
         ->__getLastResponseHeaders()->toBe($trace->responseHeaders);
-})->skip('This makes a real API call to retrieve the WSDL');
+})->group('integration');
 
 it('returns gracefully')
     ->expect(new Trace())

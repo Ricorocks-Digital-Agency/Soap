@@ -1,36 +1,59 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap\Parameters;
 
 use Illuminate\Contracts\Support\Arrayable;
 use RicorocksDigitalAgency\Soap\Contracts\Soapable;
 
-class Node implements Arrayable, Soapable
+/**
+ * @internal
+ */
+final class Node implements Arrayable, Soapable
 {
-    protected $name;
-    protected $attributes = [];
-    protected $body = [];
+    /**
+     * @var array<string, mixed>
+     */
+    private array $attributes = [];
 
-    public function __construct($attributes)
+    /**
+     * @var array<string, mixed>
+     */
+    private array $body = [];
+
+    /**
+     * @param array<string, mixed> $attributes
+     */
+    public function __construct(array $attributes)
     {
         $this->attributes = $attributes;
     }
 
-    public function body($content)
+    /**
+     * @param array<string, mixed> $content
+     */
+    public function body(array $content): self
     {
         $this->body = $content;
 
         return $this;
     }
 
-    public function toArray()
+    /**
+     * @return array<string, mixed>
+     */
+    public function toArray(): array
     {
         return empty($this->body)
             ? array_merge(['_' => ''], $this->attributes)
             : array_merge($this->body, $this->attributes);
     }
 
-    public function toSoap()
+    /**
+     * @return array<string, mixed>
+     */
+    public function toSoap(): array
     {
         return $this->toArray();
     }

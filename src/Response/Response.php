@@ -1,37 +1,47 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap\Response;
 
 use RicorocksDigitalAgency\Soap\Support\Tracing\Trace;
+use stdClass;
 
-class Response
+final class Response
 {
-    public $response;
-    protected Trace $trace;
+    /**
+     * @var array<string, mixed>|stdClass
+     */
+    public array|stdClass $response;
 
-    public static function new($response = []): self
+    private Trace $trace;
+
+    /**
+     * @param array<string, mixed>|stdClass $response
+     */
+    public static function new(array|stdClass $response = []): self
     {
-        return tap(new static(), fn ($instance) => $instance->response = $response);
+        return tap(new self(), fn (Response $instance) => $instance->response = $response);
     }
 
-    public function __get($name)
+    public function __get(string $name): mixed
     {
         return data_get($this->response, $name);
     }
 
-    public function setTrace(Trace $trace)
+    public function setTrace(Trace $trace): self
     {
         $this->trace = $trace;
 
         return $this;
     }
 
-    public function trace()
+    public function trace(): Trace
     {
         return $this->trace ??= app(Trace::class);
     }
 
-    public function set($key, $value): self
+    public function set(string $key, mixed $value): self
     {
         data_set($this->response, $key, $value);
 

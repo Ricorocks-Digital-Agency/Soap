@@ -24,16 +24,20 @@
         "pestphp/pest": "^3.7.4",
         "phpoption/phpoption": "^1.8.1",
         "spatie/ray": "^1.17",
-        "laravel/pint": "^1.14"
+        "laravel/pint": "^1.14",
+        "larastan/larastan": "^3.0"
     },
     "scripts": {
         "lint": "./vendor/bin/pint",
         "test:lint": "./vendor/bin/pint --test",
+        "test:types": "./vendor/bin/phpstan analyse",
         "test:parallel": "./vendor/bin/pest --parallel",
         "test": [
             "@lint",
             "\n\n",
             "@test:lint",
+            "\n\n",
+            "@test:types",
             "\n\n",
             "@test:parallel"
         ]
@@ -52,7 +56,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "RicorocksDigitalAgency\\Soap\\Providers\\SoapServiceProvider"
+                "RicorocksDigitalAgency\\Soap\\Providers\\SoapServiceProvider",
+                "RicorocksDigitalAgency\\Soap\\Providers\\SoapRayServiceProvider"
             ],
             "aliases": {
                 "Soap": "RicorocksDigitalAgency\\Soap\\Facades\\Soap"

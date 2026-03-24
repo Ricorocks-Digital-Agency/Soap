@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 it('is macroable', function () {
     $this->expectExceptionObject(new Exception('You sucessfully called this!'));
 

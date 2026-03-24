@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 it('can request a trace at the time of request')
     ->expect(fn () => $this->traceableSoap()->to(EXAMPLE_SOAP_ENDPOINT)->trace()->call('Add', ['intA' => 10, 'intB' => 25])->trace())
     ->xmlRequest->toEqual('<?xml version="1.0" encoding="UTF-8"?><FooBar><Hello>World</Hello></FooBar>')

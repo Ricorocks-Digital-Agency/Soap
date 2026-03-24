@@ -1,71 +1,67 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RicorocksDigitalAgency\Soap\Tests\Mocks;
 
-class MockSoapClient
+use RicorocksDigitalAgency\Soap\Contracts\PhpSoap\Client;
+
+final class MockSoapClient implements Client
 {
-    protected $shouldTrace = false;
+    public array $headers = [];
+    public string $endpoint = '';
+    public array $options = [];
 
-    /* Methods */
-    public function __construct($wsdl, $options = [])
+    public function setHeaders(array $headers): static
     {
-        if ($options['trace'] ?? false) {
-            $this->shouldTrace = true;
-        }
+        $this->headers = $headers;
+
+        return $this;
     }
 
-    public function __call(string $function_name, array $arguments)
+    public function setEndpoint(string $endpoint): static
     {
+        $this->endpoint = $endpoint;
+
+        return $this;
     }
 
-    public function __doRequest(string $request, string $location, string $action, int $version, $one_way = 0)
+    public function setOptions(array $options): static
     {
+        $this->options = $options;
+
+        return $this;
     }
 
-    public function __getCookies()
+    public function call(string $method, mixed $body): mixed
     {
+        return [];
     }
 
-    public function __getFunctions()
+    public function getFunctions(): array
     {
         return [
             'The mock client does not actually have functions!',
         ];
     }
 
-    public function __getLastRequest()
+    public function __getLastRequest(): ?string
     {
-        if (!$this->shouldTrace) {
-            return null;
-        }
-
         return '<?xml version="1.0" encoding="UTF-8"?><FooBar><Hello>World</Hello></FooBar>';
     }
 
-    public function __getLastRequestHeaders()
+    public function __getLastResponse(): ?string
     {
-        if (!$this->shouldTrace) {
-            return null;
-        }
-
-        return 'Hello World';
-    }
-
-    public function __getLastResponse()
-    {
-        if (!$this->shouldTrace) {
-            return null;
-        }
-
         return '<?xml version="1.0" encoding="UTF-8"?><Status>Success!</Status>';
     }
 
-    public function __getLastResponseHeaders()
+    public function __getLastRequestHeaders(): ?string
     {
-        if (!$this->shouldTrace) {
-            return null;
-        }
+        return 'Hello World';
+    }
 
+    public function __getLastResponseHeaders(): ?string
+    {
         return 'Foo Bar';
     }
 

@@ -47,5 +47,8 @@ jobs:
       - name: Check Code Style
         run: composer test:lint
 
+      - name: Run Static Analysis
+        run: composer test:types
+
       - name: Run Tests
         run: composer test:parallel
