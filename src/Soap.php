@@ -17,7 +17,7 @@ class Soap
     use Macroable {
         __call as __macroableCall;
     }
-    public const VERSION = '3.0.0';
+    public const VERSION = '4.0.0';
 
     protected Fakery $fakery;
     protected Request $request;
